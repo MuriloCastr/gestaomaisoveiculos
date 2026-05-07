@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gestão Maiso Veículos</title>
+<title>Gestão Financeira</title>
 
 <style>
 
@@ -12,7 +12,7 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:Arial, sans-serif;
+  font-family:Arial,sans-serif;
 }
 
 body{
@@ -27,17 +27,16 @@ body{
 }
 
 .topo{
-  background:#1e293b;
+  background:#111827;
   color:white;
   padding:28px;
   border-radius:18px;
   margin-bottom:20px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.08);
 }
 
 .topo h1{
   font-size:30px;
-  margin-bottom:6px;
+  margin-bottom:5px;
 }
 
 .topo p{
@@ -55,15 +54,13 @@ body{
   background:white;
   padding:20px;
   border-radius:16px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.06);
-  border:1px solid #e2e8f0;
+  box-shadow:0 2px 10px rgba(0,0,0,0.06);
 }
 
 .card h3{
-  color:#64748b;
   font-size:13px;
+  color:#64748b;
   margin-bottom:10px;
-  font-weight:600;
 }
 
 .card p{
@@ -81,27 +78,25 @@ body{
   border:none;
   border-radius:14px;
   background:white;
-  box-shadow:0 3px 10px rgba(0,0,0,0.06);
-  font-size:15px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.06);
 }
 
 .formulario{
   background:white;
   padding:22px;
   border-radius:18px;
-  margin-bottom:25px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.06);
+  margin-bottom:20px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.06);
 }
 
 .formulario h2{
   margin-bottom:20px;
-  font-size:22px;
 }
 
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:14px;
+  gap:15px;
 }
 
 input,select{
@@ -110,12 +105,6 @@ input,select{
   border:1px solid #dbe2ea;
   border-radius:12px;
   outline:none;
-  transition:0.2s;
-}
-
-input:focus,
-select:focus{
-  border-color:#2563eb;
 }
 
 button{
@@ -133,16 +122,12 @@ button{
   margin-top:16px;
 }
 
-.btn:hover{
-  opacity:0.95;
-}
-
 .grupo{
   background:white;
   border-radius:18px;
   overflow:hidden;
   margin-bottom:18px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.06);
+  box-shadow:0 2px 10px rgba(0,0,0,0.06);
 }
 
 .grupo-topo{
@@ -151,7 +136,6 @@ button{
   justify-content:space-between;
   align-items:center;
   cursor:pointer;
-  border-bottom:1px solid #eef2f7;
 }
 
 .grupo-left{
@@ -179,11 +163,6 @@ button{
 .grupo-total{
   font-size:24px;
   font-weight:bold;
-}
-
-.seta{
-  font-size:20px;
-  color:#64748b;
 }
 
 .parcelas{
@@ -262,7 +241,6 @@ button{
   display:none;
   padding:18px;
   border-top:1px solid #eef2f7;
-  background:#fcfcfd;
 }
 
 .parcela-detalhes.aberto{
@@ -301,10 +279,6 @@ button{
   padding:13px;
 }
 
-.btnPago:hover{
-  opacity:0.95;
-}
-
 @media(max-width:700px){
 
   .grupo-topo,
@@ -328,7 +302,7 @@ button{
 
   <div class="topo">
     <h1>Gestão Financeira</h1>
-    <p>Controle simples e organizado de clientes e parcelas</p>
+    <p>Controle de clientes e parcelas</p>
   </div>
 
   <div class="cards">
@@ -361,14 +335,12 @@ button{
   </div>
 
   <div class="busca">
-
     <input
       type="text"
       id="busca"
       placeholder="Buscar cliente ou descrição"
       onkeyup="carregar()"
     >
-
   </div>
 
   <div class="formulario">
@@ -417,6 +389,11 @@ async function api(acao,dados={}){
 
   const response = await fetch(API,{
     method:'POST',
+
+    headers:{
+      'Content-Type':'application/json'
+    },
+
     body:JSON.stringify({
       acao,
       ...dados
@@ -456,11 +433,6 @@ async function salvar(btn){
   btn.innerHTML='SALVAR PROMISSÓRIA';
   btn.disabled=false;
 
-  document.getElementById('nome').value='';
-  document.getElementById('telefone').value='';
-  document.getElementById('descricao').value='';
-  document.getElementById('valorTotal').value='';
-
   carregar();
 
 }
@@ -469,25 +441,11 @@ async function carregar(){
 
   const resultado = await api('listar');
 
-  const dados = resultado.data || resultado;
+  const dados = resultado.data || [];
 
-  const busca = document
-    .getElementById('busca')
-    .value
-    .toLowerCase();
+  calcularResumo(dados);
 
-  const filtrados = dados.filter(item=>{
-
-    return (
-      String(item[2]).toLowerCase().includes(busca) ||
-      String(item[4]).toLowerCase().includes(busca)
-    );
-
-  });
-
-  agruparClientes(filtrados);
-
-  calcularResumo(filtrados);
+  agruparClientes(dados);
 
 }
 
@@ -500,20 +458,16 @@ function calcularResumo(lista){
   let receberAmanha = 0;
 
   const hoje = new Date();
-
   hoje.setHours(0,0,0,0);
 
   const amanha = new Date(hoje);
-
   amanha.setDate(amanha.getDate()+1);
 
   lista.forEach(item=>{
 
     const valor = Number(item[7]);
-
-    const status = item[10] || item[9];
-
-    const vencimento = new Date(item[9] || item[8]);
+    const status = item[10];
+    const vencimento = new Date(item[9]);
 
     vencimento.setHours(0,0,0,0);
 
@@ -542,22 +496,30 @@ function calcularResumo(lista){
   });
 
   document.getElementById('totalReceber').innerHTML = dinheiro(totalReceber);
-
   document.getElementById('receberHoje').innerHTML = dinheiro(receberHoje);
-
   document.getElementById('receberAmanha').innerHTML = dinheiro(receberAmanha);
-
   document.getElementById('totalPago').innerHTML = dinheiro(totalPago);
-
   document.getElementById('totalAtrasado').innerHTML = dinheiro(totalAtrasado);
 
 }
 
 function agruparClientes(lista){
 
+  const busca = document
+    .getElementById('busca')
+    .value
+    .toLowerCase();
+
   const clientes = {};
 
   lista.forEach(item=>{
+
+    if(
+      !String(item[2]).toLowerCase().includes(busca) &&
+      !String(item[4]).toLowerCase().includes(busca)
+    ){
+      return;
+    }
 
     const nome = item[2];
 
@@ -581,16 +543,13 @@ function agruparClientes(lista){
 
     parcelas.forEach(p=>{
 
-      const status = p[10] || p[9];
-
-      if(status !== 'PAGO'){
+      if(p[10] !== 'PAGO'){
         totalCliente += Number(p[7]);
       }
 
     });
 
     let html = `
-
       <div class="grupo">
 
         <div class="grupo-topo"
@@ -614,7 +573,7 @@ function agruparClientes(lista){
               ${dinheiro(totalCliente)}
             </div>
 
-            <div class="seta" id="seta${index}">
+            <div id="seta${index}">
               ▼
             </div>
 
@@ -623,29 +582,17 @@ function agruparClientes(lista){
         </div>
 
         <div class="parcelas" id="cliente${index}">
-
     `;
 
     parcelas.forEach((p,i)=>{
 
-      const status = p[10] || p[9];
-
       let classe = 'pendente';
 
-      if(status === 'PAGO') classe = 'pago';
+      if(p[10] === 'PAGO') classe = 'pago';
 
-      if(status === 'ATRASADO') classe = 'atrasado';
-
-      const valorParcela = Number(p[7]);
-
-      const totalParcelas = Number(p[6]);
-
-      const valorTotal = Number(p[8]);
-
-      const vencimento = new Date(p[9] || p[8]);
+      if(p[10] === 'ATRASADO') classe = 'atrasado';
 
       html += `
-
         <div class="parcela">
 
           <div
@@ -655,7 +602,7 @@ function agruparClientes(lista){
             <div class="parcela-left">
 
               <div class="parcela-desc">
-                ${p[4] || 'Sem descrição'}
+                ${p[4]}
               </div>
 
               <div class="parcela-info">
@@ -665,11 +612,11 @@ function agruparClientes(lista){
                 </span>
 
                 <span>
-                  ${vencimento.toLocaleDateString('pt-BR')}
+                  ${new Date(p[9]).toLocaleDateString('pt-BR')}
                 </span>
 
                 <span class="badge ${classe}">
-                  ${status}
+                  ${p[10]}
                 </span>
 
               </div>
@@ -677,7 +624,7 @@ function agruparClientes(lista){
             </div>
 
             <div class="parcela-valor">
-              ${dinheiro(valorParcela)}
+              ${dinheiro(p[7])}
             </div>
 
           </div>
@@ -690,30 +637,30 @@ function agruparClientes(lista){
 
               <div class="info-box">
                 <span>VALOR TOTAL</span>
-                <strong>${dinheiro(valorTotal)}</strong>
+                <strong>${dinheiro(p[8])}</strong>
               </div>
 
               <div class="info-box">
                 <span>PARCELAMENTO</span>
-                <strong>${totalParcelas}x</strong>
+                <strong>${p[6]}x</strong>
               </div>
 
               <div class="info-box">
-                <span>VALOR DE CADA PARCELA</span>
-                <strong>${dinheiro(valorParcela)}</strong>
+                <span>VALOR DA PARCELA</span>
+                <strong>${dinheiro(p[7])}</strong>
               </div>
 
             </div>
 
             ${
-              status !== 'PAGO'
+              p[10] !== 'PAGO'
               ?
               `
-                <button
-                  class="btnPago"
-                  onclick="pagar('${p[0]}')">
-                  MARCAR COMO RECEBIDO
-                </button>
+              <button
+                class="btnPago"
+                onclick="pagar('${p[0]}')">
+                MARCAR COMO RECEBIDO
+              </button>
               `
               :
               ''
@@ -722,17 +669,13 @@ function agruparClientes(lista){
           </div>
 
         </div>
-
       `;
 
     });
 
     html += `
-
         </div>
-
       </div>
-
     `;
 
     container.innerHTML += html;
