@@ -58,7 +58,7 @@ body{
 }
 
 .card p{
-  font-size:30px;
+  font-size:28px;
   font-weight:bold;
 }
 
@@ -103,6 +103,17 @@ button{
   opacity:0.9;
 }
 
+.busca{
+  margin-bottom:20px;
+}
+
+.busca input{
+  background:white;
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+  border:none;
+  font-size:16px;
+}
+
 .grupo{
   background:white;
   border-radius:15px;
@@ -120,6 +131,7 @@ button{
   align-items:center;
   flex-wrap:wrap;
   gap:10px;
+  cursor:pointer;
 }
 
 .grupo-nome{
@@ -130,22 +142,44 @@ button{
 .grupo-info{
   font-size:13px;
   opacity:0.9;
+  margin-top:5px;
 }
 
 .parcelas{
   padding:15px;
+  display:none;
+}
+
+.parcelas.aberto{
+  display:block;
 }
 
 .parcela{
   border:1px solid #eee;
   border-radius:12px;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+
+.parcela-topo{
   padding:15px;
-  margin-bottom:10px;
   display:flex;
   justify-content:space-between;
   align-items:center;
   flex-wrap:wrap;
   gap:10px;
+  cursor:pointer;
+}
+
+.parcela-detalhes{
+  display:none;
+  border-top:1px solid #eee;
+  padding:15px;
+  background:#fafafa;
+}
+
+.parcela-detalhes.aberto{
+  display:block;
 }
 
 .parcela-esquerda{
@@ -181,8 +215,8 @@ button{
 .btnPago{
   background:#16a34a;
   color:white;
-  padding:8px 12px;
-  margin-top:8px;
+  padding:10px 14px;
+  margin-top:12px;
 }
 
 .valor{
@@ -193,6 +227,35 @@ button{
 .vencimento{
   color:#666;
   font-size:13px;
+  margin-top:5px;
+}
+
+.resumo-parcela{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
+}
+
+.caixa-info{
+  background:white;
+  border-radius:12px;
+  padding:15px;
+  border:1px solid #eee;
+}
+
+.caixa-info span{
+  font-size:12px;
+  color:#666;
+  display:block;
+  margin-bottom:5px;
+}
+
+.caixa-info strong{
+  font-size:18px;
+}
+
+.seta{
+  font-size:20px;
 }
 
 @media(max-width:700px){
@@ -238,6 +301,15 @@ button{
 
   </div>
 
+  <div class="busca">
+    <input
+      type="text"
+      id="busca"
+      placeholder="🔎 Buscar cliente, descrição ou parcela..."
+      onkeyup="carregar()"
+    >
+  </div>
+
   <div class="formulario">
 
     <h2 style="margin-bottom:20px;">Nova Promissória</h2>
@@ -250,7 +322,7 @@ button{
 
       <input type="text" id="descricao" placeholder="Descrição">
 
-      <input type="number" id="valorTotal" placeholder="Valor">
+      <input type="number" id="valorTotal" placeholder="Valor Total">
 
       <select id="numParcelas">
         <option value="1">1x</option>
@@ -338,9 +410,21 @@ async function carregar(){
 
   const dados = resultado.data || resultado;
 
-  agruparClientes(dados);
+  const busca = document.getElementById('busca').value.toLowerCase();
 
-  calcularResumo(dados);
+  const filtrados = dados.filter(item=>{
+
+    return (
+      String(item[2]).toLowerCase().includes(busca) ||
+      String(item[4]).toLowerCase().includes(busca) ||
+      String(item[5]).includes(busca)
+    );
+
+  });
+
+  agruparClientes(filtrados);
+
+  calcularResumo(filtrados);
 
 }
 
@@ -356,9 +440,7 @@ function calcularResumo(lista){
   lista.forEach(item=>{
 
     const valor = Number(item[7]);
-
     const status = item[9];
-
     const vencimento = new Date(item[8]);
 
     if(status == 'PENDENTE'){
@@ -418,7 +500,7 @@ function agruparClientes(lista){
 
   container.innerHTML='';
 
-  Object.keys(clientes).forEach(nome=>{
+  Object.keys(clientes).forEach((nome,index)=>{
 
     const parcelas = clientes[nome];
 
@@ -435,7 +517,8 @@ function agruparClientes(lista){
     let html = `
       <div class="grupo">
 
-        <div class="grupo-topo">
+        <div class="grupo-topo"
+          onclick="toggleCliente(${index})">
 
           <div>
 
@@ -449,16 +532,25 @@ function agruparClientes(lista){
 
           </div>
 
-          <div class="valor">
-            ${dinheiro(totalCliente)}
+          <div style="display:flex;align-items:center;gap:15px;">
+
+            <div class="valor">
+              ${dinheiro(totalCliente)}
+            </div>
+
+            <div class="seta" id="setaCliente${index}">
+              ▼
+            </div>
+
           </div>
 
         </div>
 
-        <div class="parcelas">
+        <div class="parcelas"
+          id="cliente${index}">
     `;
 
-    parcelas.forEach(p=>{
+    parcelas.forEach((p,i)=>{
 
       let classe = 'pendente';
 
@@ -470,36 +562,69 @@ function agruparClientes(lista){
         classe = 'atrasado';
       }
 
+      const valorParcela = Number(p[7]);
+      const totalParcelas = Number(p[6]);
+      const valorTotal = valorParcela * totalParcelas;
+
       html += `
         <div class="parcela">
 
-          <div class="parcela-esquerda">
+          <div class="parcela-topo"
+            onclick="toggleParcela('${index}_${i}')">
 
-            <div>
-              <strong>
-                ${p[4] || 'Sem descrição'}
-              </strong>
+            <div class="parcela-esquerda">
+
+              <div>
+                <strong>
+                  ${p[4] || 'Sem descrição'}
+                </strong>
+              </div>
+
+              <div class="vencimento">
+                Parcela ${p[5]}/${p[6]}
+                •
+                Vence:
+                ${new Date(p[8]).toLocaleDateString('pt-BR')}
+              </div>
+
             </div>
 
-            <div class="vencimento">
-              Parcela ${p[5]}/${p[6]}
-              •
-              Vence:
-              ${new Date(p[8]).toLocaleDateString('pt-BR')}
+            <div class="parcela-direita">
+
+              <div class="valor">
+                ${dinheiro(valorParcela)}
+              </div>
+
+              <div style="margin-top:8px;">
+                <span class="status ${classe}">
+                  ${p[9]}
+                </span>
+              </div>
+
             </div>
 
           </div>
 
-          <div class="parcela-direita">
+          <div class="parcela-detalhes"
+            id="parcela${index}_${i}">
 
-            <div class="valor">
-              ${dinheiro(Number(p[7]))}
-            </div>
+            <div class="resumo-parcela">
 
-            <div>
-              <span class="status ${classe}">
-                ${p[9]}
-              </span>
+              <div class="caixa-info">
+                <span>VALOR TOTAL</span>
+                <strong>${dinheiro(valorTotal)}</strong>
+              </div>
+
+              <div class="caixa-info">
+                <span>TOTAL DE PARCELAS</span>
+                <strong>${totalParcelas}x</strong>
+              </div>
+
+              <div class="caixa-info">
+                <span>VALOR DA PARCELA</span>
+                <strong>${dinheiro(valorParcela)}</strong>
+              </div>
+
             </div>
 
             ${
@@ -509,7 +634,7 @@ function agruparClientes(lista){
               <button
                 class="btnPago"
                 onclick="pagar('${p[0]}')">
-                RECEBER
+                RECEBER PARCELA
               </button>
               `
               :
@@ -531,6 +656,28 @@ function agruparClientes(lista){
     container.innerHTML += html;
 
   });
+
+}
+
+function toggleCliente(id){
+
+  const box = document.getElementById('cliente'+id);
+  const seta = document.getElementById('setaCliente'+id);
+
+  box.classList.toggle('aberto');
+
+  seta.innerHTML =
+    box.classList.contains('aberto')
+    ? '▲'
+    : '▼';
+
+}
+
+function toggleParcela(id){
+
+  const box = document.getElementById('parcela'+id);
+
+  box.classList.toggle('aberto');
 
 }
 
