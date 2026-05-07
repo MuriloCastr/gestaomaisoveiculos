@@ -21,15 +21,15 @@ body{
 }
 
 .container{
-  max-width:1200px;
+  max-width:1300px;
   margin:auto;
 }
 
 .topo{
-  background:#1e3c72;
+  background:linear-gradient(135deg,#1e3c72,#2563eb);
   color:white;
   padding:25px;
-  border-radius:15px;
+  border-radius:20px;
   margin-bottom:20px;
 }
 
@@ -46,19 +46,19 @@ body{
 
 .card{
   background:white;
-  border-radius:15px;
   padding:20px;
+  border-radius:15px;
   box-shadow:0 3px 10px rgba(0,0,0,0.08);
 }
 
-.card h2{
-  font-size:14px;
+.card h3{
   color:#666;
+  font-size:14px;
   margin-bottom:10px;
 }
 
 .card p{
-  font-size:28px;
+  font-size:30px;
   font-weight:bold;
 }
 
@@ -68,10 +68,6 @@ body{
   border-radius:15px;
   margin-bottom:20px;
   box-shadow:0 3px 10px rgba(0,0,0,0.08);
-}
-
-.formulario h2{
-  margin-bottom:20px;
 }
 
 .grid{
@@ -107,31 +103,61 @@ button{
   opacity:0.9;
 }
 
-.tabela{
+.grupo{
   background:white;
   border-radius:15px;
-  padding:20px;
-  overflow:auto;
+  margin-bottom:20px;
+  overflow:hidden;
   box-shadow:0 3px 10px rgba(0,0,0,0.08);
 }
 
-table{
-  width:100%;
-  border-collapse:collapse;
+.grupo-topo{
+  background:#1e293b;
+  color:white;
+  padding:18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
 }
 
-th,td{
-  padding:14px;
-  border-bottom:1px solid #eee;
-  text-align:left;
+.grupo-nome{
+  font-size:20px;
+  font-weight:bold;
 }
 
-th{
-  background:#f8fafc;
+.grupo-info{
+  font-size:13px;
+  opacity:0.9;
+}
+
+.parcelas{
+  padding:15px;
+}
+
+.parcela{
+  border:1px solid #eee;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.parcela-esquerda{
+  flex:1;
+}
+
+.parcela-direita{
+  text-align:right;
 }
 
 .status{
-  padding:5px 12px;
+  padding:5px 10px;
   border-radius:20px;
   font-size:12px;
   font-weight:bold;
@@ -156,21 +182,23 @@ th{
   background:#16a34a;
   color:white;
   padding:8px 12px;
+  margin-top:8px;
 }
 
-.loading{
-  text-align:center;
-  padding:20px;
+.valor{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.vencimento{
+  color:#666;
+  font-size:13px;
 }
 
 @media(max-width:700px){
 
   .topo h1{
     font-size:24px;
-  }
-
-  table{
-    font-size:12px;
   }
 
 }
@@ -183,23 +211,28 @@ th{
 
   <div class="topo">
     <h1>🚗 Gestão Maiso Veículos</h1>
-    <p>Controle de Parcelas e Promissórias</p>
+    <p>Controle Inteligente de Promissórias</p>
   </div>
 
   <div class="cards">
 
     <div class="card">
-      <h2>PENDENTE</h2>
-      <p id="totalPendente">R$ 0</p>
+      <h3>💰 TOTAL A RECEBER</h3>
+      <p id="totalReceber">R$ 0</p>
     </div>
 
     <div class="card">
-      <h2>PAGO</h2>
+      <h3>📅 RECEBER ESTE MÊS</h3>
+      <p id="mesReceber">R$ 0</p>
+    </div>
+
+    <div class="card">
+      <h3>✅ TOTAL RECEBIDO</h3>
       <p id="totalPago">R$ 0</p>
     </div>
 
     <div class="card">
-      <h2>ATRASADO</h2>
+      <h3>⚠️ ATRASADO</h3>
       <p id="totalAtrasado">R$ 0</p>
     </div>
 
@@ -207,7 +240,7 @@ th{
 
   <div class="formulario">
 
-    <h2>Nova Promissória</h2>
+    <h2 style="margin-bottom:20px;">Nova Promissória</h2>
 
     <div class="grid">
 
@@ -234,34 +267,12 @@ th{
     </div>
 
     <button class="btn" onclick="salvar(this)">
-      SALVAR
+      SALVAR PROMISSÓRIA
     </button>
 
   </div>
 
-  <div class="tabela">
-
-    <table>
-
-      <thead>
-
-        <tr>
-          <th>Cliente</th>
-          <th>Descrição</th>
-          <th>Parcela</th>
-          <th>Valor</th>
-          <th>Vencimento</th>
-          <th>Status</th>
-          <th>Ação</th>
-        </tr>
-
-      </thead>
-
-      <tbody id="lista"></tbody>
-
-    </table>
-
-  </div>
+  <div id="clientes"></div>
 
 </div>
 
@@ -271,25 +282,15 @@ const API = 'https://script.google.com/macros/s/AKfycbymd5Zlz8u_sN_XnPxrefler7h6
 
 async function api(acao,dados={}){
 
-  try{
+  const response = await fetch(API,{
+    method:'POST',
+    body:JSON.stringify({
+      acao,
+      ...dados
+    })
+  });
 
-    const response = await fetch(API,{
-      method:'POST',
-      body:JSON.stringify({
-        acao,
-        ...dados
-      })
-    });
-
-    return await response.json();
-
-  }catch(erro){
-
-    alert('Erro: '+erro);
-
-    return null;
-
-  }
+  return await response.json();
 
 }
 
@@ -302,25 +303,15 @@ async function salvar(btn){
   const numParcelas = document.getElementById('numParcelas').value;
   const vencimento = document.getElementById('vencimento').value;
 
-  if(!nome){
-    alert('Digite o nome');
+  if(!nome || !valorTotal || !vencimento){
+    alert('Preencha os campos obrigatórios');
     return;
   }
 
-  if(!valorTotal){
-    alert('Digite o valor');
-    return;
-  }
+  btn.innerHTML='SALVANDO...';
+  btn.disabled=true;
 
-  if(!vencimento){
-    alert('Escolha o vencimento');
-    return;
-  }
-
-  btn.innerHTML = 'SALVANDO...';
-  btn.disabled = true;
-
-  const resultado = await api('salvar',{
+  await api('salvar',{
     nome,
     telefone,
     descricao,
@@ -329,92 +320,215 @@ async function salvar(btn){
     vencimento
   });
 
-  if(resultado?.sucesso || resultado?.status === 'success'){
+  btn.innerHTML='SALVAR PROMISSÓRIA';
+  btn.disabled=false;
 
-    alert('Salvo com sucesso');
+  document.getElementById('nome').value='';
+  document.getElementById('telefone').value='';
+  document.getElementById('descricao').value='';
+  document.getElementById('valorTotal').value='';
 
-    document.getElementById('nome').value='';
-    document.getElementById('telefone').value='';
-    document.getElementById('descricao').value='';
-    document.getElementById('valorTotal').value='';
-
-    carregar();
-
-  }else{
-
-    alert(resultado?.mensagem || 'Erro ao salvar');
-
-  }
-
-  btn.innerHTML = 'SALVAR';
-  btn.disabled = false;
+  carregar();
 
 }
 
 async function carregar(){
 
-  carregarResumo();
-
   const resultado = await api('listar');
 
-  const lista = document.getElementById('lista');
+  const dados = resultado.data || resultado;
 
-  lista.innerHTML='';
+  agruparClientes(dados);
 
-  const dados = resultado?.data || resultado || [];
+  calcularResumo(dados);
 
-  dados.forEach(item=>{
+}
 
-    let classe='pendente';
+function calcularResumo(lista){
 
-    if(item[9]=='PAGO'){
-      classe='pago';
+  let totalReceber = 0;
+  let totalPago = 0;
+  let totalAtrasado = 0;
+  let receberMes = 0;
+
+  const hoje = new Date();
+
+  lista.forEach(item=>{
+
+    const valor = Number(item[7]);
+
+    const status = item[9];
+
+    const vencimento = new Date(item[8]);
+
+    if(status == 'PENDENTE'){
+
+      totalReceber += valor;
+
+      if(
+        vencimento.getMonth() == hoje.getMonth() &&
+        vencimento.getFullYear() == hoje.getFullYear()
+      ){
+        receberMes += valor;
+      }
+
     }
 
-    if(item[9]=='ATRASADO'){
-      classe='atrasado';
+    if(status == 'PAGO'){
+      totalPago += valor;
     }
 
-    lista.innerHTML += `
-      <tr>
+    if(status == 'ATRASADO'){
+      totalAtrasado += valor;
+    }
 
-        <td>${item[2]}</td>
+  });
 
-        <td>${item[4]}</td>
+  document.getElementById('totalReceber').innerHTML =
+    dinheiro(totalReceber);
 
-        <td>${item[5]}/${item[6]}</td>
+  document.getElementById('mesReceber').innerHTML =
+    dinheiro(receberMes);
 
-        <td>
-          R$ ${Number(item[7]).toFixed(2)}
-        </td>
+  document.getElementById('totalPago').innerHTML =
+    dinheiro(totalPago);
 
-        <td>
-          ${new Date(item[8]).toLocaleDateString('pt-BR')}
-        </td>
+  document.getElementById('totalAtrasado').innerHTML =
+    dinheiro(totalAtrasado);
 
-        <td>
-          <span class="status ${classe}">
-            ${item[9]}
-          </span>
-        </td>
+}
 
-        <td>
+function agruparClientes(lista){
 
-          ${
-            item[9] != 'PAGO'
-            ?
-            `<button class="btnPago"
-              onclick="pagar('${item[0]}')">
-              Receber
-            </button>`
-            :
-            '---'
-          }
+  const clientes = {};
 
-        </td>
+  lista.forEach(item=>{
 
-      </tr>
+    const nome = item[2];
+
+    if(!clientes[nome]){
+      clientes[nome] = [];
+    }
+
+    clientes[nome].push(item);
+
+  });
+
+  const container = document.getElementById('clientes');
+
+  container.innerHTML='';
+
+  Object.keys(clientes).forEach(nome=>{
+
+    const parcelas = clientes[nome];
+
+    let totalCliente = 0;
+
+    parcelas.forEach(p=>{
+
+      if(p[9] != 'PAGO'){
+        totalCliente += Number(p[7]);
+      }
+
+    });
+
+    let html = `
+      <div class="grupo">
+
+        <div class="grupo-topo">
+
+          <div>
+
+            <div class="grupo-nome">
+              👤 ${nome}
+            </div>
+
+            <div class="grupo-info">
+              ${parcelas.length} parcela(s)
+            </div>
+
+          </div>
+
+          <div class="valor">
+            ${dinheiro(totalCliente)}
+          </div>
+
+        </div>
+
+        <div class="parcelas">
     `;
+
+    parcelas.forEach(p=>{
+
+      let classe = 'pendente';
+
+      if(p[9] == 'PAGO'){
+        classe = 'pago';
+      }
+
+      if(p[9] == 'ATRASADO'){
+        classe = 'atrasado';
+      }
+
+      html += `
+        <div class="parcela">
+
+          <div class="parcela-esquerda">
+
+            <div>
+              <strong>
+                ${p[4] || 'Sem descrição'}
+              </strong>
+            </div>
+
+            <div class="vencimento">
+              Parcela ${p[5]}/${p[6]}
+              •
+              Vence:
+              ${new Date(p[8]).toLocaleDateString('pt-BR')}
+            </div>
+
+          </div>
+
+          <div class="parcela-direita">
+
+            <div class="valor">
+              ${dinheiro(Number(p[7]))}
+            </div>
+
+            <div>
+              <span class="status ${classe}">
+                ${p[9]}
+              </span>
+            </div>
+
+            ${
+              p[9] != 'PAGO'
+              ?
+              `
+              <button
+                class="btnPago"
+                onclick="pagar('${p[0]}')">
+                RECEBER
+              </button>
+              `
+              :
+              ''
+            }
+
+          </div>
+
+        </div>
+      `;
+
+    });
+
+    html += `
+        </div>
+      </div>
+    `;
+
+    container.innerHTML += html;
 
   });
 
@@ -422,44 +536,22 @@ async function carregar(){
 
 async function pagar(id){
 
-  const confirmar = confirm('Confirmar pagamento?');
+  const ok = confirm('Confirmar recebimento?');
 
-  if(!confirmar) return;
+  if(!ok) return;
 
-  const resultado = await api('pagar',{
-    id
-  });
+  await api('pagar',{id});
 
-  if(resultado?.sucesso || resultado?.status=='success'){
-
-    alert('Pagamento registrado');
-
-    carregar();
-
-  }else{
-
-    alert('Erro');
-
-  }
+  carregar();
 
 }
 
-async function carregarResumo(){
+function dinheiro(valor){
 
-  const resultado = await api('resumo');
-
-  const r = resultado?.data?.resumo || resultado?.resumo;
-
-  if(!r) return;
-
-  document.getElementById('totalPendente').innerHTML =
-    'R$ '+Number(r.totalPendente).toFixed(2);
-
-  document.getElementById('totalPago').innerHTML =
-    'R$ '+Number(r.totalPago).toFixed(2);
-
-  document.getElementById('totalAtrasado').innerHTML =
-    'R$ '+Number(r.totalAtrasado).toFixed(2);
+  return valor.toLocaleString('pt-BR',{
+    style:'currency',
+    currency:'BRL'
+  });
 
 }
 
