@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Gestão de Veículos</title>
+
+<style>
+body {
+  font-family: Arial;
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+h1 { color: #333; }
+
+h2 {
+  margin-top: 30px;
+  color: #444;
+}
+
+input, select, button {
+  padding: 8px;
+  margin: 5px;
+}
+
+button {
+  cursor: pointer;
+  background: #2d89ef;
+  color: white;
+  border: none;
+}
+
+button:hover {
+  background: #1b5fbf;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  background: white;
+}
+
+th {
+  background: #ddd;
+}
+
+td, th {
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: center;
+}
+
+.status-ok { color: green; font-weight: bold; }
+.status-atrasado { color: red; font-weight: bold; }
+</style>
+
+</head>
+<body>
+
+<h1>🚗 Gestão de Loja</h1>
+
+<!-- CADASTRO -->
+<h2>Adicionar Veículo</h2>
+<input id="tipo" placeholder="Tipo">
+<input id="modelo" placeholder="Modelo">
+<input id="ano" placeholder="Ano">
+<input id="custo" placeholder="Custo">
+<input id="precoSugerido" placeholder="Preço sugerido (opcional)">
+<button onclick="addVeiculo()">Adicionar</button>
+
+<!-- ESTOQUE -->
+<h2>Estoque</h2>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Modelo</th>
+<th>Ano</th>
+<th>Custo</th>
+<th>Preço Sug.</th>
+<th>Status</th>
+<th>Dias</th>
+<th>Ação</th>
+</tr>
+</thead>
+<tbody id="estoque"></tbody>
+</table>
+
+<!-- VENDA -->
+<h2>Registrar Venda</h2>
+<input id="vModelo" placeholder="Modelo">
+<input id="cliente" placeholder="Cliente">
+<input id="valorVenda" placeholder="Valor vendido">
+<select id="formaPagamento">
+  <option>À Vista</option>
+  <option>Promissória</option>
+</select>
+<button onclick="vender()">Vender</button>
+
+<!-- VENDAS -->
+<h2>Vendas</h2>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Cliente</th>
+<th>Modelo</th>
+<th>Custo</th>
+<th>Venda</th>
+<th>Lucro</th>
+<th>Pagamento</th>
+</tr>
+</thead>
+<tbody id="vendas"></tbody>
+</table>
+
+<p><b>💰 Lucro total:</b> <span id="lucro"></span></p>
+
+<!-- PROMISSÓRIAS -->
+<h2>Promissórias</h2>
+<input id="pCliente" placeholder="Cliente">
+<input id="pModelo" placeholder="Modelo">
+<input id="valorTotal" placeholder="Valor total">
+<input id="parcelas" placeholder="Parcelas">
+<button onclick="addPromissoria()">Criar</button>
+
+<table>
+<thead>
+<tr>
+<th>Cliente</th>
+<th>Modelo</th>
+<th>Parcela</th>
+<th>Valor</th>
+<th>Vencimento</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="promissorias"></tbody>
+</table>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbyr6s11NDCo-c4Ov5qtAOx7sfn9C4xq_rChr1I329NNjUUlv1w51wJ-uPgFeGmDY-UHJA/exec";
+
+// ================= API =================
+
+async function get(action) {
+  const res = await fetch(`${API}?action=${action}`);
+  return res.json();
+}
+
+async function post(data) {
+  await fetch(API, {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+}
+
+// ================= ESTOQUE =================
+
+async function addVeiculo() {
+  await post({
+    action: "addVeiculo",
+    tipo: tipo.value,
+    modelo: modelo.value,
+    ano: ano.value,
+    custo: Number(custo.value),
+    precoSugerido: Number(precoSugerido.value) || "",
+    dataCompra: new Date()
+  });
+
+  loadEstoque();
+}
+
+async function loadEstoque() {
+  const data = await get("getEstoque");
+
+  estoque.innerHTML = "";
+
+  data.forEach((row, i) => {
+    if (i === 0) return;
+
+    const status = row[7];
+
+    estoque.innerHTML += `
+    <tr>
+      <td>${row[1]}</td>
+      <td>${row[2]}</td>
+      <td>${row[3]}</td>
+      <td>R$ ${row[5]}</td>
+      <td>${row[6] ? "R$ " + row[6] : "-"}</td>
+      <td>${status}</td>
+      <td>${row[8]}</td>
+      <td>
+        ${status === "DISPONIVEL" ? 
+          `<button onclick="preencherVenda('${row[2]}')">Vender</button>` 
+          : "-"}
+      </td>
+    </tr>`;
+  });
+}
+
+function preencherVenda(modelo) {
+  vModelo.value = modelo;
+}
+
+// ================= VENDA =================
+
+async function vender() {
+  await post({
+    action: "vender",
+    modelo: vModelo.value,
+    cliente: cliente.value,
+    valorVenda: Number(valorVenda.value),
+    formaPagamento: formaPagamento.value
+  });
+
+  loadEstoque();
+  loadVendas();
+}
+
+// ================= VENDAS =================
+
+async function loadVendas() {
+  const data = await get("getVendas");
+
+  let total = 0;
+  vendas.innerHTML = "";
+
+  data.forEach((row, i) => {
+    if (i === 0) return;
+
+    total += Number(row[5]);
+
+    vendas.innerHTML += `
+    <tr>
+      <td>${new Date(row[0]).toLocaleDateString()}</td>
+      <td>${row[1]}</td>
+      <td>${row[2]}</td>
+      <td>R$ ${row[3]}</td>
+      <td>R$ ${row[4]}</td>
+      <td style="color:green;">R$ ${row[5]}</td>
+      <td>${row[6]}</td>
+    </tr>`;
+  });
+
+  lucro.innerText = "R$ " + total.toFixed(2);
+}
+
+// ================= PROMISSÓRIAS =================
+
+async function addPromissoria() {
+  await post({
+    action: "addPromissoria",
+    cliente: pCliente.value,
+    modelo: pModelo.value,
+    valorTotal: Number(valorTotal.value),
+    parcelas: Number(parcelas.value)
+  });
+
+  loadPromissorias();
+}
+
+async function loadPromissorias() {
+  const data = await get("getPromissorias");
+
+  const hoje = new Date();
+  promissorias.innerHTML = "";
+
+  data.forEach((row, i) => {
+    if (i === 0) return;
+
+    const venc = new Date(row[5]);
+    let status = "EM DIA";
+    let classe = "status-ok";
+
+    if (venc < hoje) {
+      status = "ATRASADO";
+      classe = "status-atrasado";
+    }
+
+    promissorias.innerHTML += `
+    <tr>
+      <td>${row[0]}</td>
+      <td>${row[1]}</td>
+      <td>${row[2]}/${row[3]}</td>
+      <td>R$ ${row[4]}</td>
+      <td>${venc.toLocaleDateString()}</td>
+      <td class="${classe}">${status}</td>
+    </tr>`;
+  });
+}
+
+// ================= INIT =================
+
+loadEstoque();
+loadVendas();
+loadPromissorias();
+
+</script>
+
+</body>
+</html>
