@@ -12,29 +12,36 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:Arial;
+  font-family:Arial, sans-serif;
 }
 
 body{
-  background:#f1f5f9;
+  background:#f4f6f9;
+  color:#1e293b;
   padding:20px;
 }
 
 .container{
-  max-width:1300px;
+  max-width:1400px;
   margin:auto;
 }
 
 .topo{
-  background:linear-gradient(135deg,#1e3c72,#2563eb);
+  background:#1e293b;
   color:white;
-  padding:25px;
-  border-radius:20px;
+  padding:28px;
+  border-radius:18px;
   margin-bottom:20px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.08);
 }
 
 .topo h1{
-  font-size:32px;
+  font-size:30px;
+  margin-bottom:6px;
+}
+
+.topo p{
+  color:#cbd5e1;
 }
 
 .cards{
@@ -47,14 +54,16 @@ body{
 .card{
   background:white;
   padding:20px;
-  border-radius:15px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+  border-radius:16px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.06);
+  border:1px solid #e2e8f0;
 }
 
 .card h3{
-  color:#666;
-  font-size:14px;
+  color:#64748b;
+  font-size:13px;
   margin-bottom:10px;
+  font-weight:600;
 }
 
 .card p{
@@ -62,76 +71,93 @@ body{
   font-weight:bold;
 }
 
-.formulario{
-  background:white;
-  padding:20px;
-  border-radius:15px;
-  margin-bottom:20px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.08);
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:15px;
-}
-
-input,select{
-  width:100%;
-  padding:12px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  outline:none;
-}
-
-button{
-  border:none;
-  border-radius:10px;
-  padding:12px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.btn{
-  background:#2563eb;
-  color:white;
-  width:100%;
-  margin-top:15px;
-}
-
-.btn:hover{
-  opacity:0.9;
-}
-
 .busca{
   margin-bottom:20px;
 }
 
 .busca input{
-  background:white;
-  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+  width:100%;
+  padding:15px;
   border:none;
-  font-size:16px;
+  border-radius:14px;
+  background:white;
+  box-shadow:0 3px 10px rgba(0,0,0,0.06);
+  font-size:15px;
+}
+
+.formulario{
+  background:white;
+  padding:22px;
+  border-radius:18px;
+  margin-bottom:25px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.06);
+}
+
+.formulario h2{
+  margin-bottom:20px;
+  font-size:22px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+
+input,select{
+  width:100%;
+  padding:13px;
+  border:1px solid #dbe2ea;
+  border-radius:12px;
+  outline:none;
+  transition:0.2s;
+}
+
+input:focus,
+select:focus{
+  border-color:#2563eb;
+}
+
+button{
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.btn{
+  width:100%;
+  background:#2563eb;
+  color:white;
+  padding:14px;
+  margin-top:16px;
+}
+
+.btn:hover{
+  opacity:0.95;
 }
 
 .grupo{
   background:white;
-  border-radius:15px;
-  margin-bottom:20px;
+  border-radius:18px;
   overflow:hidden;
-  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+  margin-bottom:18px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.06);
 }
 
 .grupo-topo{
-  background:#1e293b;
-  color:white;
-  padding:18px;
+  padding:18px 22px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  flex-wrap:wrap;
-  gap:10px;
   cursor:pointer;
+  border-bottom:1px solid #eef2f7;
+}
+
+.grupo-left{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
 }
 
 .grupo-nome{
@@ -139,15 +165,31 @@ button{
   font-weight:bold;
 }
 
-.grupo-info{
-  font-size:13px;
-  opacity:0.9;
-  margin-top:5px;
+.grupo-sub{
+  color:#64748b;
+  font-size:14px;
+}
+
+.grupo-right{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.grupo-total{
+  font-size:24px;
+  font-weight:bold;
+}
+
+.seta{
+  font-size:20px;
+  color:#64748b;
 }
 
 .parcelas{
-  padding:15px;
   display:none;
+  padding:18px;
+  background:#f8fafc;
 }
 
 .parcelas.aberto{
@@ -155,44 +197,43 @@ button{
 }
 
 .parcela{
-  border:1px solid #eee;
-  border-radius:12px;
+  background:white;
+  border:1px solid #e2e8f0;
+  border-radius:14px;
+  margin-bottom:14px;
   overflow:hidden;
-  margin-bottom:12px;
 }
 
 .parcela-topo{
-  padding:15px;
+  padding:16px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  flex-wrap:wrap;
-  gap:10px;
   cursor:pointer;
+  gap:15px;
 }
 
-.parcela-detalhes{
-  display:none;
-  border-top:1px solid #eee;
-  padding:15px;
-  background:#fafafa;
-}
-
-.parcela-detalhes.aberto{
-  display:block;
-}
-
-.parcela-esquerda{
+.parcela-left{
   flex:1;
 }
 
-.parcela-direita{
-  text-align:right;
+.parcela-desc{
+  font-size:16px;
+  font-weight:bold;
+  margin-bottom:8px;
 }
 
-.status{
+.parcela-info{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  color:#64748b;
+  font-size:13px;
+}
+
+.badge{
   padding:5px 10px;
-  border-radius:20px;
+  border-radius:30px;
   font-size:12px;
   font-weight:bold;
 }
@@ -212,56 +253,69 @@ button{
   color:#dc2626;
 }
 
-.btnPago{
-  background:#16a34a;
-  color:white;
-  padding:10px 14px;
-  margin-top:12px;
-}
-
-.valor{
+.parcela-valor{
   font-size:22px;
   font-weight:bold;
 }
 
-.vencimento{
-  color:#666;
-  font-size:13px;
-  margin-top:5px;
+.parcela-detalhes{
+  display:none;
+  padding:18px;
+  border-top:1px solid #eef2f7;
+  background:#fcfcfd;
 }
 
-.resumo-parcela{
+.parcela-detalhes.aberto{
+  display:block;
+}
+
+.resumo-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:15px;
+  gap:12px;
 }
 
-.caixa-info{
-  background:white;
+.info-box{
+  background:#f8fafc;
   border-radius:12px;
-  padding:15px;
-  border:1px solid #eee;
+  padding:14px;
+  border:1px solid #e2e8f0;
 }
 
-.caixa-info span{
-  font-size:12px;
-  color:#666;
+.info-box span{
   display:block;
-  margin-bottom:5px;
+  font-size:12px;
+  color:#64748b;
+  margin-bottom:6px;
 }
 
-.caixa-info strong{
+.info-box strong{
   font-size:18px;
 }
 
-.seta{
-  font-size:20px;
+.btnPago{
+  margin-top:16px;
+  width:100%;
+  background:#16a34a;
+  color:white;
+  padding:13px;
+}
+
+.btnPago:hover{
+  opacity:0.95;
 }
 
 @media(max-width:700px){
 
-  .topo h1{
-    font-size:24px;
+  .grupo-topo,
+  .parcela-topo{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .grupo-right{
+    width:100%;
+    justify-content:space-between;
   }
 
 }
@@ -273,46 +327,53 @@ button{
 <div class="container">
 
   <div class="topo">
-    <h1>🚗 Gestão Maiso Veículos</h1>
-    <p>Controle Inteligente de Promissórias</p>
+    <h1>Gestão Financeira</h1>
+    <p>Controle simples e organizado de clientes e parcelas</p>
   </div>
 
   <div class="cards">
 
     <div class="card">
-      <h3>💰 TOTAL A RECEBER</h3>
+      <h3>TOTAL A RECEBER</h3>
       <p id="totalReceber">R$ 0</p>
     </div>
 
     <div class="card">
-      <h3>📅 RECEBER ESTE MÊS</h3>
-      <p id="mesReceber">R$ 0</p>
+      <h3>RECEBER HOJE</h3>
+      <p id="receberHoje">R$ 0</p>
     </div>
 
     <div class="card">
-      <h3>✅ TOTAL RECEBIDO</h3>
+      <h3>RECEBER AMANHÃ</h3>
+      <p id="receberAmanha">R$ 0</p>
+    </div>
+
+    <div class="card">
+      <h3>TOTAL RECEBIDO</h3>
       <p id="totalPago">R$ 0</p>
     </div>
 
     <div class="card">
-      <h3>⚠️ ATRASADO</h3>
+      <h3>ATRASADO</h3>
       <p id="totalAtrasado">R$ 0</p>
     </div>
 
   </div>
 
   <div class="busca">
+
     <input
       type="text"
       id="busca"
-      placeholder="🔎 Buscar cliente, descrição ou parcela..."
+      placeholder="Buscar cliente ou descrição"
       onkeyup="carregar()"
     >
+
   </div>
 
   <div class="formulario">
 
-    <h2 style="margin-bottom:20px;">Nova Promissória</h2>
+    <h2>Nova Promissória</h2>
 
     <div class="grid">
 
@@ -350,7 +411,7 @@ button{
 
 <script>
 
-const API = 'https://script.google.com/macros/s/AKfycbyEw4JNV31NPsKNR8IQAc915VHnwuzKwmjdKo25BXMlBJtAc4-nC8rm7x_sX022kQKb/exec';
+const API = 'COLE_SEU_LINK_AQUI';
 
 async function api(acao,dados={}){
 
@@ -410,14 +471,16 @@ async function carregar(){
 
   const dados = resultado.data || resultado;
 
-  const busca = document.getElementById('busca').value.toLowerCase();
+  const busca = document
+    .getElementById('busca')
+    .value
+    .toLowerCase();
 
   const filtrados = dados.filter(item=>{
 
     return (
       String(item[2]).toLowerCase().includes(busca) ||
-      String(item[4]).toLowerCase().includes(busca) ||
-      String(item[5]).includes(busca)
+      String(item[4]).toLowerCase().includes(busca)
     );
 
   });
@@ -433,50 +496,60 @@ function calcularResumo(lista){
   let totalReceber = 0;
   let totalPago = 0;
   let totalAtrasado = 0;
-  let receberMes = 0;
+  let receberHoje = 0;
+  let receberAmanha = 0;
 
   const hoje = new Date();
+
+  hoje.setHours(0,0,0,0);
+
+  const amanha = new Date(hoje);
+
+  amanha.setDate(amanha.getDate()+1);
 
   lista.forEach(item=>{
 
     const valor = Number(item[7]);
-    const status = item[9];
-    const vencimento = new Date(item[8]);
 
-    if(status == 'PENDENTE'){
+    const status = item[10] || item[9];
+
+    const vencimento = new Date(item[9] || item[8]);
+
+    vencimento.setHours(0,0,0,0);
+
+    if(status === 'PENDENTE'){
 
       totalReceber += valor;
 
-      if(
-        vencimento.getMonth() == hoje.getMonth() &&
-        vencimento.getFullYear() == hoje.getFullYear()
-      ){
-        receberMes += valor;
+      if(vencimento.getTime() === hoje.getTime()){
+        receberHoje += valor;
+      }
+
+      if(vencimento.getTime() === amanha.getTime()){
+        receberAmanha += valor;
       }
 
     }
 
-    if(status == 'PAGO'){
+    if(status === 'PAGO'){
       totalPago += valor;
     }
 
-    if(status == 'ATRASADO'){
+    if(status === 'ATRASADO'){
       totalAtrasado += valor;
     }
 
   });
 
-  document.getElementById('totalReceber').innerHTML =
-    dinheiro(totalReceber);
+  document.getElementById('totalReceber').innerHTML = dinheiro(totalReceber);
 
-  document.getElementById('mesReceber').innerHTML =
-    dinheiro(receberMes);
+  document.getElementById('receberHoje').innerHTML = dinheiro(receberHoje);
 
-  document.getElementById('totalPago').innerHTML =
-    dinheiro(totalPago);
+  document.getElementById('receberAmanha').innerHTML = dinheiro(receberAmanha);
 
-  document.getElementById('totalAtrasado').innerHTML =
-    dinheiro(totalAtrasado);
+  document.getElementById('totalPago').innerHTML = dinheiro(totalPago);
+
+  document.getElementById('totalAtrasado').innerHTML = dinheiro(totalAtrasado);
 
 }
 
@@ -508,37 +581,40 @@ function agruparClientes(lista){
 
     parcelas.forEach(p=>{
 
-      if(p[9] != 'PAGO'){
+      const status = p[10] || p[9];
+
+      if(status !== 'PAGO'){
         totalCliente += Number(p[7]);
       }
 
     });
 
     let html = `
+
       <div class="grupo">
 
         <div class="grupo-topo"
           onclick="toggleCliente(${index})">
 
-          <div>
+          <div class="grupo-left">
 
             <div class="grupo-nome">
-              👤 ${nome}
+              ${nome}
             </div>
 
-            <div class="grupo-info">
+            <div class="grupo-sub">
               ${parcelas.length} parcela(s)
             </div>
 
           </div>
 
-          <div style="display:flex;align-items:center;gap:15px;">
+          <div class="grupo-right">
 
-            <div class="valor">
+            <div class="grupo-total">
               ${dinheiro(totalCliente)}
             </div>
 
-            <div class="seta" id="setaCliente${index}">
+            <div class="seta" id="seta${index}">
               ▼
             </div>
 
@@ -546,96 +622,98 @@ function agruparClientes(lista){
 
         </div>
 
-        <div class="parcelas"
-          id="cliente${index}">
+        <div class="parcelas" id="cliente${index}">
+
     `;
 
     parcelas.forEach((p,i)=>{
 
+      const status = p[10] || p[9];
+
       let classe = 'pendente';
 
-      if(p[9] == 'PAGO'){
-        classe = 'pago';
-      }
+      if(status === 'PAGO') classe = 'pago';
 
-      if(p[9] == 'ATRASADO'){
-        classe = 'atrasado';
-      }
+      if(status === 'ATRASADO') classe = 'atrasado';
 
       const valorParcela = Number(p[7]);
+
       const totalParcelas = Number(p[6]);
-      const valorTotal = valorParcela * totalParcelas;
+
+      const valorTotal = Number(p[8]);
+
+      const vencimento = new Date(p[9] || p[8]);
 
       html += `
+
         <div class="parcela">
 
-          <div class="parcela-topo"
+          <div
+            class="parcela-topo"
             onclick="toggleParcela('${index}_${i}')">
 
-            <div class="parcela-esquerda">
+            <div class="parcela-left">
 
-              <div>
-                <strong>
-                  ${p[4] || 'Sem descrição'}
-                </strong>
+              <div class="parcela-desc">
+                ${p[4] || 'Sem descrição'}
               </div>
 
-              <div class="vencimento">
-                Parcela ${p[5]}/${p[6]}
-                •
-                Vence:
-                ${new Date(p[8]).toLocaleDateString('pt-BR')}
+              <div class="parcela-info">
+
+                <span>
+                  Parcela ${p[5]}/${p[6]}
+                </span>
+
+                <span>
+                  ${vencimento.toLocaleDateString('pt-BR')}
+                </span>
+
+                <span class="badge ${classe}">
+                  ${status}
+                </span>
+
               </div>
 
             </div>
 
-            <div class="parcela-direita">
-
-              <div class="valor">
-                ${dinheiro(valorParcela)}
-              </div>
-
-              <div style="margin-top:8px;">
-                <span class="status ${classe}">
-                  ${p[9]}
-                </span>
-              </div>
-
+            <div class="parcela-valor">
+              ${dinheiro(valorParcela)}
             </div>
 
           </div>
 
-          <div class="parcela-detalhes"
+          <div
+            class="parcela-detalhes"
             id="parcela${index}_${i}">
 
-            <div class="resumo-parcela">
+            <div class="resumo-grid">
 
-              <div class="caixa-info">
+              <div class="info-box">
                 <span>VALOR TOTAL</span>
                 <strong>${dinheiro(valorTotal)}</strong>
               </div>
 
-              <div class="caixa-info">
-                <span>TOTAL DE PARCELAS</span>
+              <div class="info-box">
+                <span>PARCELAMENTO</span>
                 <strong>${totalParcelas}x</strong>
               </div>
 
-              <div class="caixa-info">
-                <span>VALOR DA PARCELA</span>
+              <div class="info-box">
+                <span>VALOR DE CADA PARCELA</span>
                 <strong>${dinheiro(valorParcela)}</strong>
               </div>
 
             </div>
 
             ${
-              p[9] != 'PAGO'
+              status !== 'PAGO'
               ?
               `
-              <button
-                class="btnPago"
-                onclick="pagar('${p[0]}')">
-                RECEBER PARCELA
-              </button>
+                <button
+                  class="btnPago"
+                  onclick="pagar('${p[0]}')">
+                  MARCAR COMO RECEBIDO
+                </button>
               `
               :
               ''
@@ -644,13 +722,17 @@ function agruparClientes(lista){
           </div>
 
         </div>
+
       `;
 
     });
 
     html += `
+
         </div>
+
       </div>
+
     `;
 
     container.innerHTML += html;
@@ -662,7 +744,8 @@ function agruparClientes(lista){
 function toggleCliente(id){
 
   const box = document.getElementById('cliente'+id);
-  const seta = document.getElementById('setaCliente'+id);
+
+  const seta = document.getElementById('seta'+id);
 
   box.classList.toggle('aberto');
 
@@ -695,7 +778,7 @@ async function pagar(id){
 
 function dinheiro(valor){
 
-  return valor.toLocaleString('pt-BR',{
+  return Number(valor).toLocaleString('pt-BR',{
     style:'currency',
     currency:'BRL'
   });
