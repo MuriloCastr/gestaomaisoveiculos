@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-  <base target="_top">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestão Maiso Veículos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Gestão Maiso Veículos - Controle de Parcelas</title>
   
   <style>
     * {
@@ -19,6 +18,7 @@
       --success: #10b981;
       --danger: #ef4444;
       --warning: #f59e0b;
+      --info: #3b82f6;
       --dark: #1f2937;
       --gray: #6b7280;
       --light: #f3f4f6;
@@ -40,6 +40,7 @@
       margin: 0 auto;
     }
 
+    /* Header */
     .header {
       background: var(--white);
       border-radius: var(--radius);
@@ -50,6 +51,7 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
+      gap: 15px;
     }
 
     .logo h1 {
@@ -66,6 +68,15 @@
       margin-top: 5px;
     }
 
+    .data-atual {
+      background: var(--light);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: var(--dark);
+    }
+
+    /* Dashboard Resumo */
     .dashboard-resumo {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -79,7 +90,7 @@
       padding: 20px;
       box-shadow: var(--shadow);
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .card-resumo:hover {
@@ -87,11 +98,12 @@
       box-shadow: var(--shadow-lg);
     }
 
-    .card-resumo .icon { font-size: 28px; margin-bottom: 10px; }
-    .card-resumo .label { font-size: 12px; color: var(--gray); text-transform: uppercase; }
-    .card-resumo .value { font-size: 28px; font-weight: bold; color: var(--dark); }
-    .card-resumo .sub { font-size: 11px; margin-top: 5px; color: var(--gray); }
+    .card-resumo .icon { font-size: 32px; margin-bottom: 10px; }
+    .card-resumo .label { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
+    .card-resumo .value { font-size: 28px; font-weight: bold; color: var(--dark); margin: 8px 0; }
+    .card-resumo .sub { font-size: 11px; color: var(--gray); }
 
+    /* Previsão Mensal */
     .previsao-mensal {
       background: var(--white);
       border-radius: var(--radius);
@@ -106,6 +118,7 @@
       align-items: center;
       margin-bottom: 20px;
       flex-wrap: wrap;
+      gap: 10px;
     }
 
     .previsao-header h2 {
@@ -118,7 +131,7 @@
 
     .mes-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
     }
 
@@ -157,11 +170,13 @@
       font-size: 13px;
       color: var(--gray);
       margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e2e8f0;
     }
 
     .parcela-item {
       background: white;
-      padding: 8px 12px;
+      padding: 10px 12px;
       margin: 8px 0;
       border-radius: 8px;
       display: flex;
@@ -171,10 +186,22 @@
       border: 1px solid #e2e8f0;
     }
 
-    .parcela-cliente { font-weight: 600; }
-    .parcela-valor { color: var(--primary); font-weight: bold; }
-    .parcela-num { font-size: 11px; color: var(--gray); }
+    .parcela-cliente {
+      font-weight: 600;
+      color: var(--dark);
+    }
 
+    .parcela-valor {
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .parcela-num {
+      font-size: 11px;
+      color: var(--gray);
+    }
+
+    /* Formulário */
     .form-section {
       background: var(--white);
       border-radius: var(--radius);
@@ -183,9 +210,15 @@
       box-shadow: var(--shadow);
     }
 
+    .form-section h2 {
+      margin-bottom: 20px;
+      color: var(--dark);
+      font-size: 20px;
+    }
+
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 15px;
       margin-bottom: 20px;
     }
@@ -200,6 +233,7 @@
       font-size: 12px;
       font-weight: 600;
       color: var(--gray);
+      text-transform: uppercase;
     }
 
     input, select {
@@ -207,13 +241,24 @@
       border: 2px solid var(--light);
       border-radius: 8px;
       font-size: 14px;
+      transition: all 0.2s;
       outline: none;
     }
 
-    input:focus {
+    input:focus, select:focus {
       border-color: var(--primary);
     }
 
+    .resumo-parcelas {
+      background: var(--light);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    /* Botões */
     .btn {
       padding: 12px 24px;
       border: none;
@@ -221,29 +266,63 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
+      font-size: 14px;
     }
 
-    .btn-primary { background: var(--primary); color: white; width: 100%; }
-    .btn-primary:hover { background: var(--primary-dark); }
-    .btn-success { background: var(--success); color: white; }
-    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      width: 100%;
+    }
 
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      opacity: 0.9;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    /* Filtros */
     .filtros {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 20px;
+      margin-top: 15px;
     }
+
     .filtros input, .filtros select {
       flex: 1;
       min-width: 150px;
     }
 
+    /* Tabela */
     .tabela-section {
       background: var(--white);
       border-radius: var(--radius);
       padding: 20px;
       overflow-x: auto;
+      box-shadow: var(--shadow);
+    }
+
+    .tabela-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     table {
@@ -256,6 +335,9 @@
       padding: 12px;
       background: var(--light);
       font-weight: 600;
+      color: var(--dark);
+      position: sticky;
+      top: 0;
     }
 
     td {
@@ -267,6 +349,7 @@
       background: var(--light);
     }
 
+    /* Status */
     .status {
       display: inline-block;
       padding: 4px 12px;
@@ -279,6 +362,28 @@
     .status-pago { background: #e8f5e9; color: #2e7d32; }
     .status-atrasado { background: #ffebee; color: #d32f2f; }
 
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .spinner {
+      border: 3px solid var(--light);
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Toast */
     .toast {
       position: fixed;
       bottom: 20px;
@@ -289,6 +394,7 @@
       border-radius: 8px;
       z-index: 1000;
       animation: slideIn 0.3s ease;
+      box-shadow: var(--shadow-lg);
     }
 
     @keyframes slideIn {
@@ -296,9 +402,13 @@
       to { transform: translateX(0); opacity: 1; }
     }
 
+    /* Responsivo */
     @media (max-width: 768px) {
       body { padding: 10px; }
+      .header { flex-direction: column; text-align: center; }
       .mes-grid { grid-template-columns: 1fr; }
+      th, td { font-size: 11px; padding: 8px; }
+      .btn-sm { padding: 4px 8px; font-size: 10px; }
     }
   </style>
 </head>
@@ -306,15 +416,17 @@
 
 <div class="container">
   
+  <!-- Header -->
   <div class="header">
     <div class="logo">
       <h1>🚗 Gestão Maiso Veículos</h1>
       <p>Controle de Parcelas e Recebíveis</p>
     </div>
-    <div id="dataAtual" style="color: var(--gray);"></div>
+    <div class="data-atual" id="dataAtual"></div>
   </div>
 
-  <div class="dashboard-resumo" id="dashboardResumo">
+  <!-- Dashboard Resumo -->
+  <div class="dashboard-resumo">
     <div class="card-resumo" onclick="filtrarPorStatus('PENDENTE')">
       <div class="icon">📋</div>
       <div class="label">A RECEBER</div>
@@ -341,22 +453,27 @@
     </div>
   </div>
 
+  <!-- Previsão por Mês -->
   <div class="previsao-mensal">
     <div class="previsao-header">
       <h2>📅 PREVISÃO DE RECEBIMENTO POR MÊS</h2>
-      <span style="font-size: 13px; color: var(--gray);">Clique no mês para ver detalhes</span>
+      <span style="font-size: 13px; color: var(--gray);">💡 Clique no mês para ver detalhes</span>
     </div>
     <div id="previsaoMensal" class="mes-grid">
-      <div style="text-align: center; padding: 40px;">Carregando...</div>
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Carregando previsões...</p>
+      </div>
     </div>
   </div>
 
+  <!-- Formulário de Nova Promissória -->
   <div class="form-section">
-    <h2 style="margin-bottom: 20px;">➕ NOVA PROMISSÓRIA PARCELADA</h2>
+    <h2>➕ NOVA PROMISSÓRIA PARCELADA</h2>
     <div class="form-grid">
       <div class="input-group">
         <label>Cliente *</label>
-        <input type="text" id="nome" placeholder="Nome completo">
+        <input type="text" id="nome" placeholder="Nome completo do cliente">
       </div>
       <div class="input-group">
         <label>Telefone</label>
@@ -392,137 +509,153 @@
         <input type="date" id="vencimento">
       </div>
     </div>
-    <div id="resumoParcelas" style="background: var(--light); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+    <div id="resumoParcelas" class="resumo-parcelas">
       💰 Preencha o valor total para ver o resumo das parcelas
     </div>
     <button class="btn btn-primary" onclick="salvarComParcelas()">💾 Salvar Promissória Parcelada</button>
   </div>
 
+  <!-- Filtros -->
   <div class="form-section">
-    <h2 style="margin-bottom: 15px;">🔍 Filtrar Parcelas</h2>
+    <h2>🔍 Filtrar Parcelas</h2>
     <div class="filtros">
       <input type="text" id="buscaCliente" placeholder="Buscar por cliente..." onkeyup="aplicarFiltros()">
       <select id="filtroStatus" onchange="aplicarFiltros()">
-        <option value="TODOS">Todos os status</option>
-        <option value="PENDENTE">Pendentes</option>
-        <option value="PAGO">Pagos</option>
-        <option value="ATRASADO">Atrasados</option>
+        <option value="TODOS">📌 Todos os status</option>
+        <option value="PENDENTE">⏳ Pendentes</option>
+        <option value="PAGO">✅ Pago</option>
+        <option value="ATRASADO">⚠️ Atrasado</option>
       </select>
-      <button class="btn btn-primary btn-sm" onclick="limparFiltros()">Limpar Filtros</button>
+      <button class="btn btn-primary btn-sm" onclick="limparFiltros()">🗑️ Limpar Filtros</button>
     </div>
   </div>
 
+  <!-- Tabela de Parcelas -->
   <div class="tabela-section">
-    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+    <div class="tabela-header">
       <h2>📋 Lista de Parcelas</h2>
       <button class="btn btn-primary btn-sm" onclick="carregarTudo()">🔄 Atualizar</button>
     </div>
     <div id="tabelaContainer">
-      <div style="text-align: center; padding: 40px;">Carregando...</div>
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Carregando parcelas...</p>
+      </div>
     </div>
   </div>
 
 </div>
 
 <script>
-// Usando google.script.run (SEM CORS, roda dentro do Apps Script)
-let dadosAtuais = [];
+// ==================== CONFIGURAÇÃO DO SEU LINK ====================
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjkCSEo7LIQ9gHGpds8SrkBIzEovlD-PYVd3wnB87bzdwUzsYph0ggiknzWAYJ0gnC/exec';
 
-function iniciar() {
-  document.getElementById('vencimento').valueAsDate = new Date();
-  document.getElementById('dataAtual').innerHTML = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  
-  document.getElementById('valorTotal').addEventListener('input', calcularResumoParcelas);
-  document.getElementById('numParcelas').addEventListener('change', calcularResumoParcelas);
-  
-  carregarTudo();
-}
-
-function calcularResumoParcelas() {
-  const valorTotal = parseFloat(document.getElementById('valorTotal').value) || 0;
-  const numParcelas = parseInt(document.getElementById('numParcelas').value) || 1;
-  const valorParcela = valorTotal / numParcelas;
-  
-  const div = document.getElementById('resumoParcelas');
-  if (valorTotal > 0) {
-    div.innerHTML = `
-      <strong>📊 Resumo:</strong> ${numParcelas}x de ${formatarMoeda(valorParcela)}<br>
-      <span style="font-size: 13px; color: #6b7280;">Total: ${formatarMoeda(valorTotal)}</span>
-    `;
-  } else {
-    div.innerHTML = '💰 Preencha o valor total para ver o resumo das parcelas';
+// ==================== FUNÇÃO PRINCIPAL DE COMUNICAÇÃO ====================
+async function chamarAppsScript(acao, dados = {}) {
+  try {
+    mostrarToast('🔄 Processando...', 'info');
+    
+    const payload = { acao, ...dados };
+    
+    const response = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    const resultado = await response.json();
+    return resultado;
+    
+  } catch (error) {
+    console.error('Erro na requisição:', error);
+    mostrarToast('❌ Erro de conexão: ' + error.message, 'error');
+    return { status: 'error', message: error.message };
   }
 }
 
-function salvarComParcelas() {
+// ==================== SALVAR PROMISSÓRIA ====================
+async function salvarComParcelas() {
+  const nome = document.getElementById('nome').value;
+  const valorTotal = document.getElementById('valorTotal').value;
+  
+  if (!nome) {
+    mostrarToast('❌ Preencha o nome do cliente', 'error');
+    return;
+  }
+  
+  if (!valorTotal || valorTotal <= 0) {
+    mostrarToast('❌ Informe um valor válido', 'error');
+    return;
+  }
+  
   const dados = {
-    nome: document.getElementById('nome').value,
+    nome: nome,
     telefone: document.getElementById('telefone').value,
     descricao: document.getElementById('descricao').value,
-    valorTotal: document.getElementById('valorTotal').value,
+    valorTotal: valorTotal,
     numParcelas: document.getElementById('numParcelas').value,
     vencimento: document.getElementById('vencimento').value
   };
   
-  if (!dados.nome) {
-    mostrarToast('❌ Preencha o nome do cliente', 'error');
-    return;
-  }
-  if (!dados.valorTotal || dados.valorTotal <= 0) {
-    mostrarToast('❌ Informe o valor total', 'error');
-    return;
-  }
-  
   const btn = event.target;
+  const textoOriginal = btn.innerHTML;
   btn.innerHTML = '💾 Salvando...';
   btn.disabled = true;
   
-  google.script.run
-    .withSuccessHandler((resultado) => {
-      mostrarToast(resultado.mensagem, resultado.sucesso ? 'success' : 'error');
-      if (resultado.sucesso) {
-        document.getElementById('nome').value = '';
-        document.getElementById('telefone').value = '';
-        document.getElementById('descricao').value = '';
-        document.getElementById('valorTotal').value = '';
-        document.getElementById('resumoParcelas').innerHTML = '💰 Preencha o valor total para ver o resumo das parcelas';
-        carregarTudo();
-      }
-      btn.innerHTML = '💾 Salvar Promissória Parcelada';
-      btn.disabled = false;
-    })
-    .withFailureHandler((error) => {
-      mostrarToast('❌ Erro ao salvar: ' + error.message, 'error');
-      btn.innerHTML = '💾 Salvar Promissória Parcelada';
-      btn.disabled = false;
-    })
-    .salvarDividaComParcelas(dados);
+  const resultado = await chamarAppsScript('salvar', dados);
+  
+  if (resultado.status === 'success' && resultado.data?.sucesso) {
+    mostrarToast(resultado.data.mensagem, 'success');
+    
+    // Limpar formulário
+    document.getElementById('nome').value = '';
+    document.getElementById('telefone').value = '';
+    document.getElementById('descricao').value = '';
+    document.getElementById('valorTotal').value = '';
+    document.getElementById('vencimento').valueAsDate = new Date();
+    document.getElementById('resumoParcelas').innerHTML = '💰 Preencha o valor total para ver o resumo das parcelas';
+    
+    // Recarregar dados
+    carregarTudo();
+  } else {
+    mostrarToast(resultado.data?.mensagem || resultado.message || 'Erro ao salvar', 'error');
+  }
+  
+  btn.innerHTML = textoOriginal;
+  btn.disabled = false;
 }
 
-function carregarTudo() {
-  google.script.run
-    .withSuccessHandler((resumo) => {
-      atualizarDashboard(resumo);
-      renderizarPrevisaoMensal(resumo.previsaoPorMes);
-      dadosAtuais = resumo.contratos;
-      aplicarFiltros();
-    })
-    .withFailureHandler((error) => {
-      console.error('Erro:', error);
-      mostrarToast('❌ Erro ao carregar dados', 'error');
-    })
-    .obterResumoCompleto();
+// ==================== CARREGAR DADOS PRINCIPAIS ====================
+async function carregarTudo() {
+  const resultado = await chamarAppsScript('resumo');
+  
+  if (resultado.status === 'success' && resultado.data) {
+    atualizarDashboard(resultado.data);
+    renderizarPrevisaoMensal(resultado.data.previsaoPorMes);
+    await carregarParcelas();
+  } else {
+    mostrarToast('❌ Erro ao carregar dados: ' + (resultado.message || 'Desconhecido'), 'error');
+  }
 }
 
 function atualizarDashboard(resumo) {
-  if (!resumo) return;
-  document.getElementById('totalPendente').innerHTML = formatarMoeda(resumo.resumo.totalPendente);
-  document.getElementById('totalPago').innerHTML = formatarMoeda(resumo.resumo.totalPago);
-  document.getElementById('totalAtrasado').innerHTML = formatarMoeda(resumo.resumo.totalAtrasado);
-  document.getElementById('qtdPendente').innerHTML = `${resumo.resumo.qtdPendente} parcelas`;
-  document.getElementById('qtdPago').innerHTML = `${resumo.resumo.qtdPago} parcelas`;
-  document.getElementById('qtdAtrasado').innerHTML = `${resumo.resumo.qtdAtrasado} parcelas`;
-  document.getElementById('percentual').innerHTML = `${resumo.resumo.percentualRecebido.toFixed(1)}%`;
+  if (!resumo?.resumo) return;
+  
+  const r = resumo.resumo;
+  document.getElementById('totalPendente').innerHTML = formatarMoeda(r.totalPendente);
+  document.getElementById('totalPago').innerHTML = formatarMoeda(r.totalPago);
+  document.getElementById('totalAtrasado').innerHTML = formatarMoeda(r.totalAtrasado);
+  document.getElementById('qtdPendente').innerHTML = `${r.qtdPendente} parcelas`;
+  document.getElementById('qtdPago').innerHTML = `${r.qtdPago} parcelas`;
+  document.getElementById('qtdAtrasado').innerHTML = `${r.qtdAtrasado} parcelas`;
+  document.getElementById('percentual').innerHTML = `${r.percentualRecebido.toFixed(1)}%`;
 }
 
 function renderizarPrevisaoMensal(previsao) {
@@ -574,64 +707,71 @@ function renderizarPrevisaoMensal(previsao) {
   container.innerHTML = html;
 }
 
-function verDetalhesMes(nomeMes) {
-  google.script.run
-    .withSuccessHandler((previsao) => {
-      const mes = previsao.find(m => m.mes === nomeMes);
-      if (mes && mes.parcelas.length > 0) {
-        let msg = `📅 ${nomeMes.toUpperCase()}\nTotal: ${formatarMoeda(mes.total)}\n\n📋 PARCELAS:\n`;
-        mes.parcelas.forEach(p => {
-          msg += `\n• ${p.cliente}\n  Parcela ${p.numero}/${p.totalParcelas}: ${formatarMoeda(p.valor)}\n  Vence: ${new Date(p.vencimento).toLocaleDateString('pt-BR')}`;
-        });
-        alert(msg);
-      }
-    })
-    .obterPrevisaoPorMes();
-}
-
-function aplicarFiltros() {
-  const filtros = {
-    cliente: document.getElementById('buscaCliente').value,
-    status: document.getElementById('filtroStatus').value
-  };
+async function verDetalhesMes(nomeMes) {
+  const resultado = await chamarAppsScript('previsao');
   
-  google.script.run
-    .withSuccessHandler(renderizarTabela)
-    .listarParcelas(filtros);
+  if (resultado.status === 'success' && resultado.data) {
+    const mes = resultado.data.find(m => m.mes === nomeMes);
+    if (mes && mes.parcelas.length > 0) {
+      let msg = `📅 ${nomeMes.toUpperCase()}\nTotal: ${formatarMoeda(mes.total)}\n\n📋 PARCELAS:\n`;
+      mes.parcelas.forEach(p => {
+        msg += `\n• ${p.cliente}\n  Parcela ${p.numero}/${p.totalParcelas}: ${formatarMoeda(p.valor)}\n  Vence: ${new Date(p.vencimento).toLocaleDateString('pt-BR')}`;
+      });
+      alert(msg);
+    }
+  }
 }
 
-function limparFiltros() {
-  document.getElementById('buscaCliente').value = '';
-  document.getElementById('filtroStatus').value = 'TODOS';
-  aplicarFiltros();
-}
-
-function filtrarPorStatus(status) {
-  document.getElementById('filtroStatus').value = status;
-  aplicarFiltros();
+// ==================== LISTAR PARCELAS ====================
+async function carregarParcelas() {
+  const cliente = document.getElementById('buscaCliente').value || '';
+  const status = document.getElementById('filtroStatus').value || 'TODOS';
+  
+  const resultado = await chamarAppsScript('listar', { filtros: { cliente, status } });
+  
+  if (resultado.status === 'success') {
+    renderizarTabela(resultado.data || []);
+  }
 }
 
 function renderizarTabela(parcelas) {
   const container = document.getElementById('tabelaContainer');
   
   if (!parcelas || parcelas.length === 0) {
-    container.innerHTML = `<div style="text-align:center;padding:40px"><div style="font-size:48px">📭</div><p>Nenhuma parcela encontrada</p></div>`;
+    container.innerHTML = `
+      <div style="text-align: center; padding: 40px;">
+        <div style="font-size: 48px;">📭</div>
+        <p>Nenhuma parcela encontrada</p>
+        <p style="font-size: 13px; color: #6b7280;">Cadastre uma promissória para começar</p>
+      </div>
+    `;
     return;
   }
   
-  let html = `<table><thead><tr><th>Cliente</th><th>Descrição</th><th>Parcela</th><th>Valor</th><th>Vencimento</th><th>Status</th><th>Ações</th></tr></thead><tbody>`;
+  let html = `</table><thead><tr>
+    <th>Cliente</th>
+    <th>Descrição</th>
+    <th>Parcela</th>
+    <th>Valor</th>
+    <th>Vencimento</th>
+    <th>Status</th>
+    <th>Ações</th>
+  </tr></thead><tbody>`;
   
   parcelas.forEach(p => {
     const id = p[0];
     const cliente = p[2];
-    const descricao = p[4];
+    const descricao = p[4] || '-';
     const parcelaNum = p[5];
     const totalParcelas = p[6];
     const valor = Number(p[7]);
     const vencimento = new Date(p[8]).toLocaleDateString('pt-BR');
     const status = p[9];
     
-    let statusClass = status === 'PENDENTE' ? 'status-pendente' : (status === 'PAGO' ? 'status-pago' : 'status-atrasado');
+    let statusClass = '';
+    if (status === 'PENDENTE') statusClass = 'status-pendente';
+    else if (status === 'PAGO') statusClass = 'status-pago';
+    else statusClass = 'status-atrasado';
     
     html += `<tr>
       <td><strong>${escapeHtml(cliente)}</strong></td>
@@ -641,7 +781,7 @@ function renderizarTabela(parcelas) {
       <td>${vencimento}</td>
       <td><span class="status ${statusClass}">${status}</span></td>
       <td>
-        ${status !== 'PAGO' ? `<button class="btn btn-success btn-sm" onclick="marcarPaga('${id}')">✅ Receber</button>` : ''}
+        ${status !== 'PAGO' ? `<button class="btn btn-success btn-sm" onclick="marcarPaga('${id}')">✅ Receber</button>` : '✅ Pago'}
        </td>
     </tr>`;
   });
@@ -650,20 +790,37 @@ function renderizarTabela(parcelas) {
   container.innerHTML = html;
 }
 
-function marcarPaga(id) {
+// ==================== MARCAR COMO PAGO ====================
+async function marcarPaga(id) {
   if (!confirm('Confirmar recebimento desta parcela?')) return;
   
-  google.script.run
-    .withSuccessHandler((resultado) => {
-      mostrarToast(resultado.mensagem, 'success');
-      carregarTudo();
-    })
-    .withFailureHandler((error) => {
-      mostrarToast('❌ Erro ao registrar pagamento', 'error');
-    })
-    .marcarParcelaPaga(id);
+  const resultado = await chamarAppsScript('pagar', { id: id });
+  
+  if (resultado.status === 'success' && resultado.data?.sucesso) {
+    mostrarToast(resultado.data.mensagem, 'success');
+    carregarTudo();
+  } else {
+    mostrarToast(resultado.data?.mensagem || 'Erro ao registrar pagamento', 'error');
+  }
 }
 
+// ==================== FILTROS ====================
+function aplicarFiltros() {
+  carregarParcelas();
+}
+
+function limparFiltros() {
+  document.getElementById('buscaCliente').value = '';
+  document.getElementById('filtroStatus').value = 'TODOS';
+  carregarParcelas();
+}
+
+function filtrarPorStatus(status) {
+  document.getElementById('filtroStatus').value = status;
+  carregarParcelas();
+}
+
+// ==================== UTILITÁRIOS ====================
 function formatarMoeda(valor) {
   return `R$ ${valor.toFixed(2).replace('.', ',')}`;
 }
@@ -678,13 +835,62 @@ function escapeHtml(text) {
 function mostrarToast(mensagem, tipo = 'info') {
   const toast = document.createElement('div');
   toast.className = 'toast';
-  const cores = { success: '#10b981', error: '#ef4444', warning: '#f59e0b', info: '#1f2937' };
+  
+  const cores = {
+    success: '#10b981',
+    error: '#ef4444',
+    warning: '#f59e0b',
+    info: '#1f2937'
+  };
+  
   toast.style.background = cores[tipo] || cores.info;
   toast.innerHTML = mensagem;
   document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
+  
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
 }
 
+function calcularResumoParcelas() {
+  const valorTotal = parseFloat(document.getElementById('valorTotal').value) || 0;
+  const numParcelas = parseInt(document.getElementById('numParcelas').value) || 1;
+  const valorParcela = valorTotal / numParcelas;
+  
+  const div = document.getElementById('resumoParcelas');
+  if (valorTotal > 0) {
+    div.innerHTML = `
+      <strong>📊 Resumo:</strong> ${numParcelas}x de ${formatarMoeda(valorParcela)}<br>
+      <span style="font-size: 13px;">Total: ${formatarMoeda(valorTotal)}</span>
+    `;
+  } else {
+    div.innerHTML = '💰 Preencha o valor total para ver o resumo das parcelas';
+  }
+}
+
+// ==================== INICIALIZAÇÃO ====================
+function iniciar() {
+  // Data atual
+  const hoje = new Date();
+  document.getElementById('dataAtual').innerHTML = hoje.toLocaleDateString('pt-BR', { 
+    weekday: 'long', 
+    day: 'numeric', 
+    month: 'long', 
+    year: 'numeric' 
+  });
+  
+  // Data padrão do vencimento
+  document.getElementById('vencimento').valueAsDate = new Date();
+  
+  // Event listeners
+  document.getElementById('valorTotal').addEventListener('input', calcularResumoParcelas);
+  document.getElementById('numParcelas').addEventListener('change', calcularResumoParcelas);
+  
+  // Carregar dados
+  carregarTudo();
+}
+
+// Iniciar quando a página carregar
 window.onload = iniciar;
 </script>
 
