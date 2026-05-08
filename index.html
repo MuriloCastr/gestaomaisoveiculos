@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>FinancePro</title>
+<title>Promissórias</title>
 
 <style>
 
@@ -285,8 +285,8 @@ button{
 <div class="container">
 
   <div class="topo">
-    <h1>FinancePro</h1>
-    <p>Controle moderno de promissórias</p>
+    <h1>Maiso Veículos</h1>
+    <p>Controle de promissórias</p>
   </div>
 
   <div class="cards">
@@ -353,25 +353,21 @@ button{
 
   </div>
 
-  <div class="filtros">
+<div class="filtros">
 
-    <div class="filtro ativo" onclick="setFiltro('TODOS',this)">
-      TODOS
-    </div>
-
-    <div class="filtro" onclick="setFiltro('PENDENTE',this)">
-      PENDENTES
-    </div>
-
-    <div class="filtro" onclick="setFiltro('ATRASADO',this)">
-      ATRASADOS
-    </div>
-
-    <div class="filtro" onclick="setFiltro('PAGO',this)">
-      PAGOS
-    </div>
-
+  <div class="filtro ativo" onclick="setFiltro('PENDENTE',this)">
+    PENDENTES
   </div>
+
+  <div class="filtro" onclick="setFiltro('ATRASADO',this)">
+    ATRASADOS
+  </div>
+
+  <div class="filtro" onclick="setFiltro('PAGO',this)">
+    PAGOS
+  </div>
+
+</div>
 
   <div class="busca">
     <input
@@ -390,7 +386,7 @@ button{
 
 const API='https://script.google.com/macros/s/AKfycbww_lQmPPVPo-BqEMlrl1yg6-jlrXbglt2rpFGF-d45JJtGtGWHB8kSQRFPUFCDx9Ki/exec';
 
-let FILTRO='TODOS';
+let FILTRO='PENDENTE';
 
 async function api(acao,dados={}){
 
@@ -510,13 +506,10 @@ async function carregar(){
     ){
       return;
     }
-
-    if(
-      FILTRO!=='TODOS' &&
-      status!==FILTRO
-    ){
-      return;
-    }
+js
+if(status !== FILTRO){
+  return;
+}
 
     if(status!=='PAGO'){
       totalReceber+=valor;
