@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -22,7 +23,7 @@ body{
 }
 
 .container{
-  max-width:1500px;
+  max-width:1450px;
   margin:auto;
 }
 
@@ -31,11 +32,10 @@ body{
   padding:30px;
   border-radius:24px;
   margin-bottom:25px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.3);
 }
 
 .topo h1{
-  font-size:36px;
+  font-size:34px;
   margin-bottom:8px;
 }
 
@@ -46,32 +46,31 @@ body{
 .cards{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
+  gap:16px;
   margin-bottom:25px;
 }
 
 .card{
   background:#1e293b;
-  border:1px solid rgba(255,255,255,.08);
   border-radius:22px;
   padding:22px;
 }
 
 .card h3{
   color:#94a3b8;
-  font-size:13px;
-  margin-bottom:12px;
+  font-size:12px;
+  margin-bottom:10px;
 }
 
 .card p{
-  font-size:28px;
+  font-size:30px;
   font-weight:bold;
 }
 
 .formulario{
   background:#1e293b;
-  padding:25px;
   border-radius:24px;
+  padding:25px;
   margin-bottom:25px;
 }
 
@@ -96,6 +95,19 @@ select{
   outline:none;
 }
 
+.preview{
+  margin-top:15px;
+  background:#0f172a;
+  padding:16px;
+  border-radius:16px;
+  color:#94a3b8;
+}
+
+.preview strong{
+  color:white;
+  font-size:20px;
+}
+
 button{
   border:none;
   cursor:pointer;
@@ -109,7 +121,26 @@ button{
   background:linear-gradient(135deg,#2563eb,#7c3aed);
   color:white;
   margin-top:18px;
-  font-size:15px;
+}
+
+.filtros{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+
+.filtro{
+  background:#1e293b;
+  color:#cbd5e1;
+  padding:12px 18px;
+  border-radius:14px;
+  cursor:pointer;
+}
+
+.filtro.ativo{
+  background:#2563eb;
+  color:white;
 }
 
 .busca{
@@ -123,9 +154,8 @@ button{
 .cliente{
   background:#1e293b;
   border-radius:22px;
-  margin-bottom:18px;
   overflow:hidden;
-  border:1px solid rgba(255,255,255,.06);
+  margin-bottom:18px;
 }
 
 .cliente-topo{
@@ -137,8 +167,14 @@ button{
 }
 
 .cliente-nome{
-  font-size:22px;
+  font-size:20px;
   font-weight:bold;
+}
+
+.cliente-sub{
+  color:#94a3b8;
+  margin-top:6px;
+  font-size:13px;
 }
 
 .cliente-total{
@@ -148,8 +184,8 @@ button{
 
 .parcelas{
   display:none;
-  padding:18px;
-  background:#0f172a;
+  padding:15px;
+  background:#111827;
 }
 
 .parcelas.aberto{
@@ -157,31 +193,32 @@ button{
 }
 
 .parcela{
-  background:#1e293b;
-  padding:18px;
+  background:#0f172a;
   border-radius:18px;
-  margin-bottom:14px;
+  padding:18px;
+  margin-bottom:12px;
 }
 
 .parcela-topo{
   display:flex;
   justify-content:space-between;
+  align-items:center;
   gap:20px;
   flex-wrap:wrap;
 }
 
-.parcela-info{
+.parcela-esq{
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:8px;
 }
 
 .parcela-desc{
-  font-size:18px;
+  font-size:17px;
   font-weight:bold;
 }
 
-.parcela-meta{
+.meta{
   display:flex;
   gap:12px;
   flex-wrap:wrap;
@@ -189,10 +226,15 @@ button{
   font-size:13px;
 }
 
+.valor{
+  font-size:26px;
+  font-weight:bold;
+}
+
 .badge{
-  padding:5px 12px;
+  padding:5px 10px;
   border-radius:30px;
-  font-size:12px;
+  font-size:11px;
   font-weight:bold;
 }
 
@@ -211,15 +253,10 @@ button{
   color:#fca5a5;
 }
 
-.valor{
-  font-size:28px;
-  font-weight:bold;
-}
-
 .btnPago{
   width:100%;
-  margin-top:15px;
-  padding:14px;
+  margin-top:14px;
+  padding:13px;
   background:#16a34a;
   color:white;
 }
@@ -227,8 +264,8 @@ button{
 .vazio{
   background:#1e293b;
   padding:40px;
-  text-align:center;
   border-radius:20px;
+  text-align:center;
   color:#94a3b8;
 }
 
@@ -249,8 +286,8 @@ button{
 <div class="container">
 
   <div class="topo">
-    <h1>Maiso Veículos</h1>
-    <p>Controle inteligente de clientes e parcelas</p>
+    <h1>FinancePro</h1>
+    <p>Controle moderno de promissórias</p>
   </div>
 
   <div class="cards">
@@ -261,8 +298,13 @@ button{
     </div>
 
     <div class="card">
-      <h3>TOTAL RECEBIDO</h3>
-      <p id="totalPago">R$ 0</p>
+      <h3>RECEBER ESTE MÊS</h3>
+      <p id="mesReceber">R$ 0</p>
+    </div>
+
+    <div class="card">
+      <h3>RECEBIDO ESTE MÊS</h3>
+      <p id="mesPago">R$ 0</p>
     </div>
 
     <div class="card">
@@ -270,20 +312,6 @@ button{
       <p id="totalAtrasado">R$ 0</p>
     </div>
 
-    <div class="card">
-      <h3>CLIENTES</h3>
-      <p id="totalClientes">0</p>
-    </div>
-
-  </div>
-
-  <div class="busca">
-    <input
-      type="text"
-      id="busca"
-      placeholder="Buscar cliente..."
-      onkeyup="carregar()"
-    >
   </div>
 
   <div class="formulario">
@@ -298,9 +326,9 @@ button{
 
       <input type="text" id="descricao" placeholder="Descrição">
 
-      <input type="number" id="valorTotal" placeholder="Valor Total">
+      <input type="number" id="valorTotal" placeholder="Valor Total" oninput="previewParcela()">
 
-      <select id="numParcelas">
+      <select id="numParcelas" onchange="previewParcela()">
         <option value="1">1x</option>
         <option value="2">2x</option>
         <option value="3">3x</option>
@@ -314,10 +342,45 @@ button{
 
     </div>
 
+    <div class="preview">
+      Cada parcela ficará em:
+      <br><br>
+      <strong id="valorParcela">R$ 0,00</strong>
+    </div>
+
     <button class="btn" onclick="salvar(this)">
       SALVAR PROMISSÓRIA
     </button>
 
+  </div>
+
+  <div class="filtros">
+
+    <div class="filtro ativo" onclick="setFiltro('TODOS',this)">
+      TODOS
+    </div>
+
+    <div class="filtro" onclick="setFiltro('PENDENTE',this)">
+      PENDENTES
+    </div>
+
+    <div class="filtro" onclick="setFiltro('ATRASADO',this)">
+      ATRASADOS
+    </div>
+
+    <div class="filtro" onclick="setFiltro('PAGO',this)">
+      PAGOS
+    </div>
+
+  </div>
+
+  <div class="busca">
+    <input
+      type="text"
+      id="busca"
+      placeholder="Buscar cliente..."
+      onkeyup="carregar()"
+    >
   </div>
 
   <div id="clientes"></div>
@@ -326,11 +389,13 @@ button{
 
 <script>
 
-const API = 'https://script.google.com/macros/s/AKfycbwqEZxapoen_DXGAMGGVD1ZZ1uJ6Yn9cNc2aybxndDQ5jLk7uuPihFHG_dXuGXD-EXq/exec';
+const API='https://script.google.com/macros/s/AKfycbww_lQmPPVPo-BqEMlrl1yg6-jlrXbglt2rpFGF-d45JJtGtGWHB8kSQRFPUFCDx9Ki/exec';
+
+let FILTRO='TODOS';
 
 async function api(acao,dados={}){
 
-  const formData = new FormData();
+  const formData=new FormData();
 
   formData.append('acao',acao);
 
@@ -338,7 +403,7 @@ async function api(acao,dados={}){
     formData.append(chave,dados[chave]);
   }
 
-  const response = await fetch(API,{
+  const response=await fetch(API,{
     method:'POST',
     body:formData
   });
@@ -347,14 +412,47 @@ async function api(acao,dados={}){
 
 }
 
+function previewParcela(){
+
+  const valor=
+    Number(
+      document.getElementById('valorTotal').value
+    );
+
+  const parcelas=
+    Number(
+      document.getElementById('numParcelas').value
+    );
+
+  const total=valor/parcelas || 0;
+
+  document.getElementById('valorParcela')
+    .innerHTML=dinheiro(total);
+
+}
+
+function setFiltro(tipo,el){
+
+  FILTRO=tipo;
+
+  document
+    .querySelectorAll('.filtro')
+    .forEach(btn=>btn.classList.remove('ativo'));
+
+  el.classList.add('ativo');
+
+  carregar();
+
+}
+
 async function salvar(btn){
 
-  const nome = document.getElementById('nome').value;
-  const telefone = document.getElementById('telefone').value;
-  const descricao = document.getElementById('descricao').value;
-  const valorTotal = document.getElementById('valorTotal').value;
-  const numParcelas = document.getElementById('numParcelas').value;
-  const vencimento = document.getElementById('vencimento').value;
+  const nome=document.getElementById('nome').value;
+  const telefone=document.getElementById('telefone').value;
+  const descricao=document.getElementById('descricao').value;
+  const valorTotal=document.getElementById('valorTotal').value;
+  const numParcelas=document.getElementById('numParcelas').value;
+  const vencimento=document.getElementById('vencimento').value;
 
   if(!nome || !valorTotal || !vencimento){
     alert('Preencha os campos');
@@ -376,48 +474,52 @@ async function salvar(btn){
   btn.innerHTML='SALVAR PROMISSÓRIA';
   btn.disabled=false;
 
-  document.getElementById('nome').value='';
-  document.getElementById('telefone').value='';
-  document.getElementById('descricao').value='';
-  document.getElementById('valorTotal').value='';
-  document.getElementById('numParcelas').value='1';
-  document.getElementById('vencimento').value='';
-
   carregar();
 
 }
 
 async function carregar(){
 
-  const resultado = await api('listar');
+  const resultado=await api('listar');
 
-  const dados = resultado.data || [];
+  const dados=resultado.data || [];
 
-  const busca = document
-    .getElementById('busca')
-    .value
-    .toLowerCase();
+  const busca=
+    document
+      .getElementById('busca')
+      .value
+      .toLowerCase();
+
+  const hoje=new Date();
 
   let totalReceber=0;
-  let totalPago=0;
   let totalAtrasado=0;
+  let mesReceber=0;
+  let mesPago=0;
 
   const clientes={};
 
   dados.forEach(item=>{
 
+    const nome=item[2];
+    const status=item[10];
+    const valor=Number(item[7]);
+    const vencimento=new Date(item[9]);
+
     if(
-      !String(item[2]).toLowerCase().includes(busca)
+      !nome.toLowerCase().includes(busca)
     ){
       return;
     }
 
-    const status=item[10];
-    const valor=Number(item[7]);
+    if(
+      FILTRO!=='TODOS' &&
+      status!==FILTRO
+    ){
+      return;
+    }
 
-    if(status==='PAGO'){
-      totalPago+=valor;
-    }else{
+    if(status!=='PAGO'){
       totalReceber+=valor;
     }
 
@@ -425,18 +527,31 @@ async function carregar(){
       totalAtrasado+=valor;
     }
 
-    if(!clientes[item[2]]){
-      clientes[item[2]]=[];
+    if(
+      vencimento.getMonth()===hoje.getMonth() &&
+      vencimento.getFullYear()===hoje.getFullYear()
+    ){
+
+      if(status==='PAGO'){
+        mesPago+=valor;
+      }else{
+        mesReceber+=valor;
+      }
+
     }
 
-    clientes[item[2]].push(item);
+    if(!clientes[nome]){
+      clientes[nome]=[];
+    }
+
+    clientes[nome].push(item);
 
   });
 
   document.getElementById('totalReceber').innerHTML=dinheiro(totalReceber);
-  document.getElementById('totalPago').innerHTML=dinheiro(totalPago);
   document.getElementById('totalAtrasado').innerHTML=dinheiro(totalAtrasado);
-  document.getElementById('totalClientes').innerHTML=Object.keys(clientes).length;
+  document.getElementById('mesReceber').innerHTML=dinheiro(mesReceber);
+  document.getElementById('mesPago').innerHTML=dinheiro(mesPago);
 
   const container=document.getElementById('clientes');
 
@@ -446,7 +561,7 @@ async function carregar(){
 
     container.innerHTML=`
       <div class="vazio">
-        Nenhum cliente encontrado
+        Nenhuma parcela encontrada
       </div>
     `;
 
@@ -469,10 +584,10 @@ async function carregar(){
     });
 
     let html=`
+
       <div class="cliente">
 
-        <div
-          class="cliente-topo"
+        <div class="cliente-topo"
           onclick="toggle(${index})">
 
           <div>
@@ -481,7 +596,7 @@ async function carregar(){
               ${nome}
             </div>
 
-            <div style="margin-top:8px;color:#94a3b8">
+            <div class="cliente-sub">
               ${parcelas.length} parcela(s)
             </div>
 
@@ -509,13 +624,13 @@ async function carregar(){
 
           <div class="parcela-topo">
 
-            <div class="parcela-info">
+            <div class="parcela-esq">
 
               <div class="parcela-desc">
                 ${p[4]}
               </div>
 
-              <div class="parcela-meta">
+              <div class="meta">
 
                 <span>
                   ${p[5]}/${p[6]}
@@ -543,11 +658,11 @@ async function carregar(){
             p[10]!=='PAGO'
             ?
             `
-              <button
-                class="btnPago"
-                onclick="pagar('${p[0]}')">
-                MARCAR COMO PAGO
-              </button>
+            <button
+              class="btnPago"
+              onclick="pagar('${p[0]}')">
+              MARCAR COMO PAGO
+            </button>
             `
             :
             ''
@@ -600,9 +715,12 @@ function dinheiro(valor){
 
 }
 
+previewParcela();
+
 carregar();
 
 </script>
 
 </body>
 </html>
+```
