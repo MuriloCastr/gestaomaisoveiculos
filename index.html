@@ -1,10 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gestão Financeira</title>
+<title>FinancePro</title>
 
 <style>
 
@@ -16,51 +17,51 @@
 }
 
 body{
-  background:#f4f6f9;
-  color:#1e293b;
+  background:#0f172a;
+  color:white;
   padding:20px;
 }
 
 .container{
-  max-width:1400px;
+  max-width:1500px;
   margin:auto;
 }
 
 .topo{
-  background:#111827;
-  color:white;
-  padding:28px;
-  border-radius:18px;
-  margin-bottom:20px;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  padding:30px;
+  border-radius:24px;
+  margin-bottom:25px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
 }
 
 .topo h1{
-  font-size:30px;
-  margin-bottom:5px;
+  font-size:36px;
+  margin-bottom:8px;
 }
 
 .topo p{
-  color:#cbd5e1;
+  opacity:.9;
 }
 
 .cards{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:15px;
-  margin-bottom:20px;
+  gap:18px;
+  margin-bottom:25px;
 }
 
 .card{
-  background:white;
-  padding:20px;
-  border-radius:16px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.06);
+  background:#1e293b;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:22px;
+  padding:22px;
 }
 
 .card h3{
+  color:#94a3b8;
   font-size:13px;
-  color:#64748b;
-  margin-bottom:10px;
+  margin-bottom:12px;
 }
 
 .card p{
@@ -68,25 +69,11 @@ body{
   font-weight:bold;
 }
 
-.busca{
-  margin-bottom:20px;
-}
-
-.busca input{
-  width:100%;
-  padding:15px;
-  border:none;
-  border-radius:14px;
-  background:white;
-  box-shadow:0 2px 10px rgba(0,0,0,0.06);
-}
-
 .formulario{
-  background:white;
-  padding:22px;
-  border-radius:18px;
-  margin-bottom:20px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.06);
+  background:#1e293b;
+  padding:25px;
+  border-radius:24px;
+  margin-bottom:25px;
 }
 
 .formulario h2{
@@ -99,76 +86,71 @@ body{
   gap:15px;
 }
 
-input,select{
+input,
+select{
   width:100%;
-  padding:13px;
-  border:1px solid #dbe2ea;
-  border-radius:12px;
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  background:#0f172a;
+  color:white;
   outline:none;
 }
 
 button{
   border:none;
-  border-radius:12px;
   cursor:pointer;
+  border-radius:14px;
   font-weight:bold;
 }
 
 .btn{
   width:100%;
-  background:#2563eb;
+  padding:16px;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
   color:white;
-  padding:14px;
-  margin-top:16px;
+  margin-top:18px;
+  font-size:15px;
 }
 
-.grupo{
-  background:white;
-  border-radius:18px;
-  overflow:hidden;
+.busca{
+  margin-bottom:20px;
+}
+
+.busca input{
+  background:#1e293b;
+}
+
+.cliente{
+  background:#1e293b;
+  border-radius:22px;
   margin-bottom:18px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.06);
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.06);
 }
 
-.grupo-topo{
-  padding:18px 22px;
+.cliente-topo{
+  padding:22px;
   display:flex;
   justify-content:space-between;
   align-items:center;
   cursor:pointer;
 }
 
-.grupo-left{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-}
-
-.grupo-nome{
-  font-size:20px;
+.cliente-nome{
+  font-size:22px;
   font-weight:bold;
 }
 
-.grupo-sub{
-  color:#64748b;
-  font-size:14px;
-}
-
-.grupo-right{
-  display:flex;
-  align-items:center;
-  gap:16px;
-}
-
-.grupo-total{
-  font-size:24px;
+.cliente-total{
+  font-size:28px;
   font-weight:bold;
 }
 
 .parcelas{
   display:none;
   padding:18px;
-  background:#f8fafc;
+  background:#0f172a;
 }
 
 .parcelas.aberto{
@@ -176,120 +158,87 @@ button{
 }
 
 .parcela{
-  background:white;
-  border:1px solid #e2e8f0;
-  border-radius:14px;
+  background:#1e293b;
+  padding:18px;
+  border-radius:18px;
   margin-bottom:14px;
-  overflow:hidden;
 }
 
 .parcela-topo{
-  padding:16px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  cursor:pointer;
-  gap:15px;
-}
-
-.parcela-left{
-  flex:1;
-}
-
-.parcela-desc{
-  font-size:16px;
-  font-weight:bold;
-  margin-bottom:8px;
+  gap:20px;
+  flex-wrap:wrap;
 }
 
 .parcela-info{
   display:flex;
-  flex-wrap:wrap;
+  flex-direction:column;
   gap:10px;
-  color:#64748b;
+}
+
+.parcela-desc{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.parcela-meta{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  color:#94a3b8;
   font-size:13px;
 }
 
 .badge{
-  padding:5px 10px;
+  padding:5px 12px;
   border-radius:30px;
   font-size:12px;
   font-weight:bold;
 }
 
 .pendente{
-  background:#fff7ed;
-  color:#ea580c;
+  background:#78350f;
+  color:#fdba74;
 }
 
 .pago{
-  background:#ecfdf5;
-  color:#16a34a;
+  background:#14532d;
+  color:#86efac;
 }
 
 .atrasado{
-  background:#fef2f2;
-  color:#dc2626;
+  background:#7f1d1d;
+  color:#fca5a5;
 }
 
-.parcela-valor{
-  font-size:22px;
+.valor{
+  font-size:28px;
   font-weight:bold;
 }
 
-.parcela-detalhes{
-  display:none;
-  padding:18px;
-  border-top:1px solid #eef2f7;
-}
-
-.parcela-detalhes.aberto{
-  display:block;
-}
-
-.resumo-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:12px;
-}
-
-.info-box{
-  background:#f8fafc;
-  border-radius:12px;
-  padding:14px;
-  border:1px solid #e2e8f0;
-}
-
-.info-box span{
-  display:block;
-  font-size:12px;
-  color:#64748b;
-  margin-bottom:6px;
-}
-
-.info-box strong{
-  font-size:18px;
-}
-
 .btnPago{
-  margin-top:16px;
   width:100%;
+  margin-top:15px;
+  padding:14px;
   background:#16a34a;
   color:white;
-  padding:13px;
+}
+
+.vazio{
+  background:#1e293b;
+  padding:40px;
+  text-align:center;
+  border-radius:20px;
+  color:#94a3b8;
 }
 
 @media(max-width:700px){
 
-  .grupo-topo,
+  .cliente-topo,
   .parcela-topo{
     flex-direction:column;
     align-items:flex-start;
-  }
-
-  .grupo-right{
-    width:100%;
-    justify-content:space-between;
   }
 
 }
@@ -301,8 +250,8 @@ button{
 <div class="container">
 
   <div class="topo">
-    <h1>Gestão Financeira</h1>
-    <p>Controle de clientes e parcelas</p>
+    <h1>FinancePro</h1>
+    <p>Controle inteligente de clientes e parcelas</p>
   </div>
 
   <div class="cards">
@@ -310,16 +259,6 @@ button{
     <div class="card">
       <h3>TOTAL A RECEBER</h3>
       <p id="totalReceber">R$ 0</p>
-    </div>
-
-    <div class="card">
-      <h3>RECEBER HOJE</h3>
-      <p id="receberHoje">R$ 0</p>
-    </div>
-
-    <div class="card">
-      <h3>RECEBER AMANHÃ</h3>
-      <p id="receberAmanha">R$ 0</p>
     </div>
 
     <div class="card">
@@ -332,13 +271,18 @@ button{
       <p id="totalAtrasado">R$ 0</p>
     </div>
 
+    <div class="card">
+      <h3>CLIENTES</h3>
+      <p id="totalClientes">0</p>
+    </div>
+
   </div>
 
   <div class="busca">
     <input
       type="text"
       id="busca"
-      placeholder="Buscar cliente ou descrição"
+      placeholder="Buscar cliente..."
       onkeyup="carregar()"
     >
   </div>
@@ -383,21 +327,21 @@ button{
 
 <script>
 
-const API = 'https://script.google.com/macros/s/AKfycbz-7uI7Qj8DZaERoeESQ_8f7vIMauGiOBjBlc-ok3QYIgqh6RYxjabO6bij5WzKo5OM/exec';
+const API = 'https://script.google.com/macros/s/AKfycbwqEZxapoen_DXGAMGGVD1ZZ1uJ6Yn9cNc2aybxndDQ5jLk7uuPihFHG_dXuGXD-EXq/exec';
 
 async function api(acao,dados={}){
 
+  const formData = new FormData();
+
+  formData.append('acao',acao);
+
+  for(let chave in dados){
+    formData.append(chave,dados[chave]);
+  }
+
   const response = await fetch(API,{
     method:'POST',
-
-    headers:{
-      'Content-Type':'application/json'
-    },
-
-    body:JSON.stringify({
-      acao,
-      ...dados
-    })
+    body:formData
   });
 
   return await response.json();
@@ -414,7 +358,7 @@ async function salvar(btn){
   const vencimento = document.getElementById('vencimento').value;
 
   if(!nome || !valorTotal || !vencimento){
-    alert('Preencha os campos obrigatórios');
+    alert('Preencha os campos');
     return;
   }
 
@@ -433,6 +377,13 @@ async function salvar(btn){
   btn.innerHTML='SALVAR PROMISSÓRIA';
   btn.disabled=false;
 
+  document.getElementById('nome').value='';
+  document.getElementById('telefone').value='';
+  document.getElementById('descricao').value='';
+  document.getElementById('valorTotal').value='';
+  document.getElementById('numParcelas').value='1';
+  document.getElementById('vencimento').value='';
+
   carregar();
 
 }
@@ -443,172 +394,132 @@ async function carregar(){
 
   const dados = resultado.data || [];
 
-  calcularResumo(dados);
-
-  agruparClientes(dados);
-
-}
-
-function calcularResumo(lista){
-
-  let totalReceber = 0;
-  let totalPago = 0;
-  let totalAtrasado = 0;
-  let receberHoje = 0;
-  let receberAmanha = 0;
-
-  const hoje = new Date();
-  hoje.setHours(0,0,0,0);
-
-  const amanha = new Date(hoje);
-  amanha.setDate(amanha.getDate()+1);
-
-  lista.forEach(item=>{
-
-    const valor = Number(item[7]);
-    const status = item[10];
-    const vencimento = new Date(item[9]);
-
-    vencimento.setHours(0,0,0,0);
-
-    if(status === 'PENDENTE'){
-
-      totalReceber += valor;
-
-      if(vencimento.getTime() === hoje.getTime()){
-        receberHoje += valor;
-      }
-
-      if(vencimento.getTime() === amanha.getTime()){
-        receberAmanha += valor;
-      }
-
-    }
-
-    if(status === 'PAGO'){
-      totalPago += valor;
-    }
-
-    if(status === 'ATRASADO'){
-      totalAtrasado += valor;
-    }
-
-  });
-
-  document.getElementById('totalReceber').innerHTML = dinheiro(totalReceber);
-  document.getElementById('receberHoje').innerHTML = dinheiro(receberHoje);
-  document.getElementById('receberAmanha').innerHTML = dinheiro(receberAmanha);
-  document.getElementById('totalPago').innerHTML = dinheiro(totalPago);
-  document.getElementById('totalAtrasado').innerHTML = dinheiro(totalAtrasado);
-
-}
-
-function agruparClientes(lista){
-
   const busca = document
     .getElementById('busca')
     .value
     .toLowerCase();
 
-  const clientes = {};
+  let totalReceber=0;
+  let totalPago=0;
+  let totalAtrasado=0;
 
-  lista.forEach(item=>{
+  const clientes={};
+
+  dados.forEach(item=>{
 
     if(
-      !String(item[2]).toLowerCase().includes(busca) &&
-      !String(item[4]).toLowerCase().includes(busca)
+      !String(item[2]).toLowerCase().includes(busca)
     ){
       return;
     }
 
-    const nome = item[2];
+    const status=item[10];
+    const valor=Number(item[7]);
 
-    if(!clientes[nome]){
-      clientes[nome] = [];
+    if(status==='PAGO'){
+      totalPago+=valor;
+    }else{
+      totalReceber+=valor;
     }
 
-    clientes[nome].push(item);
+    if(status==='ATRASADO'){
+      totalAtrasado+=valor;
+    }
+
+    if(!clientes[item[2]]){
+      clientes[item[2]]=[];
+    }
+
+    clientes[item[2]].push(item);
 
   });
 
-  const container = document.getElementById('clientes');
+  document.getElementById('totalReceber').innerHTML=dinheiro(totalReceber);
+  document.getElementById('totalPago').innerHTML=dinheiro(totalPago);
+  document.getElementById('totalAtrasado').innerHTML=dinheiro(totalAtrasado);
+  document.getElementById('totalClientes').innerHTML=Object.keys(clientes).length;
+
+  const container=document.getElementById('clientes');
 
   container.innerHTML='';
 
+  if(Object.keys(clientes).length===0){
+
+    container.innerHTML=`
+      <div class="vazio">
+        Nenhum cliente encontrado
+      </div>
+    `;
+
+    return;
+
+  }
+
   Object.keys(clientes).forEach((nome,index)=>{
 
-    const parcelas = clientes[nome];
+    const parcelas=clientes[nome];
 
-    let totalCliente = 0;
+    let total=0;
 
     parcelas.forEach(p=>{
 
-      if(p[10] !== 'PAGO'){
-        totalCliente += Number(p[7]);
+      if(p[10]!=='PAGO'){
+        total+=Number(p[7]);
       }
 
     });
 
-    let html = `
-      <div class="grupo">
+    let html=`
+      <div class="cliente">
 
-        <div class="grupo-topo"
-          onclick="toggleCliente(${index})">
+        <div
+          class="cliente-topo"
+          onclick="toggle(${index})">
 
-          <div class="grupo-left">
+          <div>
 
-            <div class="grupo-nome">
+            <div class="cliente-nome">
               ${nome}
             </div>
 
-            <div class="grupo-sub">
+            <div style="margin-top:8px;color:#94a3b8">
               ${parcelas.length} parcela(s)
             </div>
 
           </div>
 
-          <div class="grupo-right">
-
-            <div class="grupo-total">
-              ${dinheiro(totalCliente)}
-            </div>
-
-            <div id="seta${index}">
-              ▼
-            </div>
-
+          <div class="cliente-total">
+            ${dinheiro(total)}
           </div>
 
         </div>
 
-        <div class="parcelas" id="cliente${index}">
+        <div class="parcelas" id="box${index}">
     `;
 
-    parcelas.forEach((p,i)=>{
+    parcelas.forEach(p=>{
 
-      let classe = 'pendente';
+      let classe='pendente';
 
-      if(p[10] === 'PAGO') classe = 'pago';
+      if(p[10]==='PAGO') classe='pago';
+      if(p[10]==='ATRASADO') classe='atrasado';
 
-      if(p[10] === 'ATRASADO') classe = 'atrasado';
+      html+=`
 
-      html += `
         <div class="parcela">
 
-          <div
-            class="parcela-topo"
-            onclick="toggleParcela('${index}_${i}')">
+          <div class="parcela-topo">
 
-            <div class="parcela-left">
+            <div class="parcela-info">
 
               <div class="parcela-desc">
                 ${p[4]}
               </div>
 
-              <div class="parcela-info">
+              <div class="parcela-meta">
 
                 <span>
-                  Parcela ${p[5]}/${p[6]}
+                  ${p[5]}/${p[6]}
                 </span>
 
                 <span>
@@ -623,93 +534,55 @@ function agruparClientes(lista){
 
             </div>
 
-            <div class="parcela-valor">
+            <div class="valor">
               ${dinheiro(p[7])}
             </div>
 
           </div>
 
-          <div
-            class="parcela-detalhes"
-            id="parcela${index}_${i}">
-
-            <div class="resumo-grid">
-
-              <div class="info-box">
-                <span>VALOR TOTAL</span>
-                <strong>${dinheiro(p[8])}</strong>
-              </div>
-
-              <div class="info-box">
-                <span>PARCELAMENTO</span>
-                <strong>${p[6]}x</strong>
-              </div>
-
-              <div class="info-box">
-                <span>VALOR DA PARCELA</span>
-                <strong>${dinheiro(p[7])}</strong>
-              </div>
-
-            </div>
-
-            ${
-              p[10] !== 'PAGO'
-              ?
-              `
+          ${
+            p[10]!=='PAGO'
+            ?
+            `
               <button
                 class="btnPago"
                 onclick="pagar('${p[0]}')">
-                MARCAR COMO RECEBIDO
+                MARCAR COMO PAGO
               </button>
-              `
-              :
-              ''
-            }
-
-          </div>
+            `
+            :
+            ''
+          }
 
         </div>
+
       `;
 
     });
 
-    html += `
+    html+=`
         </div>
       </div>
     `;
 
-    container.innerHTML += html;
+    container.innerHTML+=html;
 
   });
 
 }
 
-function toggleCliente(id){
+function toggle(id){
 
-  const box = document.getElementById('cliente'+id);
-
-  const seta = document.getElementById('seta'+id);
-
-  box.classList.toggle('aberto');
-
-  seta.innerHTML =
-    box.classList.contains('aberto')
-    ? '▲'
-    : '▼';
-
-}
-
-function toggleParcela(id){
-
-  const box = document.getElementById('parcela'+id);
-
-  box.classList.toggle('aberto');
+  document
+    .getElementById('box'+id)
+    .classList
+    .toggle('aberto');
 
 }
 
 async function pagar(id){
 
-  const ok = confirm('Confirmar recebimento?');
+  const ok=confirm('Confirmar pagamento?');
 
   if(!ok) return;
 
@@ -734,3 +607,4 @@ carregar();
 
 </body>
 </html>
+```
