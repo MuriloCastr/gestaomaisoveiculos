@@ -3,281 +3,473 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>FinancePro</title>
+<title>FinancePro - Gestão de Promissórias</title>
 
 <style>
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Arial,sans-serif;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-body{
-  background:#0f172a;
-  color:white;
-  padding:20px;
+body {
+  background: linear-gradient(135deg, #0f172a 0%, #1a1f35 100%);
+  color: white;
+  padding: 20px;
+  min-height: 100vh;
 }
 
-.container{
-  max-width:1450px;
-  margin:auto;
+.container {
+  max-width: 1450px;
+  margin: auto;
 }
 
-.topo{
-  background:linear-gradient(135deg,#2563eb,#7c3aed);
-  padding:30px;
-  border-radius:24px;
-  margin-bottom:25px;
+.topo {
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  padding: 35px;
+  border-radius: 24px;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 40px rgba(37, 99, 235, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
-.topo h1{
-  font-size:34px;
-  margin-bottom:8px;
+.topo::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
 }
 
-.topo p{
-  opacity:.9;
+.topo h1 {
+  font-size: 38px;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
 }
 
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;
-  margin-bottom:25px;
+.topo p {
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+  font-size: 16px;
 }
 
-.card{
-  background:#1e293b;
-  border-radius:22px;
-  padding:22px;
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
 }
 
-.card h3{
-  color:#94a3b8;
-  font-size:12px;
-  margin-bottom:10px;
+.card {
+  background: #1e293b;
+  border-radius: 22px;
+  padding: 25px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.card p{
-  font-size:30px;
-  font-weight:bold;
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  border-color: rgba(37, 99, 235, 0.5);
 }
 
-.formulario{
-  background:#1e293b;
-  border-radius:24px;
-  padding:25px;
-  margin-bottom:25px;
+.card h3 {
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.formulario h2{
-  margin-bottom:20px;
+.card p {
+  font-size: 34px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:15px;
+.formulario {
+  background: #1e293b;
+  border-radius: 24px;
+  padding: 30px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.formulario h2 {
+  margin-bottom: 25px;
+  font-size: 24px;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
 }
 
 input,
-select{
-  width:100%;
-  padding:15px;
-  border:none;
-  border-radius:14px;
-  background:#0f172a;
-  color:white;
-  outline:none;
+select {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: #0f172a;
+  color: white;
+  outline: none;
+  font-size: 15px;
+  transition: all 0.3s ease;
 }
 
-.preview{
-  margin-top:15px;
-  background:#0f172a;
-  padding:16px;
-  border-radius:16px;
-  color:#94a3b8;
+input:focus,
+select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.preview strong{
-  color:white;
-  font-size:20px;
+input::placeholder {
+  color: #64748b;
 }
 
-button{
-  border:none;
-  cursor:pointer;
-  border-radius:14px;
-  font-weight:bold;
+.preview {
+  margin-top: 20px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.1));
+  padding: 20px;
+  border-radius: 16px;
+  color: #94a3b8;
+  border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
-.btn{
-  width:100%;
-  padding:16px;
-  background:linear-gradient(135deg,#2563eb,#7c3aed);
-  color:white;
-  margin-top:18px;
+.preview strong {
+  color: white;
+  font-size: 24px;
 }
 
-.filtros{
-  display:flex;
-  gap:10px;
-  margin-bottom:20px;
-  flex-wrap:wrap;
+button {
+  border: none;
+  cursor: pointer;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.filtro{
-  background:#1e293b;
-  color:#cbd5e1;
-  padding:12px 18px;
-  border-radius:14px;
-  cursor:pointer;
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
-.filtro.ativo{
-  background:#2563eb;
-  color:white;
+button:active {
+  transform: translateY(0);
 }
 
-.busca{
-  margin-bottom:20px;
+.btn {
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: white;
+  margin-top: 20px;
+  font-size: 16px;
 }
 
-.busca input{
-  background:#1e293b;
+.btn:hover {
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
 }
 
-.cliente{
-  background:#1e293b;
-  border-radius:22px;
-  overflow:hidden;
-  margin-bottom:18px;
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
-.cliente-topo{
-  padding:22px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  cursor:pointer;
+.filtros {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
-.cliente-nome{
-  font-size:20px;
-  font-weight:bold;
+.filtro {
+  background: #1e293b;
+  color: #cbd5e1;
+  padding: 12px 20px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.cliente-sub{
-  color:#94a3b8;
-  margin-top:6px;
-  font-size:13px;
+.filtro:hover {
+  background: #334155;
+  border-color: rgba(37, 99, 235, 0.3);
 }
 
-.cliente-total{
-  font-size:28px;
-  font-weight:bold;
+.filtro.ativo {
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 5px 20px rgba(37, 99, 235, 0.4);
 }
 
-.parcelas{
-  display:none;
-  padding:15px;
-  background:#111827;
+.busca {
+  margin-bottom: 20px;
 }
 
-.parcelas.aberto{
-  display:block;
+.busca input {
+  background: #1e293b;
+  padding: 16px;
+  font-size: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-.parcela{
-  background:#0f172a;
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:12px;
+.busca input:focus {
+  border-color: #2563eb;
 }
 
-.parcela-topo{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
-  flex-wrap:wrap;
+.cliente {
+  background: #1e293b;
+  border-radius: 22px;
+  overflow: hidden;
+  margin-bottom: 18px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.parcela-esq{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
+.cliente:hover {
+  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-.parcela-desc{
-  font-size:17px;
-  font-weight:bold;
+.cliente-topo {
+  padding: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.meta{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  color:#94a3b8;
-  font-size:13px;
+.cliente-topo:hover {
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.valor{
-  font-size:26px;
-  font-weight:bold;
+.cliente-nome {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
-.badge{
-  padding:5px 10px;
-  border-radius:30px;
-  font-size:11px;
-  font-weight:bold;
+.cliente-sub {
+  color: #94a3b8;
+  font-size: 14px;
 }
 
-.pendente{
-  background:#78350f;
-  color:#fdba74;
+.cliente-total {
+  font-size: 32px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.pago{
-  background:#14532d;
-  color:#86efac;
+.parcelas {
+  display: none;
+  padding: 20px;
+  background: #111827;
+  animation: slideDown 0.3s ease;
 }
 
-.atrasado{
-  background:#7f1d1d;
-  color:#fca5a5;
-}
-
-.btnPago{
-  width:100%;
-  margin-top:14px;
-  padding:13px;
-  background:#16a34a;
-  color:white;
-}
-
-.vazio{
-  background:#1e293b;
-  padding:40px;
-  border-radius:20px;
-  text-align:center;
-  color:#94a3b8;
-}
-
-@media(max-width:700px){
-
-  .cliente-topo,
-  .parcela-topo{
-    flex-direction:column;
-    align-items:flex-start;
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
+.parcelas.aberto {
+  display: block;
+}
+
+.parcela {
+  background: #0f172a;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.parcela:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.parcela-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.parcela-esq {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.parcela-desc {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.valor {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pendente {
+  background: #78350f;
+  color: #fdba74;
+}
+
+.pago {
+  background: #14532d;
+  color: #86efac;
+}
+
+.atrasado {
+  background: #7f1d1d;
+  color: #fca5a5;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.btnPago {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: white;
+  font-size: 14px;
+}
+
+.btnPago:hover {
+  box-shadow: 0 10px 25px rgba(22, 163, 74, 0.4);
+}
+
+.vazio {
+  background: #1e293b;
+  padding: 60px 40px;
+  border-radius: 20px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 18px;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+}
+
+.alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 16px 24px;
+  border-radius: 14px;
+  color: white;
+  font-weight: 600;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+
+.alert-error {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+}
+
+@media (max-width: 768px) {
+  .cliente-topo,
+  .parcela-topo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .cliente-total {
+    font-size: 24px;
+  }
+}
 </style>
 </head>
 <body>
@@ -285,48 +477,37 @@ button{
 <div class="container">
 
   <div class="topo">
-    <h1>FinancePro</h1>
-    <p>Controle de promissórias</p>
+    <h1>💰 FinancePro</h1>
+    <p>Gestão inteligente de promissórias com notificações automáticas via WhatsApp</p>
   </div>
 
   <div class="cards">
-
     <div class="card">
-      <h3>TOTAL A RECEBER</h3>
+      <h3>💰 Total a Receber</h3>
       <p id="totalReceber">R$ 0</p>
     </div>
-
     <div class="card">
-      <h3>RECEBER ESTE MÊS</h3>
+      <h3>📅 Receber este Mês</h3>
       <p id="mesReceber">R$ 0</p>
     </div>
-
     <div class="card">
-      <h3>RECEBIDO ESTE MÊS</h3>
+      <h3>✅ Recebido este Mês</h3>
       <p id="mesPago">R$ 0</p>
     </div>
-
     <div class="card">
-      <h3>ATRASADO</h3>
+      <h3>⚠️ Atrasado</h3>
       <p id="totalAtrasado">R$ 0</p>
     </div>
-
   </div>
 
   <div class="formulario">
-
-    <h2>Nova Promissória</h2>
-
+    <h2>📝 Nova Promissória</h2>
+    
     <div class="grid">
-
-      <input type="text" id="nome" placeholder="Cliente">
-
-      <input type="text" id="telefone" placeholder="Telefone">
-
-      <input type="text" id="descricao" placeholder="Descrição">
-
+      <input type="text" id="nome" placeholder="Nome do Cliente">
+      <input type="text" id="telefone" placeholder="WhatsApp (com DDD)" value="89981067904">
+      <input type="text" id="descricao" placeholder="Descrição do Contrato">
       <input type="number" id="valorTotal" placeholder="Valor Total" oninput="previewParcela()">
-
       <select id="numParcelas" onchange="previewParcela()">
         <option value="1">1x</option>
         <option value="2">2x</option>
@@ -336,50 +517,29 @@ button{
         <option value="6">6x</option>
         <option value="12">12x</option>
       </select>
-
       <input type="date" id="vencimento">
-
     </div>
 
     <div class="preview">
-      Cada parcela ficará em:
+      📊 Valor de cada parcela:
       <br><br>
       <strong id="valorParcela">R$ 0,00</strong>
     </div>
 
     <button class="btn" onclick="salvar(this)">
-      SALVAR PROMISSÓRIA
+      💾 SALVAR PROMISSÓRIA
     </button>
-
   </div>
 
   <div class="filtros">
-
-    <div class="filtro ativo" onclick="setFiltro('TODOS',this)">
-      TODOS
-    </div>
-
-    <div class="filtro" onclick="setFiltro('PENDENTE',this)">
-      PENDENTES
-    </div>
-
-    <div class="filtro" onclick="setFiltro('ATRASADO',this)">
-      ATRASADOS
-    </div>
-
-    <div class="filtro" onclick="setFiltro('PAGO',this)">
-      PAGOS
-    </div>
-
+    <div class="filtro ativo" onclick="setFiltro('TODOS', this)">📋 TODOS</div>
+    <div class="filtro" onclick="setFiltro('PENDENTE', this)">⏳ PENDENTES</div>
+    <div class="filtro" onclick="setFiltro('ATRASADO', this)">❗ ATRASADOS</div>
+    <div class="filtro" onclick="setFiltro('PAGO', this)">✅ PAGOS</div>
   </div>
 
   <div class="busca">
-    <input
-      type="text"
-      id="busca"
-      placeholder="Buscar cliente..."
-      onkeyup="carregar()"
-    >
+    <input type="text" id="busca" placeholder="🔍 Buscar cliente..." onkeyup="carregar()">
   </div>
 
   <div id="clientes"></div>
@@ -387,337 +547,379 @@ button{
 </div>
 
 <script>
+// Configuração
+const API = 'https://script.google.com/macros/s/AKfycbwqEZxapoen_DXGAMGGVD1ZZ1uJ6Yn9cNc2aybxndDQ5jLk7uuPihFHG_dXuGXD-EXq/exec';
+let FILTRO = 'TODOS';
 
-const API='https://script.google.com/macros/s/AKfycbwqEZxapoen_DXGAMGGVD1ZZ1uJ6Yn9cNc2aybxndDQ5jLk7uuPihFHG_dXuGXD-EXq/exec';
+// Sistema de cache para otimização
+const cache = {
+  dados: null,
+  timestamp: 0,
+  duracao: 10000, // 10 segundos de cache
+};
 
-let FILTRO='TODOS';
+// Função para mostrar alertas
+function mostrarAlerta(mensagem, tipo = 'info') {
+  const alerta = document.createElement('div');
+  alerta.className = `alert alert-${tipo}`;
+  alerta.textContent = mensagem;
+  document.body.appendChild(alerta);
+  
+  setTimeout(() => {
+    alerta.style.animation = 'slideIn 0.3s ease reverse';
+    setTimeout(() => alerta.remove(), 300);
+  }, 3000);
+}
 
-async function api(acao,dados={}){
-
-  const formData=new FormData();
-
-  formData.append('acao',acao);
-
-  for(let chave in dados){
-    formData.append(chave,dados[chave]);
-  }
-
-  const response=await fetch(API,{
-    method:'POST',
-    body:formData
+// Função principal de API com retry automático
+async function api(acao, dados = {}, tentativas = 3) {
+  const formData = new FormData();
+  formData.append('acao', acao);
+  
+  Object.entries(dados).forEach(([chave, valor]) => {
+    formData.append(chave, valor);
   });
 
-  return await response.json();
-
+  for (let i = 0; i < tentativas; i++) {
+    try {
+      const response = await fetch(API, {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (erro) {
+      console.error(`Tentativa ${i + 1} falhou:`, erro);
+      if (i === tentativas - 1) {
+        mostrarAlerta('Erro de conexão. Tente novamente.', 'error');
+        return { data: [] };
+      }
+      // Aguardar antes de tentar novamente (backoff exponencial)
+      await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+    }
+  }
 }
 
-function previewParcela(){
-
-  const valor=
-    Number(
-      document.getElementById('valorTotal').value
-    );
-
-  const parcelas=
-    Number(
-      document.getElementById('numParcelas').value
-    );
-
-  const total=valor/parcelas || 0;
-
-  document.getElementById('valorParcela')
-    .innerHTML=dinheiro(total);
-
+// Preview do valor da parcela
+function previewParcela() {
+  const valor = Number(document.getElementById('valorTotal').value);
+  const parcelas = Number(document.getElementById('numParcelas').value);
+  const total = valor / parcelas || 0;
+  
+  document.getElementById('valorParcela').innerHTML = dinheiro(total);
 }
 
-function setFiltro(tipo,el){
+// Formatar valor em reais
+function dinheiro(valor) {
+  return Number(valor).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
+}
 
-  FILTRO=tipo;
-
-  document
-    .querySelectorAll('.filtro')
-    .forEach(btn=>btn.classList.remove('ativo'));
-
+// Alternar filtros
+function setFiltro(tipo, el) {
+  FILTRO = tipo;
+  
+  document.querySelectorAll('.filtro').forEach(btn => {
+    btn.classList.remove('ativo');
+  });
+  
   el.classList.add('ativo');
-
-  carregar();
-
+  carregar(true);
 }
 
-async function salvar(btn){
+// Salvar nova promissória
+async function salvar(btn) {
+  const nome = document.getElementById('nome').value.trim();
+  const telefone = document.getElementById('telefone').value.trim();
+  const descricao = document.getElementById('descricao').value.trim();
+  const valorTotal = document.getElementById('valorTotal').value;
+  const numParcelas = document.getElementById('numParcelas').value;
+  const vencimento = document.getElementById('vencimento').value;
 
-  const nome=document.getElementById('nome').value;
-  const telefone=document.getElementById('telefone').value;
-  const descricao=document.getElementById('descricao').value;
-  const valorTotal=document.getElementById('valorTotal').value;
-  const numParcelas=document.getElementById('numParcelas').value;
-  const vencimento=document.getElementById('vencimento').value;
-
-  if(!nome || !valorTotal || !vencimento){
-    alert('Preencha os campos');
+  // Validações
+  if (!nome) {
+    mostrarAlerta('Por favor, informe o nome do cliente.', 'error');
+    return;
+  }
+  
+  if (!valorTotal || valorTotal <= 0) {
+    mostrarAlerta('Por favor, informe um valor válido.', 'error');
+    return;
+  }
+  
+  if (!vencimento) {
+    mostrarAlerta('Por favor, informe a data de vencimento.', 'error');
     return;
   }
 
-  btn.innerHTML='SALVANDO...';
-  btn.disabled=true;
+  // Desabilitar botão durante o salvamento
+  btn.innerHTML = '⏳ SALVANDO...';
+  btn.disabled = true;
 
-  await api('salvar',{
-    nome,
-    telefone,
-    descricao,
-    valorTotal,
-    numParcelas,
-    vencimento
-  });
+  try {
+    const resultado = await api('salvar', {
+      nome,
+      telefone,
+      descricao,
+      valorTotal,
+      numParcelas,
+      vencimento
+    });
 
-  btn.innerHTML='SALVAR PROMISSÓRIA';
-  btn.disabled=false;
-
-  carregar();
-
+    if (resultado.data && resultado.data.sucesso) {
+      mostrarAlerta('Promissória salva com sucesso! ✅', 'success');
+      
+      // Limpar campos
+      document.getElementById('nome').value = '';
+      document.getElementById('descricao').value = '';
+      document.getElementById('valorTotal').value = '';
+      document.getElementById('vencimento').value = '';
+      document.getElementById('numParcelas').value = '1';
+      
+      previewParcela();
+      carregar(true);
+    } else {
+      mostrarAlerta('Erro ao salvar. Tente novamente.', 'error');
+    }
+  } catch (erro) {
+    console.error('Erro ao salvar:', erro);
+    mostrarAlerta('Erro ao salvar promissória.', 'error');
+  } finally {
+    btn.innerHTML = '💾 SALVAR PROMISSÓRIA';
+    btn.disabled = false;
+  }
 }
 
-async function carregar(){
+// Carregar dados com cache
+async function carregar(forcar = false) {
+  const agora = Date.now();
+  
+  // Verificar cache
+  if (!forcar && cache.dados && (agora - cache.timestamp) < cache.duracao) {
+    renderizarClientes(cache.dados);
+    return;
+  }
 
-  const resultado=await api('listar');
+  const resultado = await api('listar');
+  cache.dados = resultado.data || [];
+  cache.timestamp = agora;
+  
+  renderizarClientes(cache.dados);
+}
 
-  const dados=resultado.data || [];
+// Renderizar clientes na tela
+function renderizarClientes(dados) {
+  const busca = document.getElementById('busca').value.toLowerCase();
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  
+  let totalReceber = 0;
+  let totalAtrasado = 0;
+  let mesReceber = 0;
+  let mesPago = 0;
+  
+  // Agrupar por cliente usando Map para melhor performance
+  const clientesMap = new Map();
 
-  const busca=
-    document
-      .getElementById('busca')
-      .value
-      .toLowerCase();
+  dados.forEach(item => {
+    const nome = item[2];
+    const status = item[10];
+    const valor = Number(item[7]);
+    const vencimento = new Date(item[9]);
 
-  const hoje=new Date();
+    // Filtrar por busca
+    if (busca && !nome.toLowerCase().includes(busca)) return;
+    
+    // Filtrar por status
+    if (FILTRO !== 'TODOS' && status !== FILTRO) return;
 
-  let totalReceber=0;
-  let totalAtrasado=0;
-  let mesReceber=0;
-  let mesPago=0;
+    // Calcular totais
+    if (status !== 'PAGO') totalReceber += valor;
+    if (status === 'ATRASADO') totalAtrasado += valor;
 
-  const clientes={};
-
-  dados.forEach(item=>{
-
-    const nome=item[2];
-    const status=item[10];
-    const valor=Number(item[7]);
-    const vencimento=new Date(item[9]);
-
-    if(
-      !nome.toLowerCase().includes(busca)
-    ){
-      return;
-    }
-
-    if(
-      FILTRO!=='TODOS' &&
-      status!==FILTRO
-    ){
-      return;
-    }
-
-    if(status!=='PAGO'){
-      totalReceber+=valor;
-    }
-
-    if(status==='ATRASADO'){
-      totalAtrasado+=valor;
-    }
-
-    if(
-      vencimento.getMonth()===hoje.getMonth() &&
-      vencimento.getFullYear()===hoje.getFullYear()
-    ){
-
-      if(status==='PAGO'){
-        mesPago+=valor;
-      }else{
-        mesReceber+=valor;
+    // Verificar mês atual
+    if (vencimento.getMonth() === hoje.getMonth() && 
+        vencimento.getFullYear() === hoje.getFullYear()) {
+      if (status === 'PAGO') {
+        mesPago += valor;
+      } else {
+        mesReceber += valor;
       }
-
     }
 
-    if(!clientes[nome]){
-      clientes[nome]=[];
+    // Agrupar por cliente
+    if (!clientesMap.has(nome)) {
+      clientesMap.set(nome, []);
     }
-
-    clientes[nome].push(item);
-
+    clientesMap.get(nome).push(item);
   });
 
-  document.getElementById('totalReceber').innerHTML=dinheiro(totalReceber);
-  document.getElementById('totalAtrasado').innerHTML=dinheiro(totalAtrasado);
-  document.getElementById('mesReceber').innerHTML=dinheiro(mesReceber);
-  document.getElementById('mesPago').innerHTML=dinheiro(mesPago);
+  // Atualizar cards
+  document.getElementById('totalReceber').innerHTML = dinheiro(totalReceber);
+  document.getElementById('totalAtrasado').innerHTML = dinheiro(totalAtrasado);
+  document.getElementById('mesReceber').innerHTML = dinheiro(mesReceber);
+  document.getElementById('mesPago').innerHTML = dinheiro(mesPago);
 
-  const container=document.getElementById('clientes');
-
-  container.innerHTML='';
-
-  if(Object.keys(clientes).length===0){
-
-    container.innerHTML=`
+  // Renderizar lista de clientes
+  const container = document.getElementById('clientes');
+  
+  if (clientesMap.size === 0) {
+    container.innerHTML = `
       <div class="vazio">
-        Nenhuma parcela encontrada
+        📭 Nenhuma parcela encontrada
       </div>
     `;
-
     return;
-
   }
 
-  Object.keys(clientes).forEach((nome,index)=>{
+  // Usar DocumentFragment para melhor performance
+  const fragment = document.createDocumentFragment();
+  let index = 0;
 
-    const parcelas=clientes[nome];
+  clientesMap.forEach((parcelas, nome) => {
+    const total = parcelas.reduce((sum, p) => 
+      p[10] !== 'PAGO' ? sum + Number(p[7]) : sum, 0
+    );
 
-    let total=0;
-
-    parcelas.forEach(p=>{
-
-      if(p[10]!=='PAGO'){
-        total+=Number(p[7]);
-      }
-
-    });
-
-    let html=`
-
-      <div class="cliente">
-
-        <div class="cliente-topo"
-          onclick="toggle(${index})">
-
-          <div>
-
-            <div class="cliente-nome">
-              ${nome}
-            </div>
-
-            <div class="cliente-sub">
-              ${parcelas.length} parcela(s)
-            </div>
-
+    const divCliente = document.createElement('div');
+    divCliente.className = 'cliente';
+    divCliente.innerHTML = `
+      <div class="cliente-topo" onclick="toggle(${index})">
+        <div>
+          <div class="cliente-nome">${nome}</div>
+          <div class="cliente-sub">
+            ${parcelas.length} parcela(s) | 
+            ${parcelas.filter(p => p[10] === 'PAGO').length} paga(s)
           </div>
-
-          <div class="cliente-total">
-            ${dinheiro(total)}
-          </div>
-
         </div>
-
-        <div class="parcelas" id="box${index}">
-    `;
-
-    parcelas.forEach(p=>{
-
-      let classe='pendente';
-
-      if(p[10]==='PAGO') classe='pago';
-      if(p[10]==='ATRASADO') classe='atrasado';
-
-      html+=`
-
-        <div class="parcela">
-
-          <div class="parcela-topo">
-
-            <div class="parcela-esq">
-
-              <div class="parcela-desc">
-                ${p[4]}
+        <div class="cliente-total">${dinheiro(total)}</div>
+      </div>
+      <div class="parcelas" id="box${index}">
+        ${parcelas.map(p => {
+          let classe = 'pendente';
+          if (p[10] === 'PAGO') classe = 'pago';
+          if (p[10] === 'ATRASADO') classe = 'atrasado';
+          
+          const dataFormatada = new Date(p[9]).toLocaleDateString('pt-BR');
+          
+          return `
+            <div class="parcela">
+              <div class="parcela-topo">
+                <div class="parcela-esq">
+                  <div class="parcela-desc">${p[4] || 'Sem descrição'}</div>
+                  <div class="meta">
+                    <span>📌 ${p[5]}/${p[6]}</span>
+                    <span>📅 ${dataFormatada}</span>
+                    <span class="badge ${classe}">${p[10]}</span>
+                  </div>
+                </div>
+                <div class="valor">${dinheiro(p[7])}</div>
               </div>
-
-              <div class="meta">
-
-                <span>
-                  ${p[5]}/${p[6]}
-                </span>
-
-                <span>
-                  ${new Date(p[9]).toLocaleDateString('pt-BR')}
-                </span>
-
-                <span class="badge ${classe}">
-                  ${p[10]}
-                </span>
-
-              </div>
-
+              ${p[10] !== 'PAGO' ? 
+                `<button class="btnPago" onclick="pagar('${p[0]}')">
+                  ✅ MARCAR COMO PAGO
+                </button>` : 
+                `<div style="margin-top:16px; color:#86efac; text-align:center; font-size:14px;">
+                  ✔️ Pago em ${new Date(p[11]).toLocaleDateString('pt-BR')}
+                </div>`
+              }
             </div>
-
-            <div class="valor">
-              ${dinheiro(p[7])}
-            </div>
-
-          </div>
-
-          ${
-            p[10]!=='PAGO'
-            ?
-            `
-            <button
-              class="btnPago"
-              onclick="pagar('${p[0]}')">
-              MARCAR COMO PAGO
-            </button>
-            `
-            :
-            ''
-          }
-
-        </div>
-
-      `;
-
-    });
-
-    html+=`
-        </div>
+          `;
+        }).join('')}
       </div>
     `;
-
-    container.innerHTML+=html;
-
+    
+    fragment.appendChild(divCliente);
+    index++;
   });
 
+  container.innerHTML = '';
+  container.appendChild(fragment);
 }
 
-function toggle(id){
-
-  document
-    .getElementById('box'+id)
-    .classList
-    .toggle('aberto');
-
+// Alternar visualização de parcelas
+function toggle(id) {
+  const box = document.getElementById('box' + id);
+  if (box) {
+    box.classList.toggle('aberto');
+  }
 }
 
-async function pagar(id){
+// Marcar parcela como paga
+async function pagar(id) {
+  const confirmacao = confirm('✅ Confirmar pagamento desta parcela?');
+  if (!confirmacao) return;
 
-  const ok=confirm('Confirmar pagamento?');
+  try {
+    const resultado = await api('pagar', { id });
+    
+    if (resultado.data && resultado.data.sucesso) {
+      if (resultado.data.contratoQuitado) {
+        mostrarAlerta('🎉 Contrato quitado! Cliente movido para antigos.', 'success');
+      } else {
+        mostrarAlerta('✅ Parcela paga com sucesso!', 'success');
+      }
+      
+      // Recarregar dados
+      carregar(true);
+    } else {
+      mostrarAlerta('Erro ao marcar como pago.', 'error');
+    }
+  } catch (erro) {
+    console.error('Erro ao pagar:', erro);
+    mostrarAlerta('Erro ao processar pagamento.', 'error');
+  }
+}
 
-  if(!ok) return;
+// Verificar notificações manualmente (botão adicional opcional)
+async function verificarNotificacoes() {
+  const resultado = await api('verificarNotificacoes');
+  if (resultado.data && resultado.data.notificacoes > 0) {
+    mostrarAlerta(`📱 ${resultado.data.notificacoes} notificação(ões) enviada(s)!`, 'success');
+  } else {
+    mostrarAlerta('📱 Nenhuma notificação necessária no momento.', 'info');
+  }
+}
 
-  await api('pagar',{id});
-
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+  previewParcela();
   carregar();
+  
+  // Atualizar dados a cada 30 segundos
+  setInterval(() => carregar(), 30000);
+  
+  // Verificar notificações a cada 5 minutos (apenas atualização visual)
+  setInterval(() => {
+    console.log('Verificando notificações...');
+    api('verificarNotificacoes').then(resultado => {
+      if (resultado.data && resultado.data.notificacoes > 0) {
+        console.log(`${resultado.data.notificacoes} notificações enviadas`);
+      }
+    });
+  }, 300000);
+});
 
-}
-
-function dinheiro(valor){
-
-  return Number(valor).toLocaleString('pt-BR',{
-    style:'currency',
-    currency:'BRL'
-  });
-
-}
-
-previewParcela();
-
-carregar();
-
+// Atalhos de teclado
+document.addEventListener('keydown', (e) => {
+  // Ctrl + F para focar na busca
+  if (e.ctrlKey && e.key === 'f') {
+    e.preventDefault();
+    document.getElementById('busca').focus();
+  }
+  
+  // Ctrl + N para nova promissória
+  if (e.ctrlKey && e.key === 'n') {
+    e.preventDefault();
+    document.getElementById('nome').focus();
+  }
+});
 </script>
 
 </body>
