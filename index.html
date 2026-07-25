@@ -611,7 +611,6 @@
             font-style: italic;
         }
 
-        /* Modal de edição */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -759,6 +758,10 @@
                 <div class="label">Clientes Ativos</div>
                 <div class="value" id="totalClientes">0</div>
             </div>
+            <div class="metric-card">
+                <div class="label">Clientes Antigos</div>
+                <div class="value" id="totalAntigos" style="color: #a88ac8;">0</div>
+            </div>
         </section>
 
         <section class="form-section">
@@ -834,7 +837,7 @@
 
         let filtroAtual = 'TODOS';
         let dadosCache = [];
-        let dadosAntigos = [];
+        let dadosAntigosCache = [];
         let parcelaEditando = null;
 
         function formatarMoeda(valor) {
@@ -951,24 +954,29 @@
         }
 
         async function carregarClientes(forcar = false) {
-            if (!forcar && dadosCache.length > 0) {
-                renderizar(dadosCache);
+            if (!forcar && dadosCache.length > 0 && dadosAntigosCache.length > 0) {
+                renderizar(dadosCache, dadosAntigosCache);
                 return;
             }
 
             const container = document.getElementById('clientesContainer');
             container.innerHTML = '<div class="empty-state">Carregando...</div>';
 
+            // Buscar dados da aba Parcelas (clientes ativos)
             const resultado = await chamarApi('listar');
             const lista = resultado || [];
+
+            // Buscar dados da aba Antigos_Clientes
+            const antigosResultado = await chamarApi('listarAntigos');
+            const listaAntigos = antigosResultado || [];
 
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
 
+            // Processar clientes ativos
             const clientesAtivos = [];
-            const clientesAntigos = [];
-
             const contratos = new Map();
+            
             lista.forEach(row => {
                 const contratoId = row[1];
                 if (!contratos.has(contratoId)) {
@@ -997,19 +1005,18 @@
                     }
                 }
 
-                if (isQuitado) {
-                    clientesAntigos.push(row);
-                } else {
+                if (!isQuitado) {
                     clientesAtivos.push(row);
                 }
             });
 
             dadosCache = clientesAtivos;
-            dadosAntigos = clientesAntigos;
-            renderizar(clientesAtivos);
+            dadosAntigosCache = listaAntigos;
+            
+            renderizar(clientesAtivos, listaAntigos);
         }
 
-        function renderizar(dados) {
+        function renderizar(dados, dadosAntigos) {
             const busca = document.getElementById('busca').value.toLowerCase().trim();
             const container = document.getElementById('clientesContainer');
 
@@ -1017,10 +1024,10 @@
             let isAntigos = false;
 
             if (filtroAtual === 'ANTIGOS') {
-                listaParaRenderizar = dadosAntigos;
+                listaParaRenderizar = dadosAntigos || [];
                 isAntigos = true;
             } else {
-                listaParaRenderizar = dados;
+                listaParaRenderizar = dados || [];
             }
 
             let filtrados = listaParaRenderizar.filter(row => {
@@ -1031,6 +1038,7 @@
                 return true;
             });
 
+            // Atualizar métricas
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
             const mesAtual = hoje.getMonth();
@@ -1042,7 +1050,8 @@
             let mesPago = 0;
             const clientesSet = new Set();
 
-            dados.forEach(row => {
+            // Calcular métricas apenas com dados ativos
+            (dados || []).forEach(row => {
                 const status = row[10];
                 const valor = parseFloat(row[7]) || 0;
                 const venc = new Date(row[9]);
@@ -1064,7 +1073,9 @@
             document.getElementById('mesReceber').textContent = formatarMoeda(mesReceber);
             document.getElementById('mesPago').textContent = formatarMoeda(mesPago);
             document.getElementById('totalClientes').textContent = clientesSet.size;
+            document.getElementById('totalAntigos').textContent = (dadosAntigos || []).length;
 
+            // Agrupar por cliente
             const grupos = new Map();
             filtrados.forEach(row => {
                 const nome = row[2] || 'Sem nome';
@@ -1083,7 +1094,11 @@
             let html = '';
             let idx = 0;
             for (const [nome, parcelas] of grupos) {
-                const totalCliente = parcelas.reduce((s, p) => p[10] !== 'PAGO' ? s + parseFloat(p[7] || 0) : s, 0);
+                const totalCliente = parcelas.reduce((s, p) => {
+                    const valor = parseFloat(p[7]) || 0;
+                    return p[10] !== 'PAGO' ? s + valor : s;
+                }, 0);
+                
                 const pagas = parcelas.filter(p => p[10] === 'PAGO').length;
                 const totalParcelas = parcelas.length;
                 const todasPagas = pagas === totalParcelas;
@@ -1196,7 +1211,7 @@
                 if (resultado.contratoQuitado) {
                     mostrarAlerta('Contrato quitado! Cliente movido para Antigos Clientes.', 'success');
                     dadosCache = [];
-                    dadosAntigos = [];
+                    dadosAntigosCache = [];
                     await carregarClientes(true);
                 } else {
                     mostrarAlerta('Parcela marcada como paga!', 'success');
@@ -1214,8 +1229,7 @@
         function abrirModalEdicao(id) {
             parcelaEditando = id;
             
-            // Buscar dados da parcela
-            const todasParcelas = [...dadosCache, ...dadosAntigos];
+            const todasParcelas = [...dadosCache, ...dadosAntigosCache];
             const parcela = todasParcelas.find(p => p[0] === id);
             
             if (!parcela) {
@@ -1268,21 +1282,19 @@
                 mostrarAlerta('Parcela atualizada com sucesso!', 'success');
                 fecharModalEdicao();
                 dadosCache = [];
-                dadosAntigos = [];
+                dadosAntigosCache = [];
                 await carregarClientes(true);
             } else {
                 mostrarAlerta('Erro ao editar parcela.', 'error');
             }
         }
 
-        // Fechar modal com ESC
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 fecharModalEdicao();
             }
         });
 
-        // Fechar modal clicando fora
         document.getElementById('modalEditar').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) {
                 fecharModalEdicao();
@@ -1300,7 +1312,7 @@
             if (resultado.sucesso) {
                 mostrarAlerta('Parcela excluida com sucesso!', 'success');
                 dadosCache = [];
-                dadosAntigos = [];
+                dadosAntigosCache = [];
                 await carregarClientes(true);
             } else {
                 mostrarAlerta('Erro ao excluir parcela.', 'error');
@@ -1315,7 +1327,7 @@
             if (resultado.sucesso) {
                 mostrarAlerta(`Contrato excluido com sucesso! ${resultado.parcelasExcluidas || 0} parcelas removidas.`, 'success');
                 dadosCache = [];
-                dadosAntigos = [];
+                dadosAntigosCache = [];
                 await carregarClientes(true);
             } else {
                 mostrarAlerta('Erro ao excluir contrato.', 'error');
