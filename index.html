@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Promissorias Pro - Gestão Inteligente</title>
+    <title>Promissorias</title>
 
     <style>
         /* Reset e base */
@@ -195,7 +195,7 @@
             cursor: not-allowed;
         }
 
-        /* Filtros */
+        /* Filtros - Nova aba de Antigos */
         .filter-bar {
             display: flex;
             flex-wrap: wrap;
@@ -223,6 +223,15 @@
             background: #6a80d9;
             border-color: #6a80d9;
             color: #fff;
+        }
+
+        .filter-btn.antigos {
+            border-color: #4a3a5a;
+        }
+
+        .filter-btn.antigos.active {
+            background: #7a5a9a;
+            border-color: #7a5a9a;
         }
 
         /* Busca */
@@ -270,6 +279,15 @@
             border-color: #334a6a;
         }
 
+        .client-card.quitado {
+            opacity: 0.75;
+            border-color: #3a2a4a;
+        }
+
+        .client-card.quitado .client-header:hover {
+            background: #161f35;
+        }
+
         .client-header {
             display: flex;
             justify-content: space-between;
@@ -289,6 +307,16 @@
             color: #e8edf5;
         }
 
+        .client-name .quitado-badge {
+            font-size: 12px;
+            font-weight: 500;
+            color: #a88ac8;
+            background: #2a1a3a;
+            padding: 2px 12px;
+            border-radius: 20px;
+            margin-left: 10px;
+        }
+
         .client-meta {
             font-size: 13px;
             color: #6a7fa0;
@@ -299,6 +327,13 @@
             font-size: 26px;
             font-weight: 700;
             background: linear-gradient(135deg, #a8bfff, #7a92e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .client-total.quitado {
+            background: linear-gradient(135deg, #c8b8d8, #a88ac8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -577,12 +612,13 @@
             <button class="btn-primary" id="btnSalvar" onclick="salvar()">Salvar Promissória</button>
         </section>
 
-        <!-- Filtros -->
+        <!-- Filtros - Inclui a nova aba Antigos -->
         <div class="filter-bar">
             <button class="filter-btn active" data-filter="TODOS" onclick="setFiltro('TODOS', this)">Todos</button>
             <button class="filter-btn" data-filter="PENDENTE" onclick="setFiltro('PENDENTE', this)">Pendentes</button>
             <button class="filter-btn" data-filter="ATRASADO" onclick="setFiltro('ATRASADO', this)">Atrasados</button>
             <button class="filter-btn" data-filter="PAGO" onclick="setFiltro('PAGO', this)">Pagos</button>
+            <button class="filter-btn antigos" data-filter="ANTIGOS" onclick="setFiltro('ANTIGOS', this)">Antigos Clientes</button>
         </div>
 
         <!-- Busca -->
@@ -602,10 +638,11 @@
         // CONFIGURAÇÃO - MESMA URL DO SEU GS
         // ============================================================
         const API_URL =
-            'https://script.google.com/macros/s/AKfycbww_lQmPPVPo-BqEMlrl1yg6-jlrXbglt2rpFGF-d45JJtGtGWHB8kSQRFPUFCDx9Ki/exec';
+            'https://script.google.com/macros/s/AKfycbwqEZxapoen_DXGAMGGVD1ZZ1uJ6Yn9cNc2aybxndDQ5jLk7uuPihFHG_dXuGXD-EXq/exec';
 
         let filtroAtual = 'TODOS';
         let dadosCache = [];
+        let dadosAntigos = [];
 
         // ============================================================
         // UTILITÁRIOS
@@ -741,17 +778,48 @@
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
 
+            // Separar clientes ativos e antigos
+            const clientesAtivos = [];
+            const clientesAntigos = [];
+
             lista.forEach((row) => {
-                if (row[10] === 'PAGO') return;
+                if (row[10] === 'PAGO') {
+                    // Verificar se todas as parcelas deste contrato estão pagas
+                    // Vamos agrupar por contrato para verificar
+                    return;
+                }
                 const venc = new Date(row[9]);
                 venc.setHours(0, 0, 0, 0);
                 if (venc < hoje && row[10] !== 'ATRASADO') {
                     row[10] = 'ATRASADO';
                 }
+                clientesAtivos.push(row);
             });
 
-            dadosCache = lista;
-            renderizar(lista);
+            // Agora vamos buscar os clientes antigos (contratos quitados)
+            // O GS já move para a aba Antigos_Clientes, mas vamos criar uma lógica
+            // para identificar contratos com todas as parcelas pagas
+            const contratos = new Map();
+            lista.forEach(row => {
+                const contratoId = row[1];
+                if (!contratos.has(contratoId)) {
+                    contratos.set(contratoId, []);
+                }
+                contratos.get(contratoId).push(row);
+            });
+
+            // Verificar quais contratos estão totalmente pagos
+            for (const [contratoId, parcelas] of contratos) {
+                const todasPagas = parcelas.every(p => p[10] === 'PAGO');
+                if (todasPagas && parcelas.length > 0) {
+                    // Mover para antigos (apenas para exibição, o GS já moveu)
+                    clientesAntigos.push(...parcelas);
+                }
+            }
+
+            dadosCache = clientesAtivos;
+            dadosAntigos = clientesAntigos;
+            renderizar(clientesAtivos);
         }
 
         // ============================================================
@@ -761,14 +829,25 @@
             const busca = document.getElementById('busca').value.toLowerCase().trim();
             const container = document.getElementById('clientesContainer');
 
-            let filtrados = dados.filter(row => {
+            // Determinar qual lista usar baseado no filtro
+            let listaParaRenderizar = [];
+            let isAntigos = false;
+
+            if (filtroAtual === 'ANTIGOS') {
+                listaParaRenderizar = dadosAntigos;
+                isAntigos = true;
+            } else {
+                listaParaRenderizar = dados;
+            }
+
+            let filtrados = listaParaRenderizar.filter(row => {
                 const nome = (row[2] || '').toLowerCase();
                 if (busca && !nome.includes(busca)) return false;
-                if (filtroAtual !== 'TODOS' && row[10] !== filtroAtual) return false;
+                if (filtroAtual !== 'TODOS' && filtroAtual !== 'ANTIGOS' && row[10] !== filtroAtual) return false;
                 return true;
             });
 
-            // Métricas
+            // Métricas (apenas para clientes ativos)
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
             const mesAtual = hoje.getMonth();
@@ -812,7 +891,10 @@
             });
 
             if (grupos.size === 0) {
-                container.innerHTML = `<div class="empty-state">Nenhum cliente encontrado</div>`;
+                const mensagem = isAntigos ? 
+                    'Nenhum cliente antigo encontrado' : 
+                    'Nenhum cliente encontrado';
+                container.innerHTML = `<div class="empty-state">${mensagem}</div>`;
                 return;
             }
 
@@ -821,15 +903,28 @@
             for (const [nome, parcelas] of grupos) {
                 const totalCliente = parcelas.reduce((s, p) => p[10] !== 'PAGO' ? s + parseFloat(p[7] || 0) : s, 0);
                 const pagas = parcelas.filter(p => p[10] === 'PAGO').length;
+                const totalParcelas = parcelas.length;
+                const todasPagas = pagas === totalParcelas;
+
+                // Determinar se é cliente antigo (todas as parcelas pagas)
+                const isQuitado = todasPagas && totalParcelas > 0;
 
                 html += `
-                    <div class="client-card">
+                    <div class="client-card ${isQuitado ? 'quitado' : ''}">
                         <div class="client-header" onclick="toggleParcelas(${idx})">
                             <div>
-                                <div class="client-name">${nome}</div>
-                                <div class="client-meta">${parcelas.length} parcelas · ${pagas} pagas</div>
+                                <div class="client-name">
+                                    ${nome}
+                                    ${isQuitado ? '<span class="quitado-badge">Quitado</span>' : ''}
+                                </div>
+                                <div class="client-meta">
+                                    ${totalParcelas} parcelas · ${pagas} pagas
+                                    ${isQuitado ? ' · Contrato finalizado' : ''}
+                                </div>
                             </div>
-                            <div class="client-total">${formatarMoeda(totalCliente)}</div>
+                            <div class="client-total ${isQuitado ? 'quitado' : ''}">
+                                ${formatarMoeda(totalCliente)}
+                            </div>
                         </div>
                         <div class="parcelas-wrapper" id="parcelas_${idx}">
                 `;
@@ -862,13 +957,13 @@
                         </div>
                     `;
 
-                    if (status !== 'PAGO') {
+                    if (status !== 'PAGO' && !isQuitado) {
                         html += `
                             <button class="btn-pagar" onclick="marcarPago('${idParcela}')">
                                 Marcar como pago
                             </button>
                         `;
-                    } else {
+                    } else if (status === 'PAGO') {
                         const dataPag = p[11] ? new Date(p[11]).toLocaleDateString('pt-BR') : '';
                         html += `
                             <div class="pago-info">Pago em ${dataPag || 'data desconhecida'}</div>
@@ -904,12 +999,16 @@
 
             if (resultado.sucesso) {
                 if (resultado.contratoQuitado) {
-                    mostrarAlerta('Contrato quitado! Cliente movido para arquivo.', 'success');
+                    mostrarAlerta('Contrato quitado! Cliente movido para Antigos Clientes.', 'success');
+                    // Recarregar para atualizar as listas
+                    dadosCache = [];
+                    dadosAntigos = [];
+                    await carregarClientes(true);
                 } else {
                     mostrarAlerta('Parcela marcada como paga!', 'success');
+                    dadosCache = [];
+                    await carregarClientes(true);
                 }
-                dadosCache = [];
-                carregarClientes(true);
             } else {
                 mostrarAlerta('Erro ao marcar como pago.', 'error');
             }
@@ -926,7 +1025,6 @@
             setInterval(() => carregarClientes(true), 30000);
 
             // Verificar notificações a cada 5min (o GS já faz isso via trigger)
-            // Mas podemos chamar manualmente para testar
             setInterval(async () => {
                 try {
                     await chamarApi('verificarNotificacoes');
