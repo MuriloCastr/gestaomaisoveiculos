@@ -52,6 +52,45 @@
             font-size: 14px;
         }
 
+        .header .status-whatsapp {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #121a2e;
+            padding: 6px 16px 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #22304a;
+            font-size: 13px;
+        }
+
+        .header .status-whatsapp .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .header .status-whatsapp .dot.online {
+            background: #4ade80;
+            box-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+        }
+
+        .header .status-whatsapp .dot.offline {
+            background: #f87171;
+            box-shadow: 0 0 10px rgba(248, 113, 113, 0.3);
+        }
+
+        .header .status-whatsapp .dot.testing {
+            background: #fbbf24;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
         .metric-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -492,6 +531,26 @@
             color: #aac8ff;
         }
 
+        .btn-editar-contrato {
+            background: #1a2a4a;
+            border: 1px solid #2a3a5a;
+            border-radius: 10px;
+            padding: 11px 18px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #8ab8f5;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .btn-editar-contrato:hover {
+            background: #2a3a5a;
+            color: #aac8ff;
+            border-color: #3a5a7a;
+        }
+
         .btn-excluir {
             background: #4a1a1a;
             border: none;
@@ -618,7 +677,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -632,7 +691,7 @@
             background: #121a2e;
             border-radius: 24px;
             padding: 32px;
-            max-width: 600px;
+            max-width: 650px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
@@ -646,7 +705,11 @@
         }
 
         .modal .form-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .modal .form-grid .full-width {
+            grid-column: 1 / -1;
         }
 
         .modal .botoes-modal {
@@ -684,6 +747,86 @@
             background: #3a3a4a;
         }
 
+        .modal .info-parcelas {
+            background: #0e1525;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            color: #7a8fa8;
+            font-size: 14px;
+            border: 1px solid #1f2a45;
+        }
+
+        .modal .info-parcelas strong {
+            color: #c8d6f0;
+        }
+
+        /* Configuração WhatsApp */
+        .whatsapp-config {
+            background: #121a2e;
+            border-radius: 20px;
+            padding: 24px 28px;
+            margin-bottom: 28px;
+            border: 1px solid #1f2a45;
+        }
+
+        .whatsapp-config .config-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: #c8d6f0;
+        }
+
+        .whatsapp-config .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .whatsapp-config .config-grid input {
+            background: #0e1525;
+            border: 1px solid #22304a;
+            border-radius: 12px;
+            padding: 13px 15px;
+            color: #e8edf5;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .whatsapp-config .config-grid input:focus {
+            border-color: #e65c2a;
+            box-shadow: 0 0 0 3px rgba(230, 92, 42, 0.12);
+        }
+
+        .whatsapp-config .config-grid input::placeholder {
+            color: #4a5f80;
+        }
+
+        .whatsapp-config .config-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .btn-testar-whatsapp {
+            background: #1a4a2a;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 22px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #b0e8c0;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .btn-testar-whatsapp:hover {
+            background: #2a5a3a;
+            color: #fff;
+        }
+
         @media (max-width: 700px) {
             .client-header {
                 flex-direction: column;
@@ -713,6 +856,16 @@
             .botoes-modal {
                 flex-direction: column;
             }
+            .modal .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .whatsapp-config .config-grid {
+                grid-template-columns: 1fr;
+            }
+            .header .status-whatsapp {
+                font-size: 11px;
+                padding: 4px 12px 4px 8px;
+            }
         }
 
         @media (max-width: 450px) {
@@ -734,7 +887,10 @@
                 <h1>MotoPromissorias</h1>
                 <span class="sub">Gestao de vendas com lembretes automaticos via WhatsApp</span>
             </div>
-            <div style="font-size:13px; color:#e65c2a;">v2.0</div>
+            <div class="status-whatsapp">
+                <span class="dot" id="whatsappStatusDot"></span>
+                <span id="whatsappStatusText">Verificando...</span>
+            </div>
         </header>
 
         <section class="metric-grid">
@@ -793,6 +949,18 @@
             <button class="btn-primary" id="btnSalvar" onclick="salvar()">Salvar Venda</button>
         </section>
 
+        <!-- Configuração WhatsApp -->
+        <section class="whatsapp-config">
+            <div class="config-title">Configuracao do WhatsApp</div>
+            <div class="config-grid">
+                <input type="text" id="whatsappServer" placeholder="URL do servidor WhatsApp" />
+                <input type="text" id="whatsappTestPhone" placeholder="Telefone para teste" value="89981067904" />
+                <div class="full-width">
+                    <button class="btn-testar-whatsapp" onclick="testarWhatsApp()">Testar Envio de Mensagem</button>
+                </div>
+            </div>
+        </section>
+
         <div class="filter-bar">
             <button class="filter-btn active" data-filter="TODOS" onclick="setFiltro('TODOS', this)">Todos</button>
             <button class="filter-btn" data-filter="PENDENTE" onclick="setFiltro('PENDENTE', this)">Pendentes</button>
@@ -811,35 +979,54 @@
 
     </div>
 
-    <!-- Modal de Edição -->
-    <div class="modal-overlay" id="modalEditar">
+    <!-- Modal de Edição de Contrato -->
+    <div class="modal-overlay" id="modalEditarContrato">
         <div class="modal">
-            <h2>Editar Parcela</h2>
+            <h2 id="modalTitulo">Editar Contrato</h2>
+            <div class="info-parcelas" id="infoParcelas">
+                <strong>Parcelas:</strong> <span id="infoTotalParcelas">0</span> parcelas · 
+                <strong>Valor total:</strong> <span id="infoValorTotal">R$ 0,00</span>
+            </div>
             <div class="form-grid">
                 <input type="text" id="editNome" placeholder="Nome do cliente" />
                 <input type="text" id="editTelefone" placeholder="WhatsApp (com DDD)" />
-                <input type="text" id="editMoto" placeholder="Moto" />
-                <input type="text" id="editDescricao" placeholder="Descricao" />
-                <input type="number" id="editValor" placeholder="Valor da parcela" step="0.01" />
+                <input type="text" id="editMoto" placeholder="Moto" class="full-width" />
+                <input type="text" id="editDescricao" placeholder="Descricao" class="full-width" />
+                <input type="number" id="editValorTotal" placeholder="Valor total" step="0.01" />
                 <input type="date" id="editVencimento" />
-                <textarea id="editObservacao" placeholder="Observacao interna"></textarea>
+                <select id="editNumParcelas">
+                    <option value="1">1 parcela</option>
+                    <option value="2">2 parcelas</option>
+                    <option value="3">3 parcelas</option>
+                    <option value="4">4 parcelas</option>
+                    <option value="5">5 parcelas</option>
+                    <option value="6">6 parcelas</option>
+                    <option value="12">12 parcelas</option>
+                </select>
+                <textarea id="editObservacao" placeholder="Observacao interna" class="full-width"></textarea>
             </div>
             <div class="botoes-modal">
                 <button class="btn-cancelar-edicao" onclick="fecharModalEdicao()">Cancelar</button>
-                <button class="btn-salvar-edicao" onclick="salvarEdicao()">Salvar Alteracoes</button>
+                <button class="btn-salvar-edicao" onclick="salvarEdicaoContrato()">Salvar Alteracoes</button>
             </div>
         </div>
     </div>
 
     <script>
+        // ============================================================
+        // CONFIGURAÇÃO
+        // ============================================================
         const API_URL =
-            'https://script.google.com/macros/s/AKfycbww_lQmPPVPo-BqEMlrl1yg6-jlrXbglt2rpFGF-d45JJtGtGWHB8kSQRFPUFCDx9Ki/exec';
+            'https://script.google.com/macros/s/AKfycbwqEZxapoen_DXGAMGGVD1ZZ1uJ6Yn9cNc2aybxndDQ5jLk7uuPihFHG_dXuGXD-EXq/exec';
 
         let filtroAtual = 'TODOS';
         let dadosCache = [];
         let dadosAntigosCache = [];
-        let parcelaEditando = null;
+        let contratoEditando = null;
 
+        // ============================================================
+        // UTILITÁRIOS
+        // ============================================================
         function formatarMoeda(valor) {
             return Number(valor).toLocaleString('pt-BR', {
                 style: 'currency',
@@ -871,6 +1058,93 @@
             previewParcela();
         }
 
+        // ============================================================
+        // STATUS DO WHATSAPP
+        // ============================================================
+        async function verificarStatusWhatsApp() {
+            const dot = document.getElementById('whatsappStatusDot');
+            const text = document.getElementById('whatsappStatusText');
+            const server = document.getElementById('whatsappServer').value || 'http://localhost:3000';
+
+            try {
+                const response = await fetch(`${server}/status`, {
+                    method: 'GET',
+                    signal: AbortSignal.timeout(5000)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.connected) {
+                        dot.className = 'dot online';
+                        text.textContent = 'WhatsApp Conectado';
+                    } else {
+                        dot.className = 'dot offline';
+                        text.textContent = 'WhatsApp Desconectado';
+                    }
+                } else {
+                    dot.className = 'dot offline';
+                    text.textContent = 'Servidor Offline';
+                }
+            } catch (error) {
+                dot.className = 'dot offline';
+                text.textContent = 'Servidor Offline';
+            }
+        }
+
+        // ============================================================
+        // TESTAR WHATSAPP
+        // ============================================================
+        async function testarWhatsApp() {
+            const telefone = document.getElementById('whatsappTestPhone').value.trim();
+            const server = document.getElementById('whatsappServer').value.trim() || 'http://localhost:3000';
+
+            if (!telefone) {
+                mostrarAlerta('Informe um telefone para teste.', 'error');
+                return;
+            }
+
+            const dot = document.getElementById('whatsappStatusDot');
+            const text = document.getElementById('whatsappStatusText');
+
+            dot.className = 'dot testing';
+            text.textContent = 'Enviando...';
+
+            try {
+                const mensagem = 'Teste do sistema MotoPromissorias!\n\nSistema funcionando perfeitamente.';
+                
+                const response = await fetch(`${server}/enviar-whatsapp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: telefone, message: mensagem })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        dot.className = 'dot online';
+                        text.textContent = 'Mensagem enviada!';
+                        mostrarAlerta(`Mensagem enviada para ${telefone}`, 'success');
+                        setTimeout(() => verificarStatusWhatsApp(), 3000);
+                    } else {
+                        dot.className = 'dot offline';
+                        text.textContent = 'Falha no envio';
+                        mostrarAlerta(`Erro: ${data.error || 'Falha desconhecida'}`, 'error');
+                    }
+                } else {
+                    dot.className = 'dot offline';
+                    text.textContent = 'Servidor Offline';
+                    mostrarAlerta('Servidor WhatsApp nao respondeu.', 'error');
+                }
+            } catch (error) {
+                dot.className = 'dot offline';
+                text.textContent = 'Erro de conexao';
+                mostrarAlerta(`Erro: ${error.message}`, 'error');
+            }
+        }
+
+        // ============================================================
+        // API
+        // ============================================================
         async function chamarApi(acao, dados = {}, tentativas = 3) {
             const form = new FormData();
             form.append('acao', acao);
@@ -894,6 +1168,9 @@
             return {};
         }
 
+        // ============================================================
+        // SALVAR
+        // ============================================================
         async function salvar() {
             const nome = document.getElementById('nome').value.trim();
             const telefone = document.getElementById('telefone').value.trim();
@@ -946,6 +1223,9 @@
             }
         }
 
+        // ============================================================
+        // FILTRO
+        // ============================================================
         function setFiltro(tipo, el) {
             filtroAtual = tipo;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -953,6 +1233,9 @@
             carregarClientes(true);
         }
 
+        // ============================================================
+        // CARREGAR DADOS
+        // ============================================================
         async function carregarClientes(forcar = false) {
             if (!forcar && dadosCache.length > 0 && dadosAntigosCache.length > 0) {
                 renderizar(dadosCache, dadosAntigosCache);
@@ -962,18 +1245,15 @@
             const container = document.getElementById('clientesContainer');
             container.innerHTML = '<div class="empty-state">Carregando...</div>';
 
-            // Buscar dados da aba Parcelas (clientes ativos)
             const resultado = await chamarApi('listar');
             const lista = resultado || [];
 
-            // Buscar dados da aba Antigos_Clientes
             const antigosResultado = await chamarApi('listarAntigos');
             const listaAntigos = antigosResultado || [];
 
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
 
-            // Processar clientes ativos
             const clientesAtivos = [];
             const contratos = new Map();
             
@@ -1016,6 +1296,9 @@
             renderizar(clientesAtivos, listaAntigos);
         }
 
+        // ============================================================
+        // RENDERIZAR
+        // ============================================================
         function renderizar(dados, dadosAntigos) {
             const busca = document.getElementById('busca').value.toLowerCase().trim();
             const container = document.getElementById('clientesContainer');
@@ -1050,7 +1333,6 @@
             let mesPago = 0;
             const clientesSet = new Set();
 
-            // Calcular métricas apenas com dados ativos
             (dados || []).forEach(row => {
                 const status = row[10];
                 const valor = parseFloat(row[7]) || 0;
@@ -1075,12 +1357,14 @@
             document.getElementById('totalClientes').textContent = clientesSet.size;
             document.getElementById('totalAntigos').textContent = (dadosAntigos || []).length;
 
-            // Agrupar por cliente
+            // Agrupar por cliente (contrato)
             const grupos = new Map();
             filtrados.forEach(row => {
+                const contratoId = row[1];
                 const nome = row[2] || 'Sem nome';
-                if (!grupos.has(nome)) grupos.set(nome, []);
-                grupos.get(nome).push(row);
+                const key = `${contratoId}_${nome}`;
+                if (!grupos.has(key)) grupos.set(key, { nome, contratoId, parcelas: [] });
+                grupos.get(key).parcelas.push(row);
             });
 
             if (grupos.size === 0) {
@@ -1093,7 +1377,8 @@
 
             let html = '';
             let idx = 0;
-            for (const [nome, parcelas] of grupos) {
+            for (const [key, grupo] of grupos) {
+                const { nome, contratoId, parcelas } = grupo;
                 const totalCliente = parcelas.reduce((s, p) => {
                     const valor = parseFloat(p[7]) || 0;
                     return p[10] !== 'PAGO' ? s + valor : s;
@@ -1105,7 +1390,6 @@
 
                 const moto = parcelas[0]?.[14] || 'Moto nao informada';
                 const observacao = parcelas[0]?.[15] || '';
-                const contratoId = parcelas[0]?.[1] || '';
 
                 const isQuitado = todasPagas && totalParcelas > 0;
 
@@ -1163,7 +1447,6 @@
                         html += `
                             <div class="botoes-acao">
                                 <button class="btn-pagar" onclick="marcarPago('${idParcela}')">Marcar como pago</button>
-                                <button class="btn-editar" onclick="abrirModalEdicao('${idParcela}')">Editar</button>
                                 <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">Excluir</button>
                             </div>
                         `;
@@ -1172,15 +1455,18 @@
                         html += `
                             <div class="pago-info">Pago em ${dataPag || 'data desconhecida'}</div>
                             <div class="botoes-acao">
-                                <button class="btn-editar" onclick="abrirModalEdicao('${idParcela}')">Editar</button>
                                 <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">Excluir</button>
                             </div>
                         `;
                     }
                 });
 
+                // Botões para editar/excluir contrato inteiro
                 if (!isQuitado && totalParcelas > 0) {
                     html += `
+                        <button class="btn-editar-contrato" onclick="abrirModalEdicaoContrato('${contratoId}')">
+                            Editar contrato inteiro
+                        </button>
                         <button class="btn-excluir-contrato" onclick="excluirContrato('${contratoId}')">
                             Excluir contrato inteiro (${totalParcelas} parcelas)
                         </button>
@@ -1202,6 +1488,9 @@
             if (el) el.classList.toggle('open');
         }
 
+        // ============================================================
+        // MARCAR PAGO
+        // ============================================================
         async function marcarPago(id) {
             if (!confirm('Confirmar pagamento desta parcela?')) return;
 
@@ -1224,68 +1513,76 @@
         }
 
         // ============================================================
-        // FUNÇÕES DE EDIÇÃO
+        // EDIÇÃO DE CONTRATO INTEIRO
         // ============================================================
-        function abrirModalEdicao(id) {
-            parcelaEditando = id;
+        function abrirModalEdicaoContrato(contratoId) {
+            contratoEditando = contratoId;
             
             const todasParcelas = [...dadosCache, ...dadosAntigosCache];
-            const parcela = todasParcelas.find(p => p[0] === id);
+            const parcelasDoContrato = todasParcelas.filter(p => p[1].toString() === contratoId.toString());
             
-            if (!parcela) {
-                mostrarAlerta('Parcela nao encontrada.', 'error');
+            if (parcelasDoContrato.length === 0) {
+                mostrarAlerta('Contrato nao encontrado.', 'error');
                 return;
             }
 
-            document.getElementById('editNome').value = parcela[2] || '';
-            document.getElementById('editTelefone').value = parcela[3] || '';
-            document.getElementById('editMoto').value = parcela[14] || '';
-            document.getElementById('editDescricao').value = parcela[4] || '';
-            document.getElementById('editValor').value = parcela[7] || '';
-            
-            const vencimento = new Date(parcela[9]);
-            const vencStr = vencimento.toISOString().split('T')[0];
-            document.getElementById('editVencimento').value = vencStr;
-            
-            document.getElementById('editObservacao').value = parcela[15] || '';
+            const primeira = parcelasDoContrato[0];
+            const valorTotal = parcelasDoContrato.reduce((sum, p) => sum + parseFloat(p[7] || 0), 0);
 
-            document.getElementById('modalEditar').classList.add('active');
+            document.getElementById('modalTitulo').textContent = `Editar Contrato - ${primeira[2] || 'Cliente'}`;
+            document.getElementById('infoTotalParcelas').textContent = parcelasDoContrato.length;
+            document.getElementById('infoValorTotal').textContent = formatarMoeda(valorTotal);
+            
+            document.getElementById('editNome').value = primeira[2] || '';
+            document.getElementById('editTelefone').value = primeira[3] || '';
+            document.getElementById('editMoto').value = primeira[14] || '';
+            document.getElementById('editDescricao').value = primeira[4] || '';
+            document.getElementById('editValorTotal').value = valorTotal;
+            document.getElementById('editNumParcelas').value = parcelasDoContrato.length;
+            document.getElementById('editObservacao').value = primeira[15] || '';
+            
+            // Data do primeiro vencimento
+            const vencimento = new Date(primeira[9]);
+            document.getElementById('editVencimento').value = vencimento.toISOString().split('T')[0];
+
+            document.getElementById('modalEditarContrato').classList.add('active');
         }
 
         function fecharModalEdicao() {
-            document.getElementById('modalEditar').classList.remove('active');
-            parcelaEditando = null;
+            document.getElementById('modalEditarContrato').classList.remove('active');
+            contratoEditando = null;
         }
 
-        async function salvarEdicao() {
-            if (!parcelaEditando) return;
+        async function salvarEdicaoContrato() {
+            if (!contratoEditando) return;
 
             const dados = {
-                id: parcelaEditando,
+                contratoId: contratoEditando,
                 nome: document.getElementById('editNome').value.trim(),
                 telefone: document.getElementById('editTelefone').value.trim(),
                 moto: document.getElementById('editMoto').value.trim(),
                 descricao: document.getElementById('editDescricao').value.trim(),
-                valor: document.getElementById('editValor').value,
+                valorTotal: document.getElementById('editValorTotal').value,
+                numParcelas: document.getElementById('editNumParcelas').value,
                 vencimento: document.getElementById('editVencimento').value,
                 observacao: document.getElementById('editObservacao').value.trim()
             };
 
             if (!dados.nome) return mostrarAlerta('Informe o nome do cliente.', 'error');
             if (!dados.moto) return mostrarAlerta('Informe a moto.', 'error');
-            if (!dados.valor || parseFloat(dados.valor) <= 0) return mostrarAlerta('Informe um valor valido.', 'error');
+            if (!dados.valorTotal || parseFloat(dados.valorTotal) <= 0) return mostrarAlerta('Informe um valor valido.', 'error');
             if (!dados.vencimento) return mostrarAlerta('Informe a data de vencimento.', 'error');
 
-            const resultado = await chamarApi('editarParcela', dados);
+            const resultado = await chamarApi('editarContrato', dados);
 
             if (resultado.sucesso) {
-                mostrarAlerta('Parcela atualizada com sucesso!', 'success');
+                mostrarAlerta('Contrato atualizado com sucesso!', 'success');
                 fecharModalEdicao();
                 dadosCache = [];
                 dadosAntigosCache = [];
                 await carregarClientes(true);
             } else {
-                mostrarAlerta('Erro ao editar parcela.', 'error');
+                mostrarAlerta('Erro ao editar contrato.', 'error');
             }
         }
 
@@ -1295,14 +1592,14 @@
             }
         });
 
-        document.getElementById('modalEditar').addEventListener('click', (e) => {
+        document.getElementById('modalEditarContrato').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) {
                 fecharModalEdicao();
             }
         });
 
         // ============================================================
-        // FUNÇÕES DE EXCLUSÃO
+        // EXCLUSÃO
         // ============================================================
         async function excluirParcela(id) {
             if (!confirm('Tem certeza que deseja EXCLUIR esta parcela?\n\nEsta acao nao pode ser desfeita!')) return;
@@ -1338,11 +1635,27 @@
         // INICIALIZAÇÃO
         // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
+            // Carregar configurações salvas
+            const savedServer = localStorage.getItem('whatsappServer');
+            if (savedServer) {
+                document.getElementById('whatsappServer').value = savedServer;
+            }
+
+            document.getElementById('whatsappServer').addEventListener('change', (e) => {
+                localStorage.setItem('whatsappServer', e.target.value);
+            });
+
             previewParcela();
             carregarClientes(true);
+            verificarStatusWhatsApp();
 
+            // Verificar status do WhatsApp a cada 30 segundos
+            setInterval(verificarStatusWhatsApp, 30000);
+
+            // Atualizar dados a cada 30 segundos
             setInterval(() => carregarClientes(true), 30000);
 
+            // Verificar notificações automaticamente
             setInterval(async () => {
                 try {
                     await chamarApi('verificarNotificacoes');
