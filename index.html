@@ -493,6 +493,57 @@
             color: #fff;
         }
 
+        .btn-excluir {
+            background: #4a1a1a;
+            border: none;
+            border-radius: 10px;
+            padding: 11px 18px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #f58a8a;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-excluir:hover {
+            background: #5a2a2a;
+            color: #ffaaaa;
+        }
+
+        .btn-excluir-contrato {
+            background: #3a1a1a;
+            border: 1px solid #5a2a2a;
+            border-radius: 10px;
+            padding: 11px 18px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #f58a8a;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .btn-excluir-contrato:hover {
+            background: #5a2a2a;
+            color: #ffaaaa;
+            border-color: #8a3a3a;
+        }
+
+        .botoes-acao {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .botoes-acao .btn-pagar,
+        .botoes-acao .btn-excluir {
+            flex: 1;
+            margin-top: 0;
+        }
+
         .pago-info {
             margin-top: 10px;
             color: #7ad4a0;
@@ -551,7 +602,7 @@
             }
         }
 
-        /* Observação interna (só visível para o admin) */
+        /* Observação interna */
         .obs-interna {
             background: #1a1a2a;
             border-radius: 8px;
@@ -585,6 +636,9 @@
             .client-total {
                 font-size: 20px;
                 margin-left: 0;
+            }
+            .botoes-acao {
+                flex-direction: column;
             }
         }
 
@@ -779,7 +833,6 @@
             btn.disabled = true;
             btn.textContent = 'Salvando...';
 
-            // Combinar descrição com moto para aparecer nas mensagens
             const descricaoCompleta = descricao ? `${moto} - ${descricao}` : moto;
 
             const resultado = await chamarApi('salvar', {
@@ -844,7 +897,6 @@
             const clientesAtivos = [];
             const clientesAntigos = [];
 
-            // Agrupar por contrato para identificar quitados
             const contratos = new Map();
             lista.forEach(row => {
                 const contratoId = row[1];
@@ -854,7 +906,6 @@
                 contratos.get(contratoId).push(row);
             });
 
-            // Verificar contratos quitados
             const contratosQuitados = new Set();
             for (const [contratoId, parcelas] of contratos) {
                 const todasPagas = parcelas.every(p => p[10] === 'PAGO');
@@ -867,7 +918,6 @@
                 const contratoId = row[1];
                 const isQuitado = contratosQuitados.has(contratoId);
 
-                // Atualizar status de atrasado
                 if (row[10] !== 'PAGO' && !isQuitado) {
                     const venc = new Date(row[9]);
                     venc.setHours(0, 0, 0, 0);
@@ -907,7 +957,7 @@
 
             let filtrados = listaParaRenderizar.filter(row => {
                 const nome = (row[2] || '').toLowerCase();
-                const moto = (row[13] || '').toLowerCase();
+                const moto = (row[14] || '').toLowerCase();
                 if (busca && !nome.includes(busca) && !moto.includes(busca)) return false;
                 if (filtroAtual !== 'TODOS' && filtroAtual !== 'ANTIGOS' && row[10] !== filtroAtual) return false;
                 return true;
@@ -972,9 +1022,9 @@
                 const totalParcelas = parcelas.length;
                 const todasPagas = pagas === totalParcelas;
 
-                // Pegar a moto da primeira parcela
-                const moto = parcelas[0]?.[13] || 'Moto não informada';
-                const observacao = parcelas[0]?.[14] || '';
+                const moto = parcelas[0]?.[14] || 'Moto não informada';
+                const observacao = parcelas[0]?.[15] || '';
+                const contratoId = parcelas[0]?.[1] || '';
 
                 const isQuitado = todasPagas && totalParcelas > 0;
 
@@ -1030,17 +1080,34 @@
 
                     if (status !== 'PAGO' && !isQuitado) {
                         html += `
-                            <button class="btn-pagar" onclick="marcarPago('${idParcela}')">
-                                Marcar como pago
-                            </button>
+                            <div class="botoes-acao">
+                                <button class="btn-pagar" onclick="marcarPago('${idParcela}')">
+                                    Marcar como pago
+                                </button>
+                                <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">
+                                    Excluir parcela
+                                </button>
+                            </div>
                         `;
                     } else if (status === 'PAGO') {
                         const dataPag = p[11] ? new Date(p[11]).toLocaleDateString('pt-BR') : '';
                         html += `
                             <div class="pago-info">Pago em ${dataPag || 'data desconhecida'}</div>
+                            <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">
+                                Excluir parcela
+                            </button>
                         `;
                     }
                 });
+
+                // Botão para excluir todo o contrato (apenas se não estiver quitado)
+                if (!isQuitado && totalParcelas > 0) {
+                    html += `
+                        <button class="btn-excluir-contrato" onclick="excluirContrato('${contratoId}')">
+                            Excluir contrato inteiro (${totalParcelas} parcelas)
+                        </button>
+                    `;
+                }
 
                 html += `
                         </div>
@@ -1081,6 +1148,42 @@
                 }
             } else {
                 mostrarAlerta('Erro ao marcar como pago.', 'error');
+            }
+        }
+
+        // ============================================================
+        // EXCLUIR PARCELA
+        // ============================================================
+        async function excluirParcela(id) {
+            if (!confirm('Tem certeza que deseja EXCLUIR esta parcela?\n\nEsta ação não pode ser desfeita!')) return;
+
+            const resultado = await chamarApi('excluirParcela', { id });
+
+            if (resultado.sucesso) {
+                mostrarAlerta('Parcela excluída com sucesso!', 'success');
+                dadosCache = [];
+                dadosAntigos = [];
+                await carregarClientes(true);
+            } else {
+                mostrarAlerta('Erro ao excluir parcela.', 'error');
+            }
+        }
+
+        // ============================================================
+        // EXCLUIR CONTRATO INTEIRO
+        // ============================================================
+        async function excluirContrato(contratoId) {
+            if (!confirm('ATENÇÃO! Você está prestes a excluir TODAS as parcelas deste contrato.\n\nEsta ação não pode ser desfeita!\n\nDeseja continuar?')) return;
+
+            const resultado = await chamarApi('excluirContrato', { contratoId });
+
+            if (resultado.sucesso) {
+                mostrarAlerta(`Contrato excluído com sucesso! ${resultado.parcelasExcluidas || 0} parcelas removidas.`, 'success');
+                dadosCache = [];
+                dadosAntigos = [];
+                await carregarClientes(true);
+            } else {
+                mostrarAlerta('Erro ao excluir contrato.', 'error');
             }
         }
 
