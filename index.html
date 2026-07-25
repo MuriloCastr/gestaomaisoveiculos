@@ -6,7 +6,6 @@
     <title>MotoPromissorias - Gestão de Vendas</title>
 
     <style>
-        /* Reset e base */
         * {
             margin: 0;
             padding: 0;
@@ -28,7 +27,6 @@
             width: 100%;
         }
 
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -54,7 +52,6 @@
             font-size: 14px;
         }
 
-        /* Cards */
         .metric-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -99,7 +96,6 @@
             color: #f58a8a;
         }
 
-        /* Form */
         .form-section {
             background: #121a2e;
             border-radius: 20px;
@@ -204,7 +200,6 @@
             cursor: not-allowed;
         }
 
-        /* Filtros */
         .filter-bar {
             display: flex;
             flex-wrap: wrap;
@@ -243,7 +238,6 @@
             border-color: #7a5a9a;
         }
 
-        /* Busca */
         .search-box {
             margin-bottom: 18px;
         }
@@ -269,7 +263,6 @@
             color: #4a5f80;
         }
 
-        /* Lista */
         .client-list {
             display: flex;
             flex-direction: column;
@@ -348,12 +341,6 @@
             color: #7a8fa8;
             font-style: italic;
             font-size: 12px;
-        }
-
-        .client-meta {
-            font-size: 13px;
-            color: #6a7fa0;
-            margin-top: 3px;
         }
 
         .client-total {
@@ -459,13 +446,8 @@
         }
 
         @keyframes pulseBadge {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.6;
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
 
         .parcela-valor {
@@ -484,13 +466,30 @@
             color: #b0e8c0;
             cursor: pointer;
             transition: 0.2s;
-            width: 100%;
-            margin-top: 10px;
+            flex: 1;
         }
 
         .btn-pagar:hover {
             background: #2a5a3a;
             color: #fff;
+        }
+
+        .btn-editar {
+            background: #1a2a4a;
+            border: none;
+            border-radius: 10px;
+            padding: 11px 18px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #8ab8f5;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1;
+        }
+
+        .btn-editar:hover {
+            background: #2a3a5a;
+            color: #aac8ff;
         }
 
         .btn-excluir {
@@ -503,8 +502,7 @@
             color: #f58a8a;
             cursor: pointer;
             transition: 0.2s;
-            width: 100%;
-            margin-top: 10px;
+            flex: 1;
         }
 
         .btn-excluir:hover {
@@ -539,6 +537,7 @@
         }
 
         .botoes-acao .btn-pagar,
+        .botoes-acao .btn-editar,
         .botoes-acao .btn-excluir {
             flex: 1;
             margin-top: 0;
@@ -561,7 +560,6 @@
             font-size: 16px;
         }
 
-        /* Toast */
         .toast {
             position: fixed;
             top: 24px;
@@ -602,7 +600,6 @@
             }
         }
 
-        /* Observação interna */
         .obs-interna {
             background: #1a1a2a;
             border-radius: 8px;
@@ -612,6 +609,80 @@
             border-left: 2px solid #4a3a5a;
             margin-top: 4px;
             font-style: italic;
+        }
+
+        /* Modal de edição */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #121a2e;
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #2a3a5a;
+        }
+
+        .modal h2 {
+            color: #c8d6f0;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .modal .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .modal .botoes-modal {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal .botoes-modal button {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal .btn-salvar-edicao {
+            background: #e65c2a;
+            color: #fff;
+        }
+
+        .modal .btn-salvar-edicao:hover {
+            background: #d04a1a;
+        }
+
+        .modal .btn-cancelar-edicao {
+            background: #2a2a3a;
+            color: #8a8aaa;
+        }
+
+        .modal .btn-cancelar-edicao:hover {
+            background: #3a3a4a;
         }
 
         @media (max-width: 700px) {
@@ -640,6 +711,9 @@
             .botoes-acao {
                 flex-direction: column;
             }
+            .botoes-modal {
+                flex-direction: column;
+            }
         }
 
         @media (max-width: 450px) {
@@ -656,27 +730,25 @@
 
     <div class="app">
 
-        <!-- Header -->
         <header class="header">
             <div>
-                <h1>🏍️ MotoPromissorias</h1>
-                <span class="sub">Gestão de vendas com lembretes automáticos via WhatsApp</span>
+                <h1>MotoPromissorias</h1>
+                <span class="sub">Gestao de vendas com lembretes automaticos via WhatsApp</span>
             </div>
             <div style="font-size:13px; color:#e65c2a;">v2.0</div>
         </header>
 
-        <!-- Métricas -->
         <section class="metric-grid">
             <div class="metric-card">
                 <div class="label">Total a Receber</div>
                 <div class="value highlight" id="totalReceber">R$ 0</div>
             </div>
             <div class="metric-card">
-                <div class="label">Receber este Mês</div>
+                <div class="label">Receber este Mes</div>
                 <div class="value" id="mesReceber">R$ 0</div>
             </div>
             <div class="metric-card">
-                <div class="label">Recebido este Mês</div>
+                <div class="label">Recebido este Mes</div>
                 <div class="value" id="mesPago">R$ 0</div>
             </div>
             <div class="metric-card">
@@ -689,14 +761,13 @@
             </div>
         </section>
 
-        <!-- Formulário -->
         <section class="form-section">
             <div class="form-title">Nova Venda de Moto</div>
             <div class="form-grid">
                 <input type="text" id="nome" placeholder="Nome do cliente" />
                 <input type="text" id="telefone" placeholder="WhatsApp (com DDD)" value="89981067904" />
                 <input type="text" id="moto" placeholder="Moto (ex: Honda CG 160 2024)" />
-                <input type="text" id="descricao" placeholder="Descrição do contrato" />
+                <input type="text" id="descricao" placeholder="Descricao do contrato" />
                 <input type="number" id="valorTotal" placeholder="Valor total" oninput="atualizarPreview()" />
                 <select id="numParcelas" onchange="atualizarPreview()">
                     <option value="1">1 parcela</option>
@@ -708,7 +779,7 @@
                     <option value="12">12 parcelas</option>
                 </select>
                 <input type="date" id="vencimento" />
-                <textarea id="observacao" placeholder="Observação interna (só você vê)"></textarea>
+                <textarea id="observacao" placeholder="Observacao interna (so voce ve)"></textarea>
             </div>
 
             <div class="preview-block">
@@ -719,7 +790,6 @@
             <button class="btn-primary" id="btnSalvar" onclick="salvar()">Salvar Venda</button>
         </section>
 
-        <!-- Filtros -->
         <div class="filter-bar">
             <button class="filter-btn active" data-filter="TODOS" onclick="setFiltro('TODOS', this)">Todos</button>
             <button class="filter-btn" data-filter="PENDENTE" onclick="setFiltro('PENDENTE', this)">Pendentes</button>
@@ -728,32 +798,45 @@
             <button class="filter-btn antigos" data-filter="ANTIGOS" onclick="setFiltro('ANTIGOS', this)">Antigos Clientes</button>
         </div>
 
-        <!-- Busca -->
         <div class="search-box">
             <input type="text" id="busca" placeholder="Buscar cliente ou moto..." oninput="carregarClientes()" />
         </div>
 
-        <!-- Lista -->
         <div class="client-list" id="clientesContainer">
             <div class="empty-state">Carregando...</div>
         </div>
 
     </div>
 
+    <!-- Modal de Edição -->
+    <div class="modal-overlay" id="modalEditar">
+        <div class="modal">
+            <h2>Editar Parcela</h2>
+            <div class="form-grid">
+                <input type="text" id="editNome" placeholder="Nome do cliente" />
+                <input type="text" id="editTelefone" placeholder="WhatsApp (com DDD)" />
+                <input type="text" id="editMoto" placeholder="Moto" />
+                <input type="text" id="editDescricao" placeholder="Descricao" />
+                <input type="number" id="editValor" placeholder="Valor da parcela" step="0.01" />
+                <input type="date" id="editVencimento" />
+                <textarea id="editObservacao" placeholder="Observacao interna"></textarea>
+            </div>
+            <div class="botoes-modal">
+                <button class="btn-cancelar-edicao" onclick="fecharModalEdicao()">Cancelar</button>
+                <button class="btn-salvar-edicao" onclick="salvarEdicao()">Salvar Alteracoes</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // ============================================================
-        // CONFIGURAÇÃO
-        // ============================================================
         const API_URL =
             'https://script.google.com/macros/s/AKfycbww_lQmPPVPo-BqEMlrl1yg6-jlrXbglt2rpFGF-d45JJtGtGWHB8kSQRFPUFCDx9Ki/exec';
 
         let filtroAtual = 'TODOS';
         let dadosCache = [];
         let dadosAntigos = [];
+        let parcelaEditando = null;
 
-        // ============================================================
-        // UTILITÁRIOS
-        // ============================================================
         function formatarMoeda(valor) {
             return Number(valor).toLocaleString('pt-BR', {
                 style: 'currency',
@@ -785,9 +868,6 @@
             previewParcela();
         }
 
-        // ============================================================
-        // API
-        // ============================================================
         async function chamarApi(acao, dados = {}, tentativas = 3) {
             const form = new FormData();
             form.append('acao', acao);
@@ -802,7 +882,7 @@
                 } catch (err) {
                     console.warn(`Tentativa ${i+1} falhou:`, err);
                     if (i === tentativas - 1) {
-                        mostrarAlerta('Erro de conexão. Tente novamente.', 'error');
+                        mostrarAlerta('Erro de conexao. Tente novamente.', 'error');
                         return {};
                     }
                     await new Promise(r => setTimeout(r, 1000 * (i + 1)));
@@ -811,9 +891,6 @@
             return {};
         }
 
-        // ============================================================
-        // SALVAR
-        // ============================================================
         async function salvar() {
             const nome = document.getElementById('nome').value.trim();
             const telefone = document.getElementById('telefone').value.trim();
@@ -826,7 +903,7 @@
 
             if (!nome) return mostrarAlerta('Informe o nome do cliente.', 'error');
             if (!moto) return mostrarAlerta('Informe a moto que foi vendida.', 'error');
-            if (!valorTotal || parseFloat(valorTotal) <= 0) return mostrarAlerta('Informe um valor válido.', 'error');
+            if (!valorTotal || parseFloat(valorTotal) <= 0) return mostrarAlerta('Informe um valor valido.', 'error');
             if (!vencimento) return mostrarAlerta('Informe a data de vencimento.', 'error');
 
             const btn = document.getElementById('btnSalvar');
@@ -866,9 +943,6 @@
             }
         }
 
-        // ============================================================
-        // FILTRO
-        // ============================================================
         function setFiltro(tipo, el) {
             filtroAtual = tipo;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -876,9 +950,6 @@
             carregarClientes(true);
         }
 
-        // ============================================================
-        // CARREGAR DADOS
-        // ============================================================
         async function carregarClientes(forcar = false) {
             if (!forcar && dadosCache.length > 0) {
                 renderizar(dadosCache);
@@ -938,9 +1009,6 @@
             renderizar(clientesAtivos);
         }
 
-        // ============================================================
-        // RENDERIZAR
-        // ============================================================
         function renderizar(dados) {
             const busca = document.getElementById('busca').value.toLowerCase().trim();
             const container = document.getElementById('clientesContainer');
@@ -963,7 +1031,6 @@
                 return true;
             });
 
-            // Métricas
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
             const mesAtual = hoje.getMonth();
@@ -998,7 +1065,6 @@
             document.getElementById('mesPago').textContent = formatarMoeda(mesPago);
             document.getElementById('totalClientes').textContent = clientesSet.size;
 
-            // Agrupar por cliente
             const grupos = new Map();
             filtrados.forEach(row => {
                 const nome = row[2] || 'Sem nome';
@@ -1022,7 +1088,7 @@
                 const totalParcelas = parcelas.length;
                 const todasPagas = pagas === totalParcelas;
 
-                const moto = parcelas[0]?.[14] || 'Moto não informada';
+                const moto = parcelas[0]?.[14] || 'Moto nao informada';
                 const observacao = parcelas[0]?.[15] || '';
                 const contratoId = parcelas[0]?.[1] || '';
 
@@ -1037,11 +1103,11 @@
                                     ${isQuitado ? '<span class="quitado-badge">Quitado</span>' : ''}
                                 </div>
                                 <div class="client-details">
-                                    <span class="moto">🏍️ ${moto}</span>
+                                    <span class="moto">${moto}</span>
                                     <span>${totalParcelas} parcelas · ${pagas} pagas</span>
-                                    ${isQuitado ? '<span>✅ Contrato finalizado</span>' : ''}
+                                    ${isQuitado ? '<span>Contrato finalizado</span>' : ''}
                                 </div>
-                                ${observacao ? `<div class="obs-interna">📝 ${observacao}</div>` : ''}
+                                ${observacao ? `<div class="obs-interna">${observacao}</div>` : ''}
                             </div>
                             <div class="client-total ${isQuitado ? 'quitado' : ''}">
                                 ${formatarMoeda(totalCliente)}
@@ -1058,7 +1124,7 @@
 
                     const venc = new Date(p[9]);
                     const vencStr = venc.toLocaleDateString('pt-BR');
-                    const desc = p[4] || 'Sem descrição';
+                    const desc = p[4] || 'Sem descricao';
                     const parcelaNum = p[5] || '?';
                     const totalParc = p[6] || '?';
                     const valor = parseFloat(p[7] || 0);
@@ -1081,26 +1147,23 @@
                     if (status !== 'PAGO' && !isQuitado) {
                         html += `
                             <div class="botoes-acao">
-                                <button class="btn-pagar" onclick="marcarPago('${idParcela}')">
-                                    Marcar como pago
-                                </button>
-                                <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">
-                                    Excluir parcela
-                                </button>
+                                <button class="btn-pagar" onclick="marcarPago('${idParcela}')">Marcar como pago</button>
+                                <button class="btn-editar" onclick="abrirModalEdicao('${idParcela}')">Editar</button>
+                                <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">Excluir</button>
                             </div>
                         `;
                     } else if (status === 'PAGO') {
                         const dataPag = p[11] ? new Date(p[11]).toLocaleDateString('pt-BR') : '';
                         html += `
                             <div class="pago-info">Pago em ${dataPag || 'data desconhecida'}</div>
-                            <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">
-                                Excluir parcela
-                            </button>
+                            <div class="botoes-acao">
+                                <button class="btn-editar" onclick="abrirModalEdicao('${idParcela}')">Editar</button>
+                                <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">Excluir</button>
+                            </div>
                         `;
                     }
                 });
 
-                // Botão para excluir todo o contrato (apenas se não estiver quitado)
                 if (!isQuitado && totalParcelas > 0) {
                     html += `
                         <button class="btn-excluir-contrato" onclick="excluirContrato('${contratoId}')">
@@ -1119,17 +1182,11 @@
             container.innerHTML = html;
         }
 
-        // ============================================================
-        // TOGGLE PARCELAS
-        // ============================================================
         function toggleParcelas(idx) {
             const el = document.getElementById(`parcelas_${idx}`);
             if (el) el.classList.toggle('open');
         }
 
-        // ============================================================
-        // MARCAR PAGO
-        // ============================================================
         async function marcarPago(id) {
             if (!confirm('Confirmar pagamento desta parcela?')) return;
 
@@ -1152,15 +1209,96 @@
         }
 
         // ============================================================
-        // EXCLUIR PARCELA
+        // FUNÇÕES DE EDIÇÃO
+        // ============================================================
+        function abrirModalEdicao(id) {
+            parcelaEditando = id;
+            
+            // Buscar dados da parcela
+            const todasParcelas = [...dadosCache, ...dadosAntigos];
+            const parcela = todasParcelas.find(p => p[0] === id);
+            
+            if (!parcela) {
+                mostrarAlerta('Parcela nao encontrada.', 'error');
+                return;
+            }
+
+            document.getElementById('editNome').value = parcela[2] || '';
+            document.getElementById('editTelefone').value = parcela[3] || '';
+            document.getElementById('editMoto').value = parcela[14] || '';
+            document.getElementById('editDescricao').value = parcela[4] || '';
+            document.getElementById('editValor').value = parcela[7] || '';
+            
+            const vencimento = new Date(parcela[9]);
+            const vencStr = vencimento.toISOString().split('T')[0];
+            document.getElementById('editVencimento').value = vencStr;
+            
+            document.getElementById('editObservacao').value = parcela[15] || '';
+
+            document.getElementById('modalEditar').classList.add('active');
+        }
+
+        function fecharModalEdicao() {
+            document.getElementById('modalEditar').classList.remove('active');
+            parcelaEditando = null;
+        }
+
+        async function salvarEdicao() {
+            if (!parcelaEditando) return;
+
+            const dados = {
+                id: parcelaEditando,
+                nome: document.getElementById('editNome').value.trim(),
+                telefone: document.getElementById('editTelefone').value.trim(),
+                moto: document.getElementById('editMoto').value.trim(),
+                descricao: document.getElementById('editDescricao').value.trim(),
+                valor: document.getElementById('editValor').value,
+                vencimento: document.getElementById('editVencimento').value,
+                observacao: document.getElementById('editObservacao').value.trim()
+            };
+
+            if (!dados.nome) return mostrarAlerta('Informe o nome do cliente.', 'error');
+            if (!dados.moto) return mostrarAlerta('Informe a moto.', 'error');
+            if (!dados.valor || parseFloat(dados.valor) <= 0) return mostrarAlerta('Informe um valor valido.', 'error');
+            if (!dados.vencimento) return mostrarAlerta('Informe a data de vencimento.', 'error');
+
+            const resultado = await chamarApi('editarParcela', dados);
+
+            if (resultado.sucesso) {
+                mostrarAlerta('Parcela atualizada com sucesso!', 'success');
+                fecharModalEdicao();
+                dadosCache = [];
+                dadosAntigos = [];
+                await carregarClientes(true);
+            } else {
+                mostrarAlerta('Erro ao editar parcela.', 'error');
+            }
+        }
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                fecharModalEdicao();
+            }
+        });
+
+        // Fechar modal clicando fora
+        document.getElementById('modalEditar').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                fecharModalEdicao();
+            }
+        });
+
+        // ============================================================
+        // FUNÇÕES DE EXCLUSÃO
         // ============================================================
         async function excluirParcela(id) {
-            if (!confirm('Tem certeza que deseja EXCLUIR esta parcela?\n\nEsta ação não pode ser desfeita!')) return;
+            if (!confirm('Tem certeza que deseja EXCLUIR esta parcela?\n\nEsta acao nao pode ser desfeita!')) return;
 
             const resultado = await chamarApi('excluirParcela', { id });
 
             if (resultado.sucesso) {
-                mostrarAlerta('Parcela excluída com sucesso!', 'success');
+                mostrarAlerta('Parcela excluida com sucesso!', 'success');
                 dadosCache = [];
                 dadosAntigos = [];
                 await carregarClientes(true);
@@ -1169,16 +1307,13 @@
             }
         }
 
-        // ============================================================
-        // EXCLUIR CONTRATO INTEIRO
-        // ============================================================
         async function excluirContrato(contratoId) {
-            if (!confirm('ATENÇÃO! Você está prestes a excluir TODAS as parcelas deste contrato.\n\nEsta ação não pode ser desfeita!\n\nDeseja continuar?')) return;
+            if (!confirm('ATENCAO! Voce esta prestes a excluir TODAS as parcelas deste contrato.\n\nEsta acao nao pode ser desfeita!\n\nDeseja continuar?')) return;
 
             const resultado = await chamarApi('excluirContrato', { contratoId });
 
             if (resultado.sucesso) {
-                mostrarAlerta(`Contrato excluído com sucesso! ${resultado.parcelasExcluidas || 0} parcelas removidas.`, 'success');
+                mostrarAlerta(`Contrato excluido com sucesso! ${resultado.parcelasExcluidas || 0} parcelas removidas.`, 'success');
                 dadosCache = [];
                 dadosAntigos = [];
                 await carregarClientes(true);
