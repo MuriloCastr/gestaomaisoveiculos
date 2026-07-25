@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Promissorias</title>
+    <title>MotoPromissorias - Gestão de Vendas</title>
 
     <style>
         /* Reset e base */
@@ -43,7 +43,7 @@
         .header h1 {
             font-size: 26px;
             font-weight: 600;
-            background: linear-gradient(135deg, #a8bfff, #7a92e6);
+            background: linear-gradient(135deg, #ff8a5c, #e65c2a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -89,7 +89,7 @@
         }
 
         .metric-card .value.highlight {
-            background: linear-gradient(135deg, #a8bfff, #7a92e6);
+            background: linear-gradient(135deg, #ff8a5c, #e65c2a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -122,7 +122,8 @@
         }
 
         .form-grid input,
-        .form-grid select {
+        .form-grid select,
+        .form-grid textarea {
             background: #0e1525;
             border: 1px solid #22304a;
             border-radius: 12px;
@@ -135,13 +136,21 @@
         }
 
         .form-grid input:focus,
-        .form-grid select:focus {
-            border-color: #6a80d9;
-            box-shadow: 0 0 0 3px rgba(106, 128, 217, 0.12);
+        .form-grid select:focus,
+        .form-grid textarea:focus {
+            border-color: #e65c2a;
+            box-shadow: 0 0 0 3px rgba(230, 92, 42, 0.12);
         }
 
-        .form-grid input::placeholder {
+        .form-grid input::placeholder,
+        .form-grid textarea::placeholder {
             color: #4a5f80;
+        }
+
+        .form-grid textarea {
+            resize: vertical;
+            min-height: 50px;
+            font-family: inherit;
         }
 
         .preview-block {
@@ -149,7 +158,7 @@
             padding: 14px 18px;
             background: #0e1525;
             border-radius: 14px;
-            border-left: 3px solid #6a80d9;
+            border-left: 3px solid #e65c2a;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -169,7 +178,7 @@
         }
 
         .btn-primary {
-            background: #6a80d9;
+            background: #e65c2a;
             border: none;
             border-radius: 12px;
             padding: 15px 22px;
@@ -184,9 +193,9 @@
         }
 
         .btn-primary:hover {
-            background: #5a70c9;
+            background: #d04a1a;
             transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(106, 128, 217, 0.25);
+            box-shadow: 0 6px 18px rgba(230, 92, 42, 0.25);
         }
 
         .btn-primary:disabled {
@@ -195,7 +204,7 @@
             cursor: not-allowed;
         }
 
-        /* Filtros - Nova aba de Antigos */
+        /* Filtros */
         .filter-bar {
             display: flex;
             flex-wrap: wrap;
@@ -220,8 +229,8 @@
         }
 
         .filter-btn.active {
-            background: #6a80d9;
-            border-color: #6a80d9;
+            background: #e65c2a;
+            border-color: #e65c2a;
             color: #fff;
         }
 
@@ -252,8 +261,8 @@
         }
 
         .search-box input:focus {
-            border-color: #6a80d9;
-            box-shadow: 0 0 0 3px rgba(106, 128, 217, 0.08);
+            border-color: #e65c2a;
+            box-shadow: 0 0 0 3px rgba(230, 92, 42, 0.08);
         }
 
         .search-box input::placeholder {
@@ -301,6 +310,10 @@
             background: #161f35;
         }
 
+        .client-info {
+            flex: 1;
+        }
+
         .client-name {
             font-size: 19px;
             font-weight: 600;
@@ -317,6 +330,26 @@
             margin-left: 10px;
         }
 
+        .client-details {
+            font-size: 13px;
+            color: #6a7fa0;
+            margin-top: 3px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .client-details .moto {
+            color: #ff8a5c;
+            font-weight: 500;
+        }
+
+        .client-details .obs {
+            color: #7a8fa8;
+            font-style: italic;
+            font-size: 12px;
+        }
+
         .client-meta {
             font-size: 13px;
             color: #6a7fa0;
@@ -326,10 +359,12 @@
         .client-total {
             font-size: 26px;
             font-weight: 700;
-            background: linear-gradient(135deg, #a8bfff, #7a92e6);
+            background: linear-gradient(135deg, #ff8a5c, #e65c2a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            white-space: nowrap;
+            margin-left: 12px;
         }
 
         .client-total.quitado {
@@ -516,6 +551,18 @@
             }
         }
 
+        /* Observação interna (só visível para o admin) */
+        .obs-interna {
+            background: #1a1a2a;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 12px;
+            color: #8a7a9a;
+            border-left: 2px solid #4a3a5a;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
         @media (max-width: 700px) {
             .client-header {
                 flex-direction: column;
@@ -534,6 +581,10 @@
             }
             .header h1 {
                 font-size: 20px;
+            }
+            .client-total {
+                font-size: 20px;
+                margin-left: 0;
             }
         }
 
@@ -554,10 +605,10 @@
         <!-- Header -->
         <header class="header">
             <div>
-                <h1>Promissorias Pro</h1>
-                <span class="sub">Gestão com lembretes automáticos via WhatsApp</span>
+                <h1>🏍️ MotoPromissorias</h1>
+                <span class="sub">Gestão de vendas com lembretes automáticos via WhatsApp</span>
             </div>
-            <div style="font-size:13px; color:#6a80d9;">v2.0</div>
+            <div style="font-size:13px; color:#e65c2a;">v2.0</div>
         </header>
 
         <!-- Métricas -->
@@ -586,10 +637,11 @@
 
         <!-- Formulário -->
         <section class="form-section">
-            <div class="form-title">Nova Promissória</div>
+            <div class="form-title">Nova Venda de Moto</div>
             <div class="form-grid">
                 <input type="text" id="nome" placeholder="Nome do cliente" />
                 <input type="text" id="telefone" placeholder="WhatsApp (com DDD)" value="89981067904" />
+                <input type="text" id="moto" placeholder="Moto (ex: Honda CG 160 2024)" />
                 <input type="text" id="descricao" placeholder="Descrição do contrato" />
                 <input type="number" id="valorTotal" placeholder="Valor total" oninput="atualizarPreview()" />
                 <select id="numParcelas" onchange="atualizarPreview()">
@@ -602,6 +654,7 @@
                     <option value="12">12 parcelas</option>
                 </select>
                 <input type="date" id="vencimento" />
+                <textarea id="observacao" placeholder="Observação interna (só você vê)"></textarea>
             </div>
 
             <div class="preview-block">
@@ -609,10 +662,10 @@
                 <span class="preview-value" id="valorParcela">R$ 0,00</span>
             </div>
 
-            <button class="btn-primary" id="btnSalvar" onclick="salvar()">Salvar Promissória</button>
+            <button class="btn-primary" id="btnSalvar" onclick="salvar()">Salvar Venda</button>
         </section>
 
-        <!-- Filtros - Inclui a nova aba Antigos -->
+        <!-- Filtros -->
         <div class="filter-bar">
             <button class="filter-btn active" data-filter="TODOS" onclick="setFiltro('TODOS', this)">Todos</button>
             <button class="filter-btn" data-filter="PENDENTE" onclick="setFiltro('PENDENTE', this)">Pendentes</button>
@@ -623,7 +676,7 @@
 
         <!-- Busca -->
         <div class="search-box">
-            <input type="text" id="busca" placeholder="Buscar cliente..." oninput="carregarClientes()" />
+            <input type="text" id="busca" placeholder="Buscar cliente ou moto..." oninput="carregarClientes()" />
         </div>
 
         <!-- Lista -->
@@ -635,10 +688,10 @@
 
     <script>
         // ============================================================
-        // CONFIGURAÇÃO - MESMA URL DO SEU GS
+        // CONFIGURAÇÃO
         // ============================================================
         const API_URL =
-            'https://script.google.com/macros/s/AKfycbwqEZxapoen_DXGAMGGVD1ZZ1uJ6Yn9cNc2aybxndDQ5jLk7uuPihFHG_dXuGXD-EXq/exec';
+            'https://script.google.com/macros/s/AKfycbww_lQmPPVPo-BqEMlrl1yg6-jlrXbglt2rpFGF-d45JJtGtGWHB8kSQRFPUFCDx9Ki/exec';
 
         let filtroAtual = 'TODOS';
         let dadosCache = [];
@@ -679,7 +732,7 @@
         }
 
         // ============================================================
-        // API - CHAMADA AO GS
+        // API
         // ============================================================
         async function chamarApi(acao, dados = {}, tentativas = 3) {
             const form = new FormData();
@@ -710,12 +763,15 @@
         async function salvar() {
             const nome = document.getElementById('nome').value.trim();
             const telefone = document.getElementById('telefone').value.trim();
+            const moto = document.getElementById('moto').value.trim();
             const descricao = document.getElementById('descricao').value.trim();
+            const observacao = document.getElementById('observacao').value.trim();
             const valorTotal = document.getElementById('valorTotal').value;
             const numParcelas = document.getElementById('numParcelas').value;
             const vencimento = document.getElementById('vencimento').value;
 
             if (!nome) return mostrarAlerta('Informe o nome do cliente.', 'error');
+            if (!moto) return mostrarAlerta('Informe a moto que foi vendida.', 'error');
             if (!valorTotal || parseFloat(valorTotal) <= 0) return mostrarAlerta('Informe um valor válido.', 'error');
             if (!vencimento) return mostrarAlerta('Informe a data de vencimento.', 'error');
 
@@ -723,22 +779,30 @@
             btn.disabled = true;
             btn.textContent = 'Salvando...';
 
+            // Combinar descrição com moto para aparecer nas mensagens
+            const descricaoCompleta = descricao ? `${moto} - ${descricao}` : moto;
+
             const resultado = await chamarApi('salvar', {
                 nome,
                 telefone,
-                descricao,
+                descricao: descricaoCompleta,
+                moto,
+                observacao,
                 valorTotal,
                 numParcelas,
                 vencimento
             });
 
             btn.disabled = false;
-            btn.textContent = 'Salvar Promissória';
+            btn.textContent = 'Salvar Venda';
 
             if (resultado.sucesso) {
-                mostrarAlerta('Promissória salva com sucesso!', 'success');
+                mostrarAlerta('Venda salva com sucesso!', 'success');
                 document.getElementById('nome').value = '';
+                document.getElementById('telefone').value = '89981067904';
+                document.getElementById('moto').value = '';
                 document.getElementById('descricao').value = '';
+                document.getElementById('observacao').value = '';
                 document.getElementById('valorTotal').value = '';
                 document.getElementById('vencimento').value = '';
                 document.getElementById('numParcelas').value = '1';
@@ -760,7 +824,7 @@
         }
 
         // ============================================================
-        // CARREGAR DADOS DO GS
+        // CARREGAR DADOS
         // ============================================================
         async function carregarClientes(forcar = false) {
             if (!forcar && dadosCache.length > 0) {
@@ -774,31 +838,13 @@
             const resultado = await chamarApi('listar');
             const lista = resultado || [];
 
-            // O GS já atualiza os status de atrasado, mas vamos garantir
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
 
-            // Separar clientes ativos e antigos
             const clientesAtivos = [];
             const clientesAntigos = [];
 
-            lista.forEach((row) => {
-                if (row[10] === 'PAGO') {
-                    // Verificar se todas as parcelas deste contrato estão pagas
-                    // Vamos agrupar por contrato para verificar
-                    return;
-                }
-                const venc = new Date(row[9]);
-                venc.setHours(0, 0, 0, 0);
-                if (venc < hoje && row[10] !== 'ATRASADO') {
-                    row[10] = 'ATRASADO';
-                }
-                clientesAtivos.push(row);
-            });
-
-            // Agora vamos buscar os clientes antigos (contratos quitados)
-            // O GS já move para a aba Antigos_Clientes, mas vamos criar uma lógica
-            // para identificar contratos com todas as parcelas pagas
+            // Agrupar por contrato para identificar quitados
             const contratos = new Map();
             lista.forEach(row => {
                 const contratoId = row[1];
@@ -808,14 +854,34 @@
                 contratos.get(contratoId).push(row);
             });
 
-            // Verificar quais contratos estão totalmente pagos
+            // Verificar contratos quitados
+            const contratosQuitados = new Set();
             for (const [contratoId, parcelas] of contratos) {
                 const todasPagas = parcelas.every(p => p[10] === 'PAGO');
                 if (todasPagas && parcelas.length > 0) {
-                    // Mover para antigos (apenas para exibição, o GS já moveu)
-                    clientesAntigos.push(...parcelas);
+                    contratosQuitados.add(contratoId);
                 }
             }
+
+            lista.forEach((row) => {
+                const contratoId = row[1];
+                const isQuitado = contratosQuitados.has(contratoId);
+
+                // Atualizar status de atrasado
+                if (row[10] !== 'PAGO' && !isQuitado) {
+                    const venc = new Date(row[9]);
+                    venc.setHours(0, 0, 0, 0);
+                    if (venc < hoje && row[10] !== 'ATRASADO') {
+                        row[10] = 'ATRASADO';
+                    }
+                }
+
+                if (isQuitado) {
+                    clientesAntigos.push(row);
+                } else {
+                    clientesAtivos.push(row);
+                }
+            });
 
             dadosCache = clientesAtivos;
             dadosAntigos = clientesAntigos;
@@ -829,7 +895,6 @@
             const busca = document.getElementById('busca').value.toLowerCase().trim();
             const container = document.getElementById('clientesContainer');
 
-            // Determinar qual lista usar baseado no filtro
             let listaParaRenderizar = [];
             let isAntigos = false;
 
@@ -842,12 +907,13 @@
 
             let filtrados = listaParaRenderizar.filter(row => {
                 const nome = (row[2] || '').toLowerCase();
-                if (busca && !nome.includes(busca)) return false;
+                const moto = (row[13] || '').toLowerCase();
+                if (busca && !nome.includes(busca) && !moto.includes(busca)) return false;
                 if (filtroAtual !== 'TODOS' && filtroAtual !== 'ANTIGOS' && row[10] !== filtroAtual) return false;
                 return true;
             });
 
-            // Métricas (apenas para clientes ativos)
+            // Métricas
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
             const mesAtual = hoje.getMonth();
@@ -891,8 +957,8 @@
             });
 
             if (grupos.size === 0) {
-                const mensagem = isAntigos ? 
-                    'Nenhum cliente antigo encontrado' : 
+                const mensagem = isAntigos ?
+                    'Nenhum cliente antigo encontrado' :
                     'Nenhum cliente encontrado';
                 container.innerHTML = `<div class="empty-state">${mensagem}</div>`;
                 return;
@@ -906,21 +972,26 @@
                 const totalParcelas = parcelas.length;
                 const todasPagas = pagas === totalParcelas;
 
-                // Determinar se é cliente antigo (todas as parcelas pagas)
+                // Pegar a moto da primeira parcela
+                const moto = parcelas[0]?.[13] || 'Moto não informada';
+                const observacao = parcelas[0]?.[14] || '';
+
                 const isQuitado = todasPagas && totalParcelas > 0;
 
                 html += `
                     <div class="client-card ${isQuitado ? 'quitado' : ''}">
                         <div class="client-header" onclick="toggleParcelas(${idx})">
-                            <div>
+                            <div class="client-info">
                                 <div class="client-name">
                                     ${nome}
                                     ${isQuitado ? '<span class="quitado-badge">Quitado</span>' : ''}
                                 </div>
-                                <div class="client-meta">
-                                    ${totalParcelas} parcelas · ${pagas} pagas
-                                    ${isQuitado ? ' · Contrato finalizado' : ''}
+                                <div class="client-details">
+                                    <span class="moto">🏍️ ${moto}</span>
+                                    <span>${totalParcelas} parcelas · ${pagas} pagas</span>
+                                    ${isQuitado ? '<span>✅ Contrato finalizado</span>' : ''}
                                 </div>
+                                ${observacao ? `<div class="obs-interna">📝 ${observacao}</div>` : ''}
                             </div>
                             <div class="client-total ${isQuitado ? 'quitado' : ''}">
                                 ${formatarMoeda(totalCliente)}
@@ -1000,7 +1071,6 @@
             if (resultado.sucesso) {
                 if (resultado.contratoQuitado) {
                     mostrarAlerta('Contrato quitado! Cliente movido para Antigos Clientes.', 'success');
-                    // Recarregar para atualizar as listas
                     dadosCache = [];
                     dadosAntigos = [];
                     await carregarClientes(true);
@@ -1021,10 +1091,8 @@
             previewParcela();
             carregarClientes(true);
 
-            // Atualizar a cada 30s
             setInterval(() => carregarClientes(true), 30000);
 
-            // Verificar notificações a cada 5min (o GS já faz isso via trigger)
             setInterval(async () => {
                 try {
                     await chamarApi('verificarNotificacoes');
@@ -1032,7 +1100,6 @@
             }, 300000);
         });
 
-        // Atalhos: Ctrl+F busca, Ctrl+N novo
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'f') {
                 e.preventDefault();
