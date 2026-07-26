@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
         }
 
         body {
@@ -27,6 +27,7 @@
             width: 100%;
         }
 
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -52,38 +53,38 @@
             font-size: 14px;
         }
 
-        .header .status-whatsapp {
+        .status-whatsapp {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             background: #121a2e;
-            padding: 6px 16px 6px 12px;
+            padding: 8px 18px;
             border-radius: 30px;
             border: 1px solid #22304a;
             font-size: 13px;
         }
 
-        .header .status-whatsapp .dot {
+        .dot {
             width: 10px;
             height: 10px;
             border-radius: 50%;
             display: inline-block;
         }
 
-        .header .status-whatsapp .dot.online {
+        .dot.online {
             background: #4ade80;
             box-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
         }
 
-        .header .status-whatsapp .dot.offline {
+        .dot.offline {
             background: #f87171;
             box-shadow: 0 0 10px rgba(248, 113, 113, 0.3);
         }
 
-        .header .status-whatsapp .dot.testing {
+        .dot.testing {
             background: #fbbf24;
             box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
-            animation: pulse 1.5s infinite;
+            animation: pulse 1s infinite;
         }
 
         @keyframes pulse {
@@ -91,6 +92,7 @@
             50% { opacity: 0.4; }
         }
 
+        /* Cards */
         .metric-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -135,6 +137,7 @@
             color: #f58a8a;
         }
 
+        /* Formulário */
         .form-section {
             background: #121a2e;
             border-radius: 20px;
@@ -177,11 +180,6 @@
             box-shadow: 0 0 0 3px rgba(230, 92, 42, 0.12);
         }
 
-        .form-grid input::placeholder,
-        .form-grid textarea::placeholder {
-            color: #4a5f80;
-        }
-
         .form-grid textarea {
             resize: vertical;
             min-height: 50px;
@@ -201,17 +199,6 @@
             gap: 10px;
         }
 
-        .preview-block .preview-label {
-            color: #7a8fa8;
-            font-size: 13px;
-        }
-
-        .preview-block .preview-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #c8d6f0;
-        }
-
         .btn-primary {
             background: #e65c2a;
             border: none;
@@ -224,21 +211,101 @@
             transition: 0.2s;
             width: 100%;
             margin-top: 18px;
-            letter-spacing: 0.3px;
         }
 
         .btn-primary:hover {
             background: #d04a1a;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
             box-shadow: 0 6px 18px rgba(230, 92, 42, 0.25);
         }
 
-        .btn-primary:disabled {
-            opacity: 0.5;
-            transform: none;
-            cursor: not-allowed;
+        /* WhatsApp Config */
+        .whatsapp-config {
+            background: #121a2e;
+            border-radius: 20px;
+            padding: 24px 28px;
+            margin-bottom: 28px;
+            border: 1px solid #1f2a45;
         }
 
+        .whatsapp-config .config-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: #c8d6f0;
+        }
+
+        .whatsapp-config .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .whatsapp-config .config-grid input {
+            background: #0e1525;
+            border: 1px solid #22304a;
+            border-radius: 12px;
+            padding: 13px 15px;
+            color: #e8edf5;
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+        }
+
+        .whatsapp-config .config-grid input:focus {
+            border-color: #e65c2a;
+            box-shadow: 0 0 0 3px rgba(230, 92, 42, 0.12);
+        }
+
+        .btn-testar-whatsapp {
+            background: #1a4a2a;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 22px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #b0e8c0;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .btn-testar-whatsapp:hover {
+            background: #2a5a3a;
+            color: #fff;
+        }
+
+        .btn-reiniciar-whatsapp {
+            background: #4a3a1a;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 22px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #e8d57a;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .btn-reiniciar-whatsapp:hover {
+            background: #5a4a2a;
+            color: #fff;
+        }
+
+        .config-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .config-buttons button {
+            flex: 1;
+        }
+
+        /* Filtros e Lista */
         .filter-bar {
             display: flex;
             flex-wrap: wrap;
@@ -290,16 +357,6 @@
             color: #e8edf5;
             font-size: 15px;
             outline: none;
-            transition: 0.2s;
-        }
-
-        .search-box input:focus {
-            border-color: #e65c2a;
-            box-shadow: 0 0 0 3px rgba(230, 92, 42, 0.08);
-        }
-
-        .search-box input::placeholder {
-            color: #4a5f80;
         }
 
         .client-list {
@@ -318,15 +375,6 @@
 
         .client-card:hover {
             border-color: #334a6a;
-        }
-
-        .client-card.quitado {
-            opacity: 0.75;
-            border-color: #3a2a4a;
-        }
-
-        .client-card.quitado .client-header:hover {
-            background: #161f35;
         }
 
         .client-header {
@@ -352,16 +400,6 @@
             color: #e8edf5;
         }
 
-        .client-name .quitado-badge {
-            font-size: 12px;
-            font-weight: 500;
-            color: #a88ac8;
-            background: #2a1a3a;
-            padding: 2px 12px;
-            border-radius: 20px;
-            margin-left: 10px;
-        }
-
         .client-details {
             font-size: 13px;
             color: #6a7fa0;
@@ -376,12 +414,6 @@
             font-weight: 500;
         }
 
-        .client-details .obs {
-            color: #7a8fa8;
-            font-style: italic;
-            font-size: 12px;
-        }
-
         .client-total {
             font-size: 26px;
             font-weight: 700;
@@ -393,34 +425,15 @@
             margin-left: 12px;
         }
 
-        .client-total.quitado {
-            background: linear-gradient(135deg, #c8b8d8, #a88ac8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
         .parcelas-wrapper {
             display: none;
             padding: 0 22px 22px 22px;
             background: #0e1525;
             border-top: 1px solid #1f2a45;
-            animation: slideDown 0.2s ease;
         }
 
         .parcelas-wrapper.open {
             display: block;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-6px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .parcela-item {
@@ -436,19 +449,10 @@
             gap: 10px;
         }
 
-        .parcela-item:hover {
-            border-color: #334a6a;
-        }
-
         .parcela-info {
             display: flex;
             flex-direction: column;
             gap: 5px;
-        }
-
-        .parcela-desc {
-            font-weight: 500;
-            color: #c8d6f0;
         }
 
         .parcela-meta {
@@ -465,7 +469,6 @@
             font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
         }
 
         .badge-pendente {
@@ -481,12 +484,6 @@
         .badge-atrasado {
             background: #2a1a1a;
             color: #f58a8a;
-            animation: pulseBadge 1.8s infinite;
-        }
-
-        @keyframes pulseBadge {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
         }
 
         .parcela-valor {
@@ -505,7 +502,8 @@
             color: #b0e8c0;
             cursor: pointer;
             transition: 0.2s;
-            flex: 1;
+            width: 100%;
+            margin-top: 10px;
         }
 
         .btn-pagar:hover {
@@ -513,22 +511,23 @@
             color: #fff;
         }
 
-        .btn-editar {
-            background: #1a2a4a;
+        .btn-excluir {
+            background: #4a1a1a;
             border: none;
             border-radius: 10px;
             padding: 11px 18px;
             font-weight: 600;
             font-size: 13px;
-            color: #8ab8f5;
+            color: #f58a8a;
             cursor: pointer;
             transition: 0.2s;
-            flex: 1;
+            width: 100%;
+            margin-top: 10px;
         }
 
-        .btn-editar:hover {
-            background: #2a3a5a;
-            color: #aac8ff;
+        .btn-excluir:hover {
+            background: #5a2a2a;
+            color: #ffaaaa;
         }
 
         .btn-editar-contrato {
@@ -548,25 +547,6 @@
         .btn-editar-contrato:hover {
             background: #2a3a5a;
             color: #aac8ff;
-            border-color: #3a5a7a;
-        }
-
-        .btn-excluir {
-            background: #4a1a1a;
-            border: none;
-            border-radius: 10px;
-            padding: 11px 18px;
-            font-weight: 600;
-            font-size: 13px;
-            color: #f58a8a;
-            cursor: pointer;
-            transition: 0.2s;
-            flex: 1;
-        }
-
-        .btn-excluir:hover {
-            background: #5a2a2a;
-            color: #ffaaaa;
         }
 
         .btn-excluir-contrato {
@@ -586,7 +566,6 @@
         .btn-excluir-contrato:hover {
             background: #5a2a2a;
             color: #ffaaaa;
-            border-color: #8a3a3a;
         }
 
         .botoes-acao {
@@ -595,18 +574,9 @@
             margin-top: 10px;
         }
 
-        .botoes-acao .btn-pagar,
-        .botoes-acao .btn-editar,
-        .botoes-acao .btn-excluir {
+        .botoes-acao button {
             flex: 1;
             margin-top: 0;
-        }
-
-        .pago-info {
-            margin-top: 10px;
-            color: #7ad4a0;
-            font-size: 14px;
-            text-align: center;
         }
 
         .empty-state {
@@ -619,6 +589,7 @@
             font-size: 16px;
         }
 
+        /* Toast */
         .toast {
             position: fixed;
             top: 24px;
@@ -629,7 +600,7 @@
             font-weight: 500;
             z-index: 999;
             box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
-            animation: toastIn 0.3s ease;
+            animation: slideIn 0.3s ease;
             max-width: 380px;
         }
 
@@ -648,7 +619,7 @@
             border-left: 4px solid #5a8ad9;
         }
 
-        @keyframes toastIn {
+        @keyframes slideIn {
             from {
                 transform: translateX(50px);
                 opacity: 0;
@@ -670,163 +641,6 @@
             font-style: italic;
         }
 
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: #121a2e;
-            border-radius: 24px;
-            padding: 32px;
-            max-width: 650px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid #2a3a5a;
-        }
-
-        .modal h2 {
-            color: #c8d6f0;
-            margin-bottom: 20px;
-            font-size: 20px;
-        }
-
-        .modal .form-grid {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .modal .form-grid .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .modal .botoes-modal {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .modal .botoes-modal button {
-            flex: 1;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .modal .btn-salvar-edicao {
-            background: #e65c2a;
-            color: #fff;
-        }
-
-        .modal .btn-salvar-edicao:hover {
-            background: #d04a1a;
-        }
-
-        .modal .btn-cancelar-edicao {
-            background: #2a2a3a;
-            color: #8a8aaa;
-        }
-
-        .modal .btn-cancelar-edicao:hover {
-            background: #3a3a4a;
-        }
-
-        .modal .info-parcelas {
-            background: #0e1525;
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            color: #7a8fa8;
-            font-size: 14px;
-            border: 1px solid #1f2a45;
-        }
-
-        .modal .info-parcelas strong {
-            color: #c8d6f0;
-        }
-
-        /* Configuração WhatsApp */
-        .whatsapp-config {
-            background: #121a2e;
-            border-radius: 20px;
-            padding: 24px 28px;
-            margin-bottom: 28px;
-            border: 1px solid #1f2a45;
-        }
-
-        .whatsapp-config .config-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 18px;
-            color: #c8d6f0;
-        }
-
-        .whatsapp-config .config-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .whatsapp-config .config-grid input {
-            background: #0e1525;
-            border: 1px solid #22304a;
-            border-radius: 12px;
-            padding: 13px 15px;
-            color: #e8edf5;
-            font-size: 14px;
-            outline: none;
-            transition: 0.2s;
-            width: 100%;
-        }
-
-        .whatsapp-config .config-grid input:focus {
-            border-color: #e65c2a;
-            box-shadow: 0 0 0 3px rgba(230, 92, 42, 0.12);
-        }
-
-        .whatsapp-config .config-grid input::placeholder {
-            color: #4a5f80;
-        }
-
-        .whatsapp-config .config-grid .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .btn-testar-whatsapp {
-            background: #1a4a2a;
-            border: none;
-            border-radius: 12px;
-            padding: 14px 22px;
-            font-weight: 600;
-            font-size: 15px;
-            color: #b0e8c0;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            margin-top: 12px;
-        }
-
-        .btn-testar-whatsapp:hover {
-            background: #2a5a3a;
-            color: #fff;
-        }
-
         @media (max-width: 700px) {
             .client-header {
                 flex-direction: column;
@@ -843,28 +657,14 @@
             .form-grid {
                 grid-template-columns: 1fr;
             }
-            .header h1 {
-                font-size: 20px;
-            }
-            .client-total {
-                font-size: 20px;
-                margin-left: 0;
-            }
-            .botoes-acao {
-                flex-direction: column;
-            }
-            .botoes-modal {
-                flex-direction: column;
-            }
-            .modal .form-grid {
-                grid-template-columns: 1fr;
-            }
             .whatsapp-config .config-grid {
                 grid-template-columns: 1fr;
             }
-            .header .status-whatsapp {
-                font-size: 11px;
-                padding: 4px 12px 4px 8px;
+            .config-buttons {
+                flex-direction: column;
+            }
+            .botoes-acao {
+                flex-direction: column;
             }
         }
 
@@ -882,28 +682,30 @@
 
     <div class="app">
 
+        <!-- Header -->
         <header class="header">
             <div>
-                <h1>MotoPromissorias</h1>
-                <span class="sub">Gestao de vendas com lembretes automaticos via WhatsApp</span>
+                <h1>🏍️ MotoPromissorias</h1>
+                <span class="sub">Gestão de vendas com lembretes automáticos</span>
             </div>
             <div class="status-whatsapp">
-                <span class="dot" id="whatsappStatusDot"></span>
+                <span class="dot offline" id="whatsappStatusDot"></span>
                 <span id="whatsappStatusText">Verificando...</span>
             </div>
         </header>
 
+        <!-- Métricas -->
         <section class="metric-grid">
             <div class="metric-card">
                 <div class="label">Total a Receber</div>
                 <div class="value highlight" id="totalReceber">R$ 0</div>
             </div>
             <div class="metric-card">
-                <div class="label">Receber este Mes</div>
+                <div class="label">Receber este Mês</div>
                 <div class="value" id="mesReceber">R$ 0</div>
             </div>
             <div class="metric-card">
-                <div class="label">Recebido este Mes</div>
+                <div class="label">Recebido este Mês</div>
                 <div class="value" id="mesPago">R$ 0</div>
             </div>
             <div class="metric-card">
@@ -920,13 +722,14 @@
             </div>
         </section>
 
+        <!-- Formulário -->
         <section class="form-section">
             <div class="form-title">Nova Venda de Moto</div>
             <div class="form-grid">
                 <input type="text" id="nome" placeholder="Nome do cliente" />
                 <input type="text" id="telefone" placeholder="WhatsApp (com DDD)" value="89981067904" />
-                <input type="text" id="moto" placeholder="Moto (ex: Honda CG 160 2024)" />
-                <input type="text" id="descricao" placeholder="Descricao do contrato" />
+                <input type="text" id="moto" placeholder="Moto (ex: Honda CG 160)" />
+                <input type="text" id="descricao" placeholder="Descrição do contrato" />
                 <input type="number" id="valorTotal" placeholder="Valor total" oninput="atualizarPreview()" />
                 <select id="numParcelas" onchange="atualizarPreview()">
                     <option value="1">1 parcela</option>
@@ -938,7 +741,7 @@
                     <option value="12">12 parcelas</option>
                 </select>
                 <input type="date" id="vencimento" />
-                <textarea id="observacao" placeholder="Observacao interna (so voce ve)"></textarea>
+                <textarea id="observacao" placeholder="Observação interna (só você vê)"></textarea>
             </div>
 
             <div class="preview-block">
@@ -951,22 +754,27 @@
 
         <!-- Configuração WhatsApp -->
         <section class="whatsapp-config">
-            <div class="config-title">Configuracao do WhatsApp</div>
+            <div class="config-title">Configuração do WhatsApp</div>
             <div class="config-grid">
-                <input type="text" id="whatsappServer" placeholder="URL do servidor WhatsApp" />
+                <input type="text" id="whatsappServer" placeholder="URL do servidor" value="http://localhost:3000" />
                 <input type="text" id="whatsappTestPhone" placeholder="Telefone para teste" value="89981067904" />
-                <div class="full-width">
-                    <button class="btn-testar-whatsapp" onclick="testarWhatsApp()">Testar Envio de Mensagem</button>
-                </div>
             </div>
+            <div class="config-buttons">
+                <button class="btn-testar-whatsapp" onclick="testarWhatsApp()">📱 Testar Mensagem</button>
+                <button class="btn-reiniciar-whatsapp" onclick="reiniciarWhatsApp()">🔄 Reiniciar Servidor</button>
+            </div>
+            <button class="btn-testar-whatsapp" onclick="verificarStatusWhatsApp()" style="margin-top: 10px; background: #1a2a4a; color: #8ab8f5;">
+                📊 Verificar Status
+            </button>
         </section>
 
+        <!-- Filtros -->
         <div class="filter-bar">
             <button class="filter-btn active" data-filter="TODOS" onclick="setFiltro('TODOS', this)">Todos</button>
             <button class="filter-btn" data-filter="PENDENTE" onclick="setFiltro('PENDENTE', this)">Pendentes</button>
             <button class="filter-btn" data-filter="ATRASADO" onclick="setFiltro('ATRASADO', this)">Atrasados</button>
             <button class="filter-btn" data-filter="PAGO" onclick="setFiltro('PAGO', this)">Pagos</button>
-            <button class="filter-btn antigos" data-filter="ANTIGOS" onclick="setFiltro('ANTIGOS', this)">Antigos Clientes</button>
+            <button class="filter-btn antigos" data-filter="ANTIGOS" onclick="setFiltro('ANTIGOS', this)">Antigos</button>
         </div>
 
         <div class="search-box">
@@ -979,19 +787,15 @@
 
     </div>
 
-    <!-- Modal de Edição de Contrato -->
-    <div class="modal-overlay" id="modalEditarContrato">
-        <div class="modal">
-            <h2 id="modalTitulo">Editar Contrato</h2>
-            <div class="info-parcelas" id="infoParcelas">
-                <strong>Parcelas:</strong> <span id="infoTotalParcelas">0</span> parcelas · 
-                <strong>Valor total:</strong> <span id="infoValorTotal">R$ 0,00</span>
-            </div>
+    <!-- Modal de Edição -->
+    <div class="modal-overlay" id="modalEditarContrato" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:1000;justify-content:center;align-items:center;">
+        <div style="background:#121a2e;border-radius:24px;padding:32px;max-width:650px;width:90%;max-height:90vh;overflow-y:auto;border:1px solid #2a3a5a;">
+            <h2 style="color:#c8d6f0;margin-bottom:20px;font-size:20px;">Editar Contrato</h2>
             <div class="form-grid">
                 <input type="text" id="editNome" placeholder="Nome do cliente" />
                 <input type="text" id="editTelefone" placeholder="WhatsApp (com DDD)" />
-                <input type="text" id="editMoto" placeholder="Moto" class="full-width" />
-                <input type="text" id="editDescricao" placeholder="Descricao" class="full-width" />
+                <input type="text" id="editMoto" placeholder="Moto" style="grid-column:1/-1;" />
+                <input type="text" id="editDescricao" placeholder="Descrição" style="grid-column:1/-1;" />
                 <input type="number" id="editValorTotal" placeholder="Valor total" step="0.01" />
                 <input type="date" id="editVencimento" />
                 <select id="editNumParcelas">
@@ -1003,11 +807,11 @@
                     <option value="6">6 parcelas</option>
                     <option value="12">12 parcelas</option>
                 </select>
-                <textarea id="editObservacao" placeholder="Observacao interna" class="full-width"></textarea>
+                <textarea id="editObservacao" placeholder="Observação interna" style="grid-column:1/-1;resize:vertical;min-height:50px;background:#0e1525;border:1px solid #22304a;border-radius:12px;padding:13px 15px;color:#e8edf5;font-size:14px;outline:none;font-family:inherit;"></textarea>
             </div>
-            <div class="botoes-modal">
-                <button class="btn-cancelar-edicao" onclick="fecharModalEdicao()">Cancelar</button>
-                <button class="btn-salvar-edicao" onclick="salvarEdicaoContrato()">Salvar Alteracoes</button>
+            <div style="display:flex;gap:12px;margin-top:20px;">
+                <button onclick="fecharModalEdicao()" style="flex:1;padding:14px;border-radius:12px;border:none;font-weight:600;font-size:14px;cursor:pointer;background:#2a2a3a;color:#8a8aaa;">Cancelar</button>
+                <button onclick="salvarEdicaoContrato()" style="flex:1;padding:14px;border-radius:12px;border:none;font-weight:600;font-size:14px;cursor:pointer;background:#e65c2a;color:#fff;">Salvar Alterações</button>
             </div>
         </div>
     </div>
@@ -1059,40 +863,51 @@
         }
 
         // ============================================================
-        // STATUS DO WHATSAPP
+        // WHATSAPP - STATUS
         // ============================================================
         async function verificarStatusWhatsApp() {
             const dot = document.getElementById('whatsappStatusDot');
             const text = document.getElementById('whatsappStatusText');
             const server = document.getElementById('whatsappServer').value || 'http://localhost:3000';
 
+            dot.className = 'dot testing';
+            text.textContent = 'Verificando...';
+
             try {
                 const response = await fetch(`${server}/status`, {
                     method: 'GET',
-                    signal: AbortSignal.timeout(5000)
+                    headers: { 'Content-Type': 'application/json' },
+                    cache: 'no-cache'
                 });
-                
+
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.connected) {
+                    console.log('📊 Status WhatsApp:', data);
+
+                    if (data.connected === true) {
                         dot.className = 'dot online';
-                        text.textContent = 'WhatsApp Conectado';
+                        text.textContent = '✅ WhatsApp Conectado';
+                        localStorage.setItem('whatsappStatus', 'online');
                     } else {
                         dot.className = 'dot offline';
-                        text.textContent = 'WhatsApp Desconectado';
+                        text.textContent = '❌ WhatsApp Desconectado';
+                        localStorage.setItem('whatsappStatus', 'offline');
                     }
                 } else {
                     dot.className = 'dot offline';
-                    text.textContent = 'Servidor Offline';
+                    text.textContent = '⚠️ Servidor Offline';
+                    localStorage.setItem('whatsappStatus', 'offline');
                 }
             } catch (error) {
+                console.error('❌ Erro:', error);
                 dot.className = 'dot offline';
-                text.textContent = 'Servidor Offline';
+                text.textContent = '❌ Erro de Conexão';
+                localStorage.setItem('whatsappStatus', 'error');
             }
         }
 
         // ============================================================
-        // TESTAR WHATSAPP
+        // WHATSAPP - TESTAR ENVIO
         // ============================================================
         async function testarWhatsApp() {
             const telefone = document.getElementById('whatsappTestPhone').value.trim();
@@ -1111,7 +926,7 @@
 
             try {
                 const mensagem = 'Teste do sistema MotoPromissorias!\n\nSistema funcionando perfeitamente.';
-                
+
                 const response = await fetch(`${server}/enviar-whatsapp`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1122,23 +937,57 @@
                     const data = await response.json();
                     if (data.success) {
                         dot.className = 'dot online';
-                        text.textContent = 'Mensagem enviada!';
-                        mostrarAlerta(`Mensagem enviada para ${telefone}`, 'success');
-                        setTimeout(() => verificarStatusWhatsApp(), 3000);
+                        text.textContent = '✅ Mensagem enviada!';
+                        mostrarAlerta(`✅ Mensagem enviada para ${telefone}`, 'success');
+                        setTimeout(verificarStatusWhatsApp, 3000);
                     } else {
                         dot.className = 'dot offline';
-                        text.textContent = 'Falha no envio';
-                        mostrarAlerta(`Erro: ${data.error || 'Falha desconhecida'}`, 'error');
+                        text.textContent = '❌ Falha no envio';
+                        mostrarAlerta(`❌ Erro: ${data.error || 'Falha desconhecida'}`, 'error');
                     }
                 } else {
                     dot.className = 'dot offline';
-                    text.textContent = 'Servidor Offline';
-                    mostrarAlerta('Servidor WhatsApp nao respondeu.', 'error');
+                    text.textContent = '⚠️ Servidor Offline';
+                    mostrarAlerta('❌ Servidor WhatsApp não respondeu.', 'error');
                 }
             } catch (error) {
                 dot.className = 'dot offline';
-                text.textContent = 'Erro de conexao';
-                mostrarAlerta(`Erro: ${error.message}`, 'error');
+                text.textContent = '❌ Erro de Conexão';
+                mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        // ============================================================
+        // WHATSAPP - REINICIAR SERVIDOR
+        // ============================================================
+        async function reiniciarWhatsApp() {
+            const server = document.getElementById('whatsappServer').value.trim() || 'http://localhost:3000';
+
+            const dot = document.getElementById('whatsappStatusDot');
+            const text = document.getElementById('whatsappStatusText');
+
+            dot.className = 'dot testing';
+            text.textContent = 'Reiniciando...';
+
+            try {
+                const response = await fetch(`${server}/reiniciar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        mostrarAlerta('✅ Servidor reiniciado! Escaneie o QR Code.', 'success');
+                        setTimeout(verificarStatusWhatsApp, 5000);
+                    } else {
+                        mostrarAlerta('❌ Erro ao reiniciar.', 'error');
+                    }
+                } else {
+                    mostrarAlerta('❌ Servidor não respondeu.', 'error');
+                }
+            } catch (error) {
+                mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
             }
         }
 
@@ -1157,9 +1006,9 @@
                     const json = await resp.json();
                     return json.data || {};
                 } catch (err) {
-                    console.warn(`Tentativa ${i+1} falhou:`, err);
+                    console.warn(`Tentativa ${i + 1} falhou:`, err);
                     if (i === tentativas - 1) {
-                        mostrarAlerta('Erro de conexao. Tente novamente.', 'error');
+                        mostrarAlerta('Erro de conexão. Tente novamente.', 'error');
                         return {};
                     }
                     await new Promise(r => setTimeout(r, 1000 * (i + 1)));
@@ -1182,8 +1031,8 @@
             const vencimento = document.getElementById('vencimento').value;
 
             if (!nome) return mostrarAlerta('Informe o nome do cliente.', 'error');
-            if (!moto) return mostrarAlerta('Informe a moto que foi vendida.', 'error');
-            if (!valorTotal || parseFloat(valorTotal) <= 0) return mostrarAlerta('Informe um valor valido.', 'error');
+            if (!moto) return mostrarAlerta('Informe a moto.', 'error');
+            if (!valorTotal || parseFloat(valorTotal) <= 0) return mostrarAlerta('Informe um valor válido.', 'error');
             if (!vencimento) return mostrarAlerta('Informe a data de vencimento.', 'error');
 
             const btn = document.getElementById('btnSalvar');
@@ -1256,7 +1105,7 @@
 
             const clientesAtivos = [];
             const contratos = new Map();
-            
+
             lista.forEach(row => {
                 const contratoId = row[1];
                 if (!contratos.has(contratoId)) {
@@ -1292,7 +1141,7 @@
 
             dadosCache = clientesAtivos;
             dadosAntigosCache = listaAntigos;
-            
+
             renderizar(clientesAtivos, listaAntigos);
         }
 
@@ -1321,7 +1170,7 @@
                 return true;
             });
 
-            // Atualizar métricas
+            // Métricas
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
             const mesAtual = hoje.getMonth();
@@ -1357,7 +1206,7 @@
             document.getElementById('totalClientes').textContent = clientesSet.size;
             document.getElementById('totalAntigos').textContent = (dadosAntigos || []).length;
 
-            // Agrupar por cliente (contrato)
+            // Agrupar por contrato
             const grupos = new Map();
             filtrados.forEach(row => {
                 const contratoId = row[1];
@@ -1368,9 +1217,7 @@
             });
 
             if (grupos.size === 0) {
-                const mensagem = isAntigos ?
-                    'Nenhum cliente antigo encontrado' :
-                    'Nenhum cliente encontrado';
+                const mensagem = isAntigos ? 'Nenhum cliente antigo encontrado' : 'Nenhum cliente encontrado';
                 container.innerHTML = `<div class="empty-state">${mensagem}</div>`;
                 return;
             }
@@ -1383,34 +1230,32 @@
                     const valor = parseFloat(p[7]) || 0;
                     return p[10] !== 'PAGO' ? s + valor : s;
                 }, 0);
-                
+
                 const pagas = parcelas.filter(p => p[10] === 'PAGO').length;
                 const totalParcelas = parcelas.length;
                 const todasPagas = pagas === totalParcelas;
 
-                const moto = parcelas[0]?.[14] || 'Moto nao informada';
+                const moto = parcelas[0]?.[14] || 'Moto não informada';
                 const observacao = parcelas[0]?.[15] || '';
 
                 const isQuitado = todasPagas && totalParcelas > 0;
 
                 html += `
-                    <div class="client-card ${isQuitado ? 'quitado' : ''}">
+                    <div class="client-card">
                         <div class="client-header" onclick="toggleParcelas(${idx})">
                             <div class="client-info">
                                 <div class="client-name">
                                     ${nome}
-                                    ${isQuitado ? '<span class="quitado-badge">Quitado</span>' : ''}
+                                    ${isQuitado ? ' <span style="font-size:12px;color:#a88ac8;background:#2a1a3a;padding:2px 12px;border-radius:20px;">Quitado</span>' : ''}
                                 </div>
                                 <div class="client-details">
-                                    <span class="moto">${moto}</span>
+                                    <span class="moto">🏍️ ${moto}</span>
                                     <span>${totalParcelas} parcelas · ${pagas} pagas</span>
-                                    ${isQuitado ? '<span>Contrato finalizado</span>' : ''}
+                                    ${isQuitado ? ' <span>✅ Contrato finalizado</span>' : ''}
                                 </div>
-                                ${observacao ? `<div class="obs-interna">${observacao}</div>` : ''}
+                                ${observacao ? `<div class="obs-interna">📝 ${observacao}</div>` : ''}
                             </div>
-                            <div class="client-total ${isQuitado ? 'quitado' : ''}">
-                                ${formatarMoeda(totalCliente)}
-                            </div>
+                            <div class="client-total">${formatarMoeda(totalCliente)}</div>
                         </div>
                         <div class="parcelas-wrapper" id="parcelas_${idx}">
                 `;
@@ -1423,7 +1268,7 @@
 
                     const venc = new Date(p[9]);
                     const vencStr = venc.toLocaleDateString('pt-BR');
-                    const desc = p[4] || 'Sem descricao';
+                    const desc = p[4] || 'Sem descrição';
                     const parcelaNum = p[5] || '?';
                     const totalParc = p[6] || '?';
                     const valor = parseFloat(p[7] || 0);
@@ -1446,30 +1291,25 @@
                     if (status !== 'PAGO' && !isQuitado) {
                         html += `
                             <div class="botoes-acao">
-                                <button class="btn-pagar" onclick="marcarPago('${idParcela}')">Marcar como pago</button>
-                                <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">Excluir</button>
+                                <button class="btn-pagar" onclick="marcarPago('${idParcela}')">✅ Marcar como pago</button>
+                                <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">🗑️ Excluir</button>
                             </div>
                         `;
                     } else if (status === 'PAGO') {
                         const dataPag = p[11] ? new Date(p[11]).toLocaleDateString('pt-BR') : '';
                         html += `
-                            <div class="pago-info">Pago em ${dataPag || 'data desconhecida'}</div>
-                            <div class="botoes-acao">
-                                <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">Excluir</button>
+                            <div class="pago-info" style="margin-top:10px;color:#7ad4a0;font-size:14px;text-align:center;">
+                                ✅ Pago em ${dataPag || 'data desconhecida'}
                             </div>
+                            <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">🗑️ Excluir</button>
                         `;
                     }
                 });
 
-                // Botões para editar/excluir contrato inteiro
                 if (!isQuitado && totalParcelas > 0) {
                     html += `
-                        <button class="btn-editar-contrato" onclick="abrirModalEdicaoContrato('${contratoId}')">
-                            Editar contrato inteiro
-                        </button>
-                        <button class="btn-excluir-contrato" onclick="excluirContrato('${contratoId}')">
-                            Excluir contrato inteiro (${totalParcelas} parcelas)
-                        </button>
+                        <button class="btn-editar-contrato" onclick="abrirModalEdicaoContrato('${contratoId}')">✏️ Editar contrato inteiro</button>
+                        <button class="btn-excluir-contrato" onclick="excluirContrato('${contratoId}')">🗑️ Excluir contrato inteiro (${totalParcelas} parcelas)</button>
                     `;
                 }
 
@@ -1483,6 +1323,9 @@
             container.innerHTML = html;
         }
 
+        // ============================================================
+        // FUNÇÕES AUXILIARES
+        // ============================================================
         function toggleParcelas(idx) {
             const el = document.getElementById(`parcelas_${idx}`);
             if (el) el.classList.toggle('open');
@@ -1498,58 +1341,90 @@
 
             if (resultado.sucesso) {
                 if (resultado.contratoQuitado) {
-                    mostrarAlerta('Contrato quitado! Cliente movido para Antigos Clientes.', 'success');
+                    mostrarAlerta('🎉 Contrato quitado! Cliente movido para Antigos.', 'success');
                     dadosCache = [];
                     dadosAntigosCache = [];
                     await carregarClientes(true);
                 } else {
-                    mostrarAlerta('Parcela marcada como paga!', 'success');
+                    mostrarAlerta('✅ Parcela marcada como paga!', 'success');
                     dadosCache = [];
                     await carregarClientes(true);
                 }
             } else {
-                mostrarAlerta('Erro ao marcar como pago.', 'error');
+                mostrarAlerta('❌ Erro ao marcar como pago.', 'error');
             }
         }
 
         // ============================================================
-        // EDIÇÃO DE CONTRATO INTEIRO
+        // EXCLUIR PARCELA
+        // ============================================================
+        async function excluirParcela(id) {
+            if (!confirm('Tem certeza que deseja EXCLUIR esta parcela?\n\nEsta ação não pode ser desfeita!')) return;
+
+            const resultado = await chamarApi('excluirParcela', { id });
+
+            if (resultado.sucesso) {
+                mostrarAlerta('🗑️ Parcela excluída com sucesso!', 'success');
+                dadosCache = [];
+                dadosAntigosCache = [];
+                await carregarClientes(true);
+            } else {
+                mostrarAlerta('❌ Erro ao excluir parcela.', 'error');
+            }
+        }
+
+        // ============================================================
+        // EXCLUIR CONTRATO
+        // ============================================================
+        async function excluirContrato(contratoId) {
+            if (!confirm('ATENÇÃO! Você está prestes a excluir TODAS as parcelas deste contrato.\n\nEsta ação não pode ser desfeita!\n\nDeseja continuar?')) return;
+
+            const resultado = await chamarApi('excluirContrato', { contratoId });
+
+            if (resultado.sucesso) {
+                mostrarAlerta(`🗑️ Contrato excluído com sucesso! ${resultado.parcelasExcluidas || 0} parcelas removidas.`, 'success');
+                dadosCache = [];
+                dadosAntigosCache = [];
+                await carregarClientes(true);
+            } else {
+                mostrarAlerta('❌ Erro ao excluir contrato.', 'error');
+            }
+        }
+
+        // ============================================================
+        // EDIÇÃO DE CONTRATO
         // ============================================================
         function abrirModalEdicaoContrato(contratoId) {
             contratoEditando = contratoId;
-            
+
             const todasParcelas = [...dadosCache, ...dadosAntigosCache];
             const parcelasDoContrato = todasParcelas.filter(p => p[1].toString() === contratoId.toString());
-            
+
             if (parcelasDoContrato.length === 0) {
-                mostrarAlerta('Contrato nao encontrado.', 'error');
+                mostrarAlerta('Contrato não encontrado.', 'error');
                 return;
             }
 
             const primeira = parcelasDoContrato[0];
             const valorTotal = parcelasDoContrato.reduce((sum, p) => sum + parseFloat(p[7] || 0), 0);
 
-            document.getElementById('modalTitulo').textContent = `Editar Contrato - ${primeira[2] || 'Cliente'}`;
-            document.getElementById('infoTotalParcelas').textContent = parcelasDoContrato.length;
-            document.getElementById('infoValorTotal').textContent = formatarMoeda(valorTotal);
-            
             document.getElementById('editNome').value = primeira[2] || '';
             document.getElementById('editTelefone').value = primeira[3] || '';
             document.getElementById('editMoto').value = primeira[14] || '';
             document.getElementById('editDescricao').value = primeira[4] || '';
             document.getElementById('editValorTotal').value = valorTotal;
             document.getElementById('editNumParcelas').value = parcelasDoContrato.length;
-            document.getElementById('editObservacao').value = primeira[15] || '';
-            
-            // Data do primeiro vencimento
+
             const vencimento = new Date(primeira[9]);
             document.getElementById('editVencimento').value = vencimento.toISOString().split('T')[0];
 
-            document.getElementById('modalEditarContrato').classList.add('active');
+            document.getElementById('editObservacao').value = primeira[15] || '';
+
+            document.getElementById('modalEditarContrato').style.display = 'flex';
         }
 
         function fecharModalEdicao() {
-            document.getElementById('modalEditarContrato').classList.remove('active');
+            document.getElementById('modalEditarContrato').style.display = 'none';
             contratoEditando = null;
         }
 
@@ -1570,64 +1445,20 @@
 
             if (!dados.nome) return mostrarAlerta('Informe o nome do cliente.', 'error');
             if (!dados.moto) return mostrarAlerta('Informe a moto.', 'error');
-            if (!dados.valorTotal || parseFloat(dados.valorTotal) <= 0) return mostrarAlerta('Informe um valor valido.', 'error');
+            if (!dados.valorTotal || parseFloat(dados.valorTotal) <= 0) return mostrarAlerta('Informe um valor válido.',
+            'error');
             if (!dados.vencimento) return mostrarAlerta('Informe a data de vencimento.', 'error');
 
             const resultado = await chamarApi('editarContrato', dados);
 
             if (resultado.sucesso) {
-                mostrarAlerta('Contrato atualizado com sucesso!', 'success');
+                mostrarAlerta('✅ Contrato atualizado com sucesso!', 'success');
                 fecharModalEdicao();
                 dadosCache = [];
                 dadosAntigosCache = [];
                 await carregarClientes(true);
             } else {
-                mostrarAlerta('Erro ao editar contrato.', 'error');
-            }
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                fecharModalEdicao();
-            }
-        });
-
-        document.getElementById('modalEditarContrato').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) {
-                fecharModalEdicao();
-            }
-        });
-
-        // ============================================================
-        // EXCLUSÃO
-        // ============================================================
-        async function excluirParcela(id) {
-            if (!confirm('Tem certeza que deseja EXCLUIR esta parcela?\n\nEsta acao nao pode ser desfeita!')) return;
-
-            const resultado = await chamarApi('excluirParcela', { id });
-
-            if (resultado.sucesso) {
-                mostrarAlerta('Parcela excluida com sucesso!', 'success');
-                dadosCache = [];
-                dadosAntigosCache = [];
-                await carregarClientes(true);
-            } else {
-                mostrarAlerta('Erro ao excluir parcela.', 'error');
-            }
-        }
-
-        async function excluirContrato(contratoId) {
-            if (!confirm('ATENCAO! Voce esta prestes a excluir TODAS as parcelas deste contrato.\n\nEsta acao nao pode ser desfeita!\n\nDeseja continuar?')) return;
-
-            const resultado = await chamarApi('excluirContrato', { contratoId });
-
-            if (resultado.sucesso) {
-                mostrarAlerta(`Contrato excluido com sucesso! ${resultado.parcelasExcluidas || 0} parcelas removidas.`, 'success');
-                dadosCache = [];
-                dadosAntigosCache = [];
-                await carregarClientes(true);
-            } else {
-                mostrarAlerta('Erro ao excluir contrato.', 'error');
+                mostrarAlerta('❌ Erro ao editar contrato.', 'error');
             }
         }
 
@@ -1635,42 +1466,20 @@
         // INICIALIZAÇÃO
         // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
-            // Carregar configurações salvas
-            const savedServer = localStorage.getItem('whatsappServer');
-            if (savedServer) {
-                document.getElementById('whatsappServer').value = savedServer;
-            }
-
-            document.getElementById('whatsappServer').addEventListener('change', (e) => {
-                localStorage.setItem('whatsappServer', e.target.value);
-            });
-
             previewParcela();
             carregarClientes(true);
+
+            // Verificar WhatsApp a cada 10 segundos
             verificarStatusWhatsApp();
+            setInterval(verificarStatusWhatsApp, 10000);
 
-            // Verificar status do WhatsApp a cada 30 segundos
-            setInterval(verificarStatusWhatsApp, 30000);
-
-            // Atualizar dados a cada 30 segundos
+            // Carregar dados a cada 30 segundos
             setInterval(() => carregarClientes(true), 30000);
-
-            // Verificar notificações automaticamente
-            setInterval(async () => {
-                try {
-                    await chamarApi('verificarNotificacoes');
-                } catch (_) { /* ignora */ }
-            }, 300000);
         });
 
         document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 'f') {
-                e.preventDefault();
-                document.getElementById('busca').focus();
-            }
-            if (e.ctrlKey && e.key === 'n') {
-                e.preventDefault();
-                document.getElementById('nome').focus();
+            if (e.key === 'Escape') {
+                fecharModalEdicao();
             }
         });
     </script>
