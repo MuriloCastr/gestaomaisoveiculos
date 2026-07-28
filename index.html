@@ -98,8 +98,22 @@
             background: #fff;
             border-radius: 12px;
             padding: 20px;
-            border: 1px solid #e2e8f0;
+            border: 2px solid #e2e8f0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .dashboard-card:hover {
+            border-color: #4299e1;
+            box-shadow: 0 4px 12px rgba(66,153,225,0.15);
+            transform: translateY(-2px);
+        }
+
+        .dashboard-card.active {
+            border-color: #2b6cb0;
+            background: #ebf8ff;
         }
 
         .dashboard-card .label {
@@ -125,13 +139,120 @@
             color: #276749;
         }
 
+        .dashboard-card .badge-count {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #edf2f7;
+            color: #4a5568;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        /* Seção de detalhes do dashboard */
+        .dashboard-detail {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: none;
+        }
+
+        .dashboard-detail.visible {
+            display: block;
+        }
+
+        .dashboard-detail h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .detail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            transition: background 0.15s;
+        }
+
+        .detail-item:hover {
+            background: #edf2f7;
+        }
+
+        .detail-info {
+            flex: 1;
+        }
+
+        .detail-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .detail-meta {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 3px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
+            white-space: nowrap;
+            margin-left: 16px;
+        }
+
+        .detail-status {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+
+        .status-vencendo {
+            background: #fefcbf;
+            color: #975a16;
+        }
+
+        .status-atrasado {
+            background: #fed7d7;
+            color: #9b2c2c;
+        }
+
+        .status-pendente {
+            background: #bee3f8;
+            color: #2a4365;
+        }
+
+        .detail-empty {
+            text-align: center;
+            color: #a0aec0;
+            padding: 32px;
+            font-size: 15px;
+        }
+
         /* Seção de busca */
         .search-section {
             margin-bottom: 24px;
-        }
-
-        .search-box {
-            position: relative;
         }
 
         .search-box input {
@@ -524,6 +645,16 @@
                 align-items: flex-start;
                 gap: 12px;
             }
+            
+            .detail-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .detail-value {
+                margin-left: 0;
+            }
         }
 
         @media (max-width: 480px) {
@@ -571,27 +702,39 @@
 
         <!-- Dashboard -->
         <section class="dashboard-grid">
-            <div class="dashboard-card">
+            <div class="dashboard-card" onclick="mostrarDetalhe('hoje')" id="cardHoje">
                 <div class="label">A Receber Hoje</div>
                 <div class="value primary" id="valorHoje">R$ 0,00</div>
+                <div class="badge-count" id="countHoje">0</div>
             </div>
-            <div class="dashboard-card">
+            <div class="dashboard-card" onclick="mostrarDetalhe('semana')" id="cardSemana">
                 <div class="label">A Receber na Semana</div>
                 <div class="value" id="valorSemana">R$ 0,00</div>
+                <div class="badge-count" id="countSemana">0</div>
             </div>
-            <div class="dashboard-card">
+            <div class="dashboard-card" onclick="mostrarDetalhe('mes')" id="cardMes">
                 <div class="label">A Receber no Mês</div>
                 <div class="value" id="valorMes">R$ 0,00</div>
+                <div class="badge-count" id="countMes">0</div>
             </div>
-            <div class="dashboard-card">
+            <div class="dashboard-card" onclick="mostrarDetalhe('total')" id="cardTotal">
                 <div class="label">Total Geral</div>
                 <div class="value success" id="totalGeral">R$ 0,00</div>
+                <div class="badge-count" id="countTotal">0</div>
             </div>
-            <div class="dashboard-card">
+            <div class="dashboard-card" onclick="mostrarDetalhe('clientes')" id="cardClientes">
                 <div class="label">Clientes Ativos</div>
                 <div class="value" id="clientesAtivos">0</div>
             </div>
         </section>
+
+        <!-- Seção de detalhes do dashboard -->
+        <div class="dashboard-detail" id="dashboardDetail">
+            <h3 id="detailTitle">Detalhes</h3>
+            <div class="detail-list" id="detailList">
+                <div class="detail-empty">Selecione um painel para ver os detalhes</div>
+            </div>
+        </div>
 
         <!-- Busca e Lista (oculta por padrão) -->
         <div id="listaClientesContainer" style="display: none;">
@@ -674,18 +817,30 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbww_lQmPPVPo-BqEMlrl1yg6-jlrXbglt2rpFGF-d45JJtGtGWHB8kSQRFPUFCDx9Ki/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwqEZxapoen_DXGAMGGVD1ZZ1uJ6Yn9cNc2aybxndDQ5jLk7uuPihFHG_dXuGXD-EXq/exec';
 
         let dadosCache = [];
         let dadosAntigosCache = [];
         let contratoEditando = null;
         let listaVisivel = false;
+        let painelAtivo = null;
+        
+        // Cache dos dados agrupados para o dashboard
+        let dadosHoje = [];
+        let dadosSemana = [];
+        let dadosMes = [];
+        let dadosTotal = [];
+        let dadosClientesAtivos = [];
 
         function formatarMoeda(valor) {
             return Number(valor).toLocaleString('pt-BR', {
                 style: 'currency',
                 currency: 'BRL'
             });
+        }
+
+        function formatarData(data) {
+            return new Date(data).toLocaleDateString('pt-BR');
         }
 
         function mostrarAlerta(mensagem, tipo = 'info') {
@@ -763,6 +918,135 @@
                 container.style.display = 'none';
                 btn.textContent = 'Lista de Clientes';
             }
+        }
+
+        // Mostrar detalhes do dashboard
+        function mostrarDetalhe(tipo) {
+            // Remove active de todos os cards
+            document.querySelectorAll('.dashboard-card').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            const detailSection = document.getElementById('dashboardDetail');
+            const detailTitle = document.getElementById('detailTitle');
+            const detailList = document.getElementById('detailList');
+
+            let titulo = '';
+            let dados = [];
+            let cardId = '';
+
+            switch(tipo) {
+                case 'hoje':
+                    titulo = 'Pagamentos de Hoje';
+                    dados = dadosHoje;
+                    cardId = 'cardHoje';
+                    break;
+                case 'semana':
+                    titulo = 'Pagamentos desta Semana';
+                    dados = dadosSemana;
+                    cardId = 'cardSemana';
+                    break;
+                case 'mes':
+                    titulo = 'Pagamentos deste Mês';
+                    dados = dadosMes;
+                    cardId = 'cardMes';
+                    break;
+                case 'total':
+                    titulo = 'Todos os Pagamentos Pendentes';
+                    dados = dadosTotal;
+                    cardId = 'cardTotal';
+                    break;
+                case 'clientes':
+                    titulo = 'Clientes Ativos';
+                    dados = dadosClientesAtivos;
+                    cardId = 'cardClientes';
+                    break;
+            }
+
+            // Se clicou no mesmo painel, fecha
+            if (painelAtivo === tipo && detailSection.classList.contains('visible')) {
+                detailSection.classList.remove('visible');
+                painelAtivo = null;
+                return;
+            }
+
+            painelAtivo = tipo;
+            document.getElementById(cardId).classList.add('active');
+            detailTitle.textContent = titulo;
+            detailSection.classList.add('visible');
+
+            if (tipo === 'clientes') {
+                renderizarDetalheClientes(dados);
+            } else {
+                renderizarDetalheParcelas(dados, titulo);
+            }
+
+            // Scroll até a seção de detalhes
+            detailSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function renderizarDetalheParcelas(dados, titulo) {
+            const detailList = document.getElementById('detailList');
+            
+            if (dados.length === 0) {
+                detailList.innerHTML = `<div class="detail-empty">Nenhum pagamento pendente para este período</div>`;
+                return;
+            }
+
+            let html = '';
+            dados.forEach(item => {
+                let statusClass = 'status-pendente';
+                if (item.status === 'ATRASADO') statusClass = 'status-atrasado';
+                
+                const hoje = new Date();
+                hoje.setHours(0, 0, 0, 0);
+                const venc = new Date(item.vencimento);
+                venc.setHours(0, 0, 0, 0);
+                
+                if (venc.getTime() === hoje.getTime()) statusClass = 'status-vencendo';
+                if (venc < hoje) statusClass = 'status-atrasado';
+
+                html += `
+                    <div class="detail-item">
+                        <div class="detail-info">
+                            <div class="detail-name">${item.cliente}</div>
+                            <div class="detail-meta">
+                                ${item.moto} · Parcela ${item.parcela}/${item.totalParcelas} · Venc: ${formatarData(item.vencimento)}
+                                <span class="detail-status ${statusClass}">${item.status}</span>
+                            </div>
+                        </div>
+                        <div class="detail-value">${formatarMoeda(item.valor)}</div>
+                    </div>
+                `;
+            });
+
+            detailList.innerHTML = html;
+        }
+
+        function renderizarDetalheClientes(dados) {
+            const detailList = document.getElementById('detailList');
+            
+            if (dados.length === 0) {
+                detailList.innerHTML = `<div class="detail-empty">Nenhum cliente ativo</div>`;
+                return;
+            }
+
+            let html = '';
+            dados.forEach(item => {
+                html += `
+                    <div class="detail-item">
+                        <div class="detail-info">
+                            <div class="detail-name">${item.cliente}</div>
+                            <div class="detail-meta">
+                                ${item.moto} · ${item.totalParcelas} parcela(s) · ${item.parcelasPagas} paga(s)
+                            </div>
+                        </div>
+                        <div class="detail-value">${formatarMoeda(item.valorPendente)} pendente</div>
+                    </div>
+                `;
+            });
+
+            detailList.innerHTML = html;
         }
 
         // API
@@ -843,9 +1127,6 @@
                 return;
             }
 
-            const container = document.getElementById('clientesContainer');
-            container.innerHTML = '<div class="empty-state">Carregando...</div>';
-
             const resultado = await chamarApi('listar');
             const lista = resultado || [];
 
@@ -899,17 +1180,6 @@
 
         // Renderizar
         function renderizar(dados, dadosAntigos) {
-            const busca = document.getElementById('busca').value.toLowerCase().trim();
-            const container = document.getElementById('clientesContainer');
-
-            let filtrados = dados.filter(row => {
-                const nome = (row[2] || '').toLowerCase();
-                const moto = (row[14] || '').toLowerCase();
-                if (busca && !nome.includes(busca) && !moto.includes(busca)) return false;
-                return true;
-            });
-
-            // Métricas do dashboard
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
             const mesAtual = hoje.getMonth();
@@ -920,52 +1190,159 @@
             const inicioSemana = new Date(hoje);
             inicioSemana.setDate(hoje.getDate() - ((diaSemana + 6) % 7));
             inicioSemana.setHours(0, 0, 0, 0);
+            
+            const fimSemana = new Date(inicioSemana);
+            fimSemana.setDate(fimSemana.getDate() + 6);
+            fimSemana.setHours(23, 59, 59, 999);
+
+            // Resetar arrays de dados do dashboard
+            dadosHoje = [];
+            dadosSemana = [];
+            dadosMes = [];
+            dadosTotal = [];
+            dadosClientesAtivos = [];
 
             let valorHoje = 0;
             let valorSemana = 0;
             let valorMes = 0;
             let totalGeral = 0;
-            const clientesSet = new Set();
+            const clientesMap = new Map();
 
             dados.forEach(row => {
                 const status = row[10];
                 const valor = parseFloat(row[7]) || 0;
                 const venc = new Date(row[9]);
                 venc.setHours(0, 0, 0, 0);
+                const cliente = row[2] || 'Sem nome';
+                const moto = row[14] || 'Não informado';
+                const parcela = row[5] || 1;
+                const totalParcelas = row[6] || 1;
 
                 if (status !== 'PAGO') {
                     totalGeral += valor;
 
+                    const parcelaInfo = {
+                        cliente,
+                        moto,
+                        valor,
+                        vencimento: row[9],
+                        parcela,
+                        totalParcelas,
+                        status,
+                        id: row[0]
+                    };
+
+                    dadosTotal.push(parcelaInfo);
+
+                    // Hoje
                     if (venc.getTime() === hoje.getTime()) {
                         valorHoje += valor;
+                        dadosHoje.push(parcelaInfo);
                     }
 
-                    if (venc >= inicioSemana && venc <= hoje) {
+                    // Esta semana (inclui hoje e próximos dias até domingo)
+                    if (venc >= inicioSemana && venc <= fimSemana) {
                         valorSemana += valor;
-                    } else if (venc > hoje) {
-                        const fimSemana = new Date(inicioSemana);
-                        fimSemana.setDate(fimSemana.getDate() + 6);
-                        if (venc <= fimSemana) {
-                            valorSemana += valor;
+                        if (venc.getTime() !== hoje.getTime()) {
+                            dadosSemana.push(parcelaInfo);
                         }
                     }
 
+                    // Este mês
                     if (venc.getMonth() === mesAtual && venc.getFullYear() === anoAtual) {
                         valorMes += valor;
+                        // Evita duplicar itens que já estão em hoje
+                        if (venc.getTime() !== hoje.getTime()) {
+                            const jaExiste = dadosMes.some(d => d.id === parcelaInfo.id);
+                            if (!jaExiste) {
+                                dadosMes.push(parcelaInfo);
+                            }
+                        }
                     }
-                }
 
-                if (row[2]) clientesSet.add(row[2]);
+                    // Agrupar por cliente para o painel de clientes ativos
+                    if (!clientesMap.has(cliente)) {
+                        clientesMap.set(cliente, {
+                            cliente,
+                            moto,
+                            valorPendente: 0,
+                            totalParcelas: 0,
+                            parcelasPagas: 0
+                        });
+                    }
+                    const clienteData = clientesMap.get(cliente);
+                    clienteData.valorPendente += valor;
+                    clienteData.totalParcelas++;
+                } else {
+                    // Parcelas pagas também contam para o total de parcelas do cliente
+                    if (!clientesMap.has(cliente)) {
+                        clientesMap.set(cliente, {
+                            cliente,
+                            moto,
+                            valorPendente: 0,
+                            totalParcelas: 0,
+                            parcelasPagas: 0
+                        });
+                    }
+                    clientesMap.get(cliente).totalParcelas++;
+                    clientesMap.get(cliente).parcelasPagas++;
+                }
             });
 
+            // Adicionar itens de hoje também na semana e mês para consistência
+            dadosHoje.forEach(item => {
+                if (!dadosSemana.some(d => d.id === item.id)) {
+                    dadosSemana.unshift(item);
+                }
+                if (!dadosMes.some(d => d.id === item.id)) {
+                    dadosMes.unshift(item);
+                }
+            });
+
+            // Ordenar dados por data de vencimento
+            const ordenarPorData = (a, b) => new Date(a.vencimento) - new Date(b.vencimento);
+            dadosHoje.sort(ordenarPorData);
+            dadosSemana.sort(ordenarPorData);
+            dadosMes.sort(ordenarPorData);
+            dadosTotal.sort(ordenarPorData);
+
+            // Converter mapa de clientes para array
+            dadosClientesAtivos = Array.from(clientesMap.values());
+
+            // Atualizar dashboard
             document.getElementById('valorHoje').textContent = formatarMoeda(valorHoje);
             document.getElementById('valorSemana').textContent = formatarMoeda(valorSemana);
             document.getElementById('valorMes').textContent = formatarMoeda(valorMes);
             document.getElementById('totalGeral').textContent = formatarMoeda(totalGeral);
-            document.getElementById('clientesAtivos').textContent = clientesSet.size;
+            document.getElementById('clientesAtivos').textContent = dadosClientesAtivos.length;
 
-            // Lista de clientes
-            if (!listaVisivel) return;
+            // Atualizar contadores
+            document.getElementById('countHoje').textContent = dadosHoje.length;
+            document.getElementById('countSemana').textContent = dadosSemana.length;
+            document.getElementById('countMes').textContent = dadosMes.length;
+            document.getElementById('countTotal').textContent = dadosTotal.length;
+
+            // Se um painel estiver ativo, atualizar os detalhes
+            if (painelAtivo && document.getElementById('dashboardDetail').classList.contains('visible')) {
+                mostrarDetalhe(painelAtivo);
+            }
+
+            // Renderizar lista de clientes se estiver visível
+            if (listaVisivel) {
+                renderizarListaClientes(dados);
+            }
+        }
+
+        function renderizarListaClientes(dados) {
+            const busca = document.getElementById('busca').value.toLowerCase().trim();
+            const container = document.getElementById('clientesContainer');
+
+            let filtrados = dados.filter(row => {
+                const nome = (row[2] || '').toLowerCase();
+                const moto = (row[14] || '').toLowerCase();
+                if (busca && !nome.includes(busca) && !moto.includes(busca)) return false;
+                return true;
+            });
 
             const grupos = new Map();
             filtrados.forEach(row => {
@@ -1030,20 +1407,20 @@
                     if (status !== 'PAGO') {
                         html += `
                             <div class="acoes-parcela">
-                                <button class="btn-pagar" onclick="marcarPago('${idParcela}')">Marcar como Pago</button>
-                                <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">Excluir</button>
+                                <button class="btn-pagar" onclick="event.stopPropagation(); marcarPago('${idParcela}')">Marcar como Pago</button>
+                                <button class="btn-excluir" onclick="event.stopPropagation(); excluirParcela('${idParcela}')">Excluir</button>
                             </div>
                         `;
                     } else {
                         html += `
-                            <button class="btn-excluir" onclick="excluirParcela('${idParcela}')" style="margin-top:6px;">Excluir</button>
+                            <button class="btn-excluir" onclick="event.stopPropagation(); excluirParcela('${idParcela}')" style="margin-top:6px;">Excluir</button>
                         `;
                     }
                 });
 
                 html += `
-                    <button class="btn-editar" onclick="abrirModalEdicao('${contratoId}')" style="margin-top:10px;">Editar Contrato</button>
-                    <button class="btn-excluir" onclick="excluirContrato('${contratoId}')" style="margin-top:6px;">Excluir Contrato</button>
+                    <button class="btn-editar" onclick="event.stopPropagation(); abrirModalEdicao('${contratoId}')" style="margin-top:10px;">Editar Contrato</button>
+                    <button class="btn-excluir" onclick="event.stopPropagation(); excluirContrato('${contratoId}')" style="margin-top:6px;">Excluir Contrato</button>
                         </div>
                     </div>
                 `;
