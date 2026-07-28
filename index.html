@@ -816,7 +816,7 @@
         <div id="listaClientesContainer" style="display: none;">
             <div class="search-section">
                 <div class="search-box">
-                    <input type="text" id="busca" placeholder="Buscar cliente..." oninput="carregarClientes()" />
+                    <input type="text" id="busca" placeholder="Buscar cliente..." oninput="filtrarListaClientes()" />
                 </div>
             </div>
 
@@ -887,7 +887,7 @@
             </div>
             <div class="modal-buttons">
                 <button class="btn-cancelar" onclick="fecharModalEdicao()">Cancelar</button>
-                <button class="btn-salvar" onclick="salvarEdicao()">Salvar Alterações</button>
+                <button class="btn-salvar" id="btnSalvarEdicao" onclick="salvarEdicao()">Salvar Alterações</button>
             </div>
         </div>
     </div>
@@ -952,17 +952,26 @@
 
         // Modal de edição
         function abrirModalEdicao(contratoId) {
+            console.log('Abrindo edição para contrato:', contratoId);
             contratoEditando = contratoId;
+            
+            // Buscar em todos os dados disponíveis
             const todasParcelas = [...dadosCache, ...dadosAntigosCache];
-            const parcelasContrato = todasParcelas.filter(p => p[1].toString() === contratoId.toString());
+            const parcelasContrato = todasParcelas.filter(p => {
+                return String(p[1]) === String(contratoId);
+            });
+
+            console.log('Parcelas encontradas:', parcelasContrato.length);
 
             if (parcelasContrato.length === 0) {
-                mostrarAlerta('Contrato não encontrado.', 'error');
+                mostrarAlerta('Contrato não encontrado. Tente recarregar a página.', 'error');
                 return;
             }
 
             const primeira = parcelasContrato[0];
-            const valorTotal = parcelasContrato.reduce((sum, p) => sum + parseFloat(p[7] || 0), 0);
+            
+            // Calcular valor total somando todas as parcelas
+            const valorTotal = parcelasContrato.reduce((sum, p) => sum + (parseFloat(p[7]) || 0), 0);
 
             document.getElementById('editNome').value = primeira[2] || '';
             document.getElementById('editTelefone').value = primeira[3] || '';
@@ -970,7 +979,12 @@
             document.getElementById('editDescricao').value = primeira[4] || '';
             document.getElementById('editValorTotal').value = valorTotal;
             document.getElementById('editNumParcelas').value = parcelasContrato.length;
-            document.getElementById('editVencimento').value = new Date(primeira[9]).toISOString().split('T')[0];
+            
+            // Formatar a data corretamente
+            const dataVenc = new Date(primeira[9]);
+            const dataFormatada = dataVenc.toISOString().split('T')[0];
+            document.getElementById('editVencimento').value = dataFormatada;
+            
             document.getElementById('editObservacao').value = primeira[15] || '';
 
             document.getElementById('modalEdicao').classList.add('active');
@@ -994,6 +1008,13 @@
             } else {
                 container.style.display = 'none';
                 btn.textContent = 'Lista de Clientes';
+            }
+        }
+
+        // Filtrar lista de clientes (sem recarregar da API)
+        function filtrarListaClientes() {
+            if (dadosCache.length > 0) {
+                renderizarListaClientes(dadosCache);
             }
         }
 
@@ -1245,7 +1266,9 @@
                 document.getElementById('vencimento').value = '';
                 document.getElementById('numParcelas').value = '1';
                 atualizarPreview();
-                carregarClientes(true);
+                dadosCache = [];
+                dadosAntigosCache = [];
+                await carregarClientes(true);
             } else {
                 mostrarAlerta('Erro ao salvar. Tente novamente.', 'error');
             }
@@ -1253,16 +1276,16 @@
 
         // Carregar dados
         async function carregarClientes(forcar = false) {
-            if (!forcar && dadosCache.length > 0 && dadosAntigosCache.length > 0) {
+            if (!forcar && dadosCache.length > 0) {
                 renderizar(dadosCache, dadosAntigosCache);
                 return;
             }
 
             const resultado = await chamarApi('listar');
-            const lista = resultado || [];
+            const lista = Array.isArray(resultado) ? resultado : [];
 
             const antigosResultado = await chamarApi('listarAntigos');
-            const listaAntigos = antigosResultado || [];
+            const listaAntigos = Array.isArray(antigosResultado) ? antigosResultado : [];
 
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
@@ -1362,7 +1385,8 @@
                         parcela,
                         totalParcelas,
                         status,
-                        id: row[0]
+                        id: row[0],
+                        contratoId: row[1]
                     };
 
                     dadosTotal.push(parcelaInfo);
@@ -1376,27 +1400,17 @@
                     // Esta semana
                     if (venc >= inicioSemana && venc <= fimSemana) {
                         valorSemana += valor;
-                        if (venc.getTime() !== hoje.getTime()) {
-                            dadosSemana.push(parcelaInfo);
-                        }
                     }
 
                     // Este mês
                     if (venc.getMonth() === mesAtual && venc.getFullYear() === anoAtual) {
                         valorMes += valor;
-                        const jaExiste = dadosMes.some(d => d.id === parcelaInfo.id);
-                        if (!jaExiste) {
-                            dadosMes.push(parcelaInfo);
-                        }
                     }
 
                     // Atrasados
                     if (status === 'ATRASADO' || venc < hoje) {
                         valorAtrasados += valor;
-                        const jaExisteAtrasado = dadosAtrasados.some(d => d.id === parcelaInfo.id);
-                        if (!jaExisteAtrasado) {
-                            dadosAtrasados.push(parcelaInfo);
-                        }
+                        dadosAtrasados.push(parcelaInfo);
                     }
 
                     // Agrupar por cliente
@@ -1427,14 +1441,16 @@
                 }
             });
 
-            // Adicionar itens de hoje também na semana e mês
-            dadosHoje.forEach(item => {
-                if (!dadosSemana.some(d => d.id === item.id)) {
-                    dadosSemana.unshift(item);
-                }
-                if (!dadosMes.some(d => d.id === item.id)) {
-                    dadosMes.unshift(item);
-                }
+            // Filtrar semana e mês para não duplicar
+            dadosSemana = dadosTotal.filter(item => {
+                const venc = new Date(item.vencimento);
+                venc.setHours(0, 0, 0, 0);
+                return venc >= inicioSemana && venc <= fimSemana;
+            });
+
+            dadosMes = dadosTotal.filter(item => {
+                const venc = new Date(item.vencimento);
+                return venc.getMonth() === mesAtual && venc.getFullYear() === anoAtual;
             });
 
             // Ordenar: atrasados primeiro, depois por data
@@ -1443,14 +1459,12 @@
                 const aVenc = new Date(a.vencimento).getTime();
                 const bVenc = new Date(b.vencimento).getTime();
                 
-                // Atrasados primeiro
                 const aAtrasado = aVenc < hojeTime || a.status === 'ATRASADO';
                 const bAtrasado = bVenc < hojeTime || b.status === 'ATRASADO';
                 
                 if (aAtrasado && !bAtrasado) return -1;
                 if (!aAtrasado && bAtrasado) return 1;
                 
-                // Depois ordenar por data
                 return aVenc - bVenc;
             };
 
@@ -1461,8 +1475,7 @@
             dadosTotal.sort(ordenarPorPrioridade);
 
             // Converter mapa de clientes para array
-            dadosClientesAtivos = Array.from(clientesMap.values())
-                .filter(c => c.valorPendente > 0 || c.totalParcelas > c.parcelasPagas);
+            dadosClientesAtivos = Array.from(clientesMap.values());
 
             // Atualizar dashboard
             document.getElementById('valorHoje').textContent = formatarMoeda(valorHoje);
@@ -1527,6 +1540,9 @@
                 const moto = parcelas[0]?.[14] || 'Não informado';
                 const totalParcelas = parcelas.length;
 
+                // Escapar o contratoId para uso seguro no HTML
+                const contratoIdSeguro = String(contratoId).replace(/'/g, "\\'");
+
                 html += `
                     <div class="client-card">
                         <div class="client-header" onclick="toggleParcelas(${idx})">
@@ -1547,7 +1563,7 @@
 
                     const vencStr = new Date(p[9]).toLocaleDateString('pt-BR');
                     const valor = parseFloat(p[7] || 0);
-                    const idParcela = p[0] || '';
+                    const idParcela = String(p[0] || '').replace(/'/g, "\\'");
 
                     html += `
                         <div class="parcela-item">
@@ -1576,8 +1592,8 @@
                 });
 
                 html += `
-                    <button class="btn-editar" onclick="event.stopPropagation(); abrirModalEdicao('${contratoId}')" style="margin-top:10px;">Editar Contrato</button>
-                    <button class="btn-excluir" onclick="event.stopPropagation(); excluirContrato('${contratoId}')" style="margin-top:6px;">Excluir Contrato</button>
+                    <button class="btn-editar" onclick="event.stopPropagation(); abrirModalEdicao('${contratoIdSeguro}')" style="margin-top:10px;">Editar Contrato</button>
+                    <button class="btn-excluir" onclick="event.stopPropagation(); excluirContrato('${contratoIdSeguro}')" style="margin-top:6px;">Excluir Contrato</button>
                         </div>
                     </div>
                 `;
@@ -1599,10 +1615,17 @@
             const resultado = await chamarApi('pagar', { id });
 
             if (resultado.sucesso) {
-                mostrarAlerta('Parcela marcada como paga!', 'success');
+                if (resultado.contratoQuitado) {
+                    mostrarAlerta('Contrato quitado! Cliente movido para finalizados.', 'success');
+                } else {
+                    mostrarAlerta('Parcela marcada como paga!', 'success');
+                }
                 dadosCache = [];
                 dadosAntigosCache = [];
                 await carregarClientes(true);
+                if (painelAtivo) {
+                    setTimeout(() => mostrarDetalhe(painelAtivo), 100);
+                }
             } else {
                 mostrarAlerta('Erro ao marcar como pago.', 'error');
             }
@@ -1619,6 +1642,9 @@
                 dadosCache = [];
                 dadosAntigosCache = [];
                 await carregarClientes(true);
+                if (painelAtivo) {
+                    setTimeout(() => mostrarDetalhe(painelAtivo), 100);
+                }
             } else {
                 mostrarAlerta('Erro ao excluir parcela.', 'error');
             }
@@ -1626,15 +1652,18 @@
 
         // Excluir contrato
         async function excluirContrato(contratoId) {
-            if (!confirm('Excluir TODAS as parcelas deste contrato?')) return;
+            if (!confirm('Excluir TODAS as parcelas deste contrato?\n\nEsta ação não pode ser desfeita!')) return;
 
             const resultado = await chamarApi('excluirContrato', { contratoId });
 
             if (resultado.sucesso) {
-                mostrarAlerta('Contrato excluído!', 'success');
+                mostrarAlerta(`Contrato excluído! ${resultado.parcelasExcluidas || 0} parcela(s) removida(s).`, 'success');
                 dadosCache = [];
                 dadosAntigosCache = [];
                 await carregarClientes(true);
+                if (painelAtivo) {
+                    setTimeout(() => mostrarDetalhe(painelAtivo), 100);
+                }
             } else {
                 mostrarAlerta('Erro ao excluir contrato.', 'error');
             }
@@ -1642,35 +1671,59 @@
 
         // Editar contrato
         async function salvarEdicao() {
-            if (!contratoEditando) return;
+            if (!contratoEditando) {
+                mostrarAlerta('Nenhum contrato selecionado para edição.', 'error');
+                return;
+            }
+
+            const nome = document.getElementById('editNome').value.trim();
+            const telefone = document.getElementById('editTelefone').value.trim();
+            const moto = document.getElementById('editMoto').value.trim();
+            const descricao = document.getElementById('editDescricao').value.trim();
+            const valorTotal = document.getElementById('editValorTotal').value;
+            const numParcelas = document.getElementById('editNumParcelas').value;
+            const vencimento = document.getElementById('editVencimento').value;
+            const observacao = document.getElementById('editObservacao').value.trim();
+
+            if (!nome) return mostrarAlerta('Informe o nome do cliente.', 'error');
+            if (!moto) return mostrarAlerta('Informe a descrição do bem.', 'error');
+            if (!valorTotal || parseFloat(valorTotal) <= 0) return mostrarAlerta('Informe um valor válido.', 'error');
+            if (!vencimento) return mostrarAlerta('Informe a data de vencimento.', 'error');
+
+            const btnSalvar = document.getElementById('btnSalvarEdicao');
+            btnSalvar.disabled = true;
+            btnSalvar.textContent = 'Salvando...';
 
             const dados = {
                 contratoId: contratoEditando,
-                nome: document.getElementById('editNome').value.trim(),
-                telefone: document.getElementById('editTelefone').value.trim(),
-                moto: document.getElementById('editMoto').value.trim(),
-                descricao: document.getElementById('editDescricao').value.trim(),
-                valorTotal: document.getElementById('editValorTotal').value,
-                numParcelas: document.getElementById('editNumParcelas').value,
-                vencimento: document.getElementById('editVencimento').value,
-                observacao: document.getElementById('editObservacao').value.trim()
+                nome,
+                telefone,
+                moto,
+                descricao,
+                valorTotal,
+                numParcelas,
+                vencimento,
+                observacao
             };
 
-            if (!dados.nome) return mostrarAlerta('Informe o nome.', 'error');
-            if (!dados.moto) return mostrarAlerta('Informe a descrição do bem.', 'error');
-            if (!dados.valorTotal || parseFloat(dados.valorTotal) <= 0) return mostrarAlerta('Valor inválido.', 'error');
-            if (!dados.vencimento) return mostrarAlerta('Informe a data.', 'error');
+            console.log('Salvando edição:', dados);
 
             const resultado = await chamarApi('editarContrato', dados);
 
-            if (resultado.sucesso) {
-                mostrarAlerta('Contrato atualizado!', 'success');
+            btnSalvar.disabled = false;
+            btnSalvar.textContent = 'Salvar Alterações';
+
+            if (resultado && resultado.sucesso) {
+                mostrarAlerta('Contrato atualizado com sucesso!', 'success');
                 fecharModalEdicao();
                 dadosCache = [];
                 dadosAntigosCache = [];
                 await carregarClientes(true);
+                if (painelAtivo) {
+                    setTimeout(() => mostrarDetalhe(painelAtivo), 100);
+                }
             } else {
-                mostrarAlerta('Erro ao editar.', 'error');
+                mostrarAlerta('Erro ao editar contrato. Verifique os dados e tente novamente.', 'error');
             }
         }
 
@@ -1678,7 +1731,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             atualizarPreview();
             carregarClientes(true);
-            setInterval(() => carregarClientes(true), 30000);
+            setInterval(() => carregarClientes(true), 60000);
         });
 
         document.addEventListener('keydown', (e) => {
