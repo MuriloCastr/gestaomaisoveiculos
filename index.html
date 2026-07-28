@@ -3,28 +3,26 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MotoPromissorias - Gestão de Vendas</title>
+    <title>Gestão de Promissórias</title>
 
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background: #0a0e17;
-            color: #e8edf5;
-            padding: 20px;
+            background: #f5f6f8;
+            color: #2d3748;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
         }
 
         .app {
-            max-width: 1400px;
-            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 20px;
         }
 
         /* Header */
@@ -32,404 +30,182 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
             margin-bottom: 28px;
             padding-bottom: 16px;
-            border-bottom: 1px solid #1c2640;
+            border-bottom: 2px solid #e2e8f0;
         }
 
         .header h1 {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 600;
-            background: linear-gradient(135deg, #ff8a5c, #e65c2a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #1a202c;
+            letter-spacing: -0.5px;
         }
 
         .header .sub {
-            color: #6a7fa0;
-            font-size: 14px;
-        }
-
-        .status-whatsapp {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #121a2e;
-            padding: 8px 18px;
-            border-radius: 30px;
-            border: 1px solid #22304a;
+            color: #718096;
             font-size: 13px;
+            margin-top: 4px;
         }
 
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
+        .header-right {
+            display: flex;
+            gap: 10px;
         }
 
-        .dot.online {
-            background: #4ade80;
-            box-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+        .btn-cadastrar {
+            background: #2d3748;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
         }
 
-        .dot.offline {
-            background: #f87171;
-            box-shadow: 0 0 10px rgba(248, 113, 113, 0.3);
+        .btn-cadastrar:hover {
+            background: #4a5568;
         }
 
-        .dot.testing {
-            background: #fbbf24;
-            box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
-            animation: pulse 1s infinite;
+        .btn-listar {
+            background: #fff;
+            color: #2d3748;
+            border: 1px solid #cbd5e0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
+        .btn-listar:hover {
+            background: #edf2f7;
+            border-color: #a0aec0;
         }
 
-        /* Cards */
-        .metric-grid {
+        /* Dashboard Cards */
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-            gap: 14px;
-            margin-bottom: 28px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
         }
 
-        .metric-card {
-            background: #121a2e;
-            border-radius: 18px;
-            padding: 18px 16px;
-            border: 1px solid #1f2a45;
-            transition: 0.2s;
+        .dashboard-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .metric-card:hover {
-            border-color: #3a4a70;
-        }
-
-        .metric-card .label {
-            font-size: 11px;
+        .dashboard-card .label {
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #6a7fa0;
-            margin-bottom: 6px;
+            color: #718096;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
 
-        .metric-card .value {
+        .dashboard-card .value {
             font-size: 28px;
             font-weight: 700;
-            color: #fff;
+            color: #1a202c;
         }
 
-        .metric-card .value.highlight {
-            background: linear-gradient(135deg, #ff8a5c, #e65c2a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .dashboard-card .value.primary {
+            color: #2b6cb0;
         }
 
-        .metric-card .value.danger {
-            color: #f58a8a;
+        .dashboard-card .value.success {
+            color: #276749;
         }
 
-        /* Formulário */
-        .form-section {
-            background: #121a2e;
-            border-radius: 20px;
-            padding: 24px 28px;
-            margin-bottom: 28px;
-            border: 1px solid #1f2a45;
-        }
-
-        .form-section .form-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 18px;
-            color: #c8d6f0;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-            gap: 12px;
-        }
-
-        .form-grid input,
-        .form-grid select,
-        .form-grid textarea {
-            background: #0e1525;
-            border: 1px solid #22304a;
-            border-radius: 12px;
-            padding: 13px 15px;
-            color: #e8edf5;
-            font-size: 14px;
-            outline: none;
-            transition: 0.2s;
-            width: 100%;
-        }
-
-        .form-grid input:focus,
-        .form-grid select:focus,
-        .form-grid textarea:focus {
-            border-color: #e65c2a;
-            box-shadow: 0 0 0 3px rgba(230, 92, 42, 0.12);
-        }
-
-        .form-grid textarea {
-            resize: vertical;
-            min-height: 50px;
-            font-family: inherit;
-        }
-
-        .preview-block {
-            margin-top: 16px;
-            padding: 14px 18px;
-            background: #0e1525;
-            border-radius: 14px;
-            border-left: 3px solid #e65c2a;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .btn-primary {
-            background: #e65c2a;
-            border: none;
-            border-radius: 12px;
-            padding: 15px 22px;
-            font-weight: 600;
-            font-size: 15px;
-            color: #fff;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            margin-top: 18px;
-        }
-
-        .btn-primary:hover {
-            background: #d04a1a;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(230, 92, 42, 0.25);
-        }
-
-        /* WhatsApp Config */
-        .whatsapp-config {
-            background: #121a2e;
-            border-radius: 20px;
-            padding: 24px 28px;
-            margin-bottom: 28px;
-            border: 1px solid #1f2a45;
-        }
-
-        .whatsapp-config .config-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 18px;
-            color: #c8d6f0;
-        }
-
-        .whatsapp-config .config-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .whatsapp-config .config-grid input {
-            background: #0e1525;
-            border: 1px solid #22304a;
-            border-radius: 12px;
-            padding: 13px 15px;
-            color: #e8edf5;
-            font-size: 14px;
-            outline: none;
-            width: 100%;
-        }
-
-        .whatsapp-config .config-grid input:focus {
-            border-color: #e65c2a;
-            box-shadow: 0 0 0 3px rgba(230, 92, 42, 0.12);
-        }
-
-        .btn-testar-whatsapp {
-            background: #1a4a2a;
-            border: none;
-            border-radius: 12px;
-            padding: 14px 22px;
-            font-weight: 600;
-            font-size: 15px;
-            color: #b0e8c0;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            margin-top: 12px;
-        }
-
-        .btn-testar-whatsapp:hover {
-            background: #2a5a3a;
-            color: #fff;
-        }
-
-        .btn-reiniciar-whatsapp {
-            background: #4a3a1a;
-            border: none;
-            border-radius: 12px;
-            padding: 14px 22px;
-            font-weight: 600;
-            font-size: 15px;
-            color: #e8d57a;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            margin-top: 12px;
-        }
-
-        .btn-reiniciar-whatsapp:hover {
-            background: #5a4a2a;
-            color: #fff;
-        }
-
-        .config-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .config-buttons button {
-            flex: 1;
-        }
-
-        /* Filtros e Lista */
-        .filter-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .filter-btn {
-            background: #121a2e;
-            border: 1px solid #22304a;
-            border-radius: 30px;
-            padding: 8px 20px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #7a8fa8;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .filter-btn:hover {
-            background: #1a2640;
-        }
-
-        .filter-btn.active {
-            background: #e65c2a;
-            border-color: #e65c2a;
-            color: #fff;
-        }
-
-        .filter-btn.antigos {
-            border-color: #4a3a5a;
-        }
-
-        .filter-btn.antigos.active {
-            background: #7a5a9a;
-            border-color: #7a5a9a;
+        /* Seção de busca */
+        .search-section {
+            margin-bottom: 24px;
         }
 
         .search-box {
-            margin-bottom: 18px;
+            position: relative;
         }
 
         .search-box input {
             width: 100%;
-            background: #121a2e;
-            border: 1px solid #22304a;
-            border-radius: 14px;
-            padding: 13px 18px;
-            color: #e8edf5;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
             font-size: 15px;
+            color: #2d3748;
+            background: #fff;
             outline: none;
+            transition: border-color 0.2s;
         }
 
+        .search-box input:focus {
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66,153,225,0.1);
+        }
+
+        .search-box input::placeholder {
+            color: #a0aec0;
+        }
+
+        /* Lista de clientes */
         .client-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
         }
 
         .client-card {
-            background: #121a2e;
-            border-radius: 18px;
-            border: 1px solid #1f2a45;
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
             overflow: hidden;
-            transition: 0.2s;
-        }
-
-        .client-card:hover {
-            border-color: #334a6a;
         }
 
         .client-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 22px;
+            padding: 16px 20px;
             cursor: pointer;
-            transition: 0.15s;
+            transition: background 0.15s;
         }
 
         .client-header:hover {
-            background: #161f35;
-        }
-
-        .client-info {
-            flex: 1;
+            background: #f7fafc;
         }
 
         .client-name {
-            font-size: 19px;
+            font-size: 16px;
             font-weight: 600;
-            color: #e8edf5;
+            color: #1a202c;
         }
 
-        .client-details {
+        .client-meta {
             font-size: 13px;
-            color: #6a7fa0;
-            margin-top: 3px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .client-details .moto {
-            color: #ff8a5c;
-            font-weight: 500;
+            color: #718096;
+            margin-top: 2px;
         }
 
         .client-total {
-            font-size: 26px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ff8a5c, #e65c2a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2b6cb0;
             white-space: nowrap;
-            margin-left: 12px;
         }
 
         .parcelas-wrapper {
             display: none;
-            padding: 0 22px 22px 22px;
-            background: #0e1525;
-            border-top: 1px solid #1f2a45;
+            padding: 0 20px 16px 20px;
+            background: #f7fafc;
+            border-top: 1px solid #e2e8f0;
         }
 
         .parcelas-wrapper.open {
@@ -437,186 +213,273 @@
         }
 
         .parcela-item {
-            background: #0a0e17;
-            border-radius: 14px;
-            padding: 16px 18px;
-            margin-top: 12px;
-            border: 1px solid #1f2a45;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
         }
 
         .parcela-info {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+            flex: 1;
+        }
+
+        .parcela-desc {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2d3748;
         }
 
         .parcela-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            font-size: 13px;
-            color: #6a7fa0;
+            font-size: 12px;
+            color: #718096;
+            margin-top: 4px;
         }
 
-        .badge-status {
-            padding: 3px 14px;
-            border-radius: 30px;
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
             font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .badge-pendente {
-            background: #2a2a1a;
-            color: #e8d57a;
+            background: #fefcbf;
+            color: #975a16;
         }
 
         .badge-pago {
-            background: #1a2a1a;
-            color: #7ad4a0;
+            background: #c6f6d5;
+            color: #276749;
         }
 
         .badge-atrasado {
-            background: #2a1a1a;
-            color: #f58a8a;
+            background: #fed7d7;
+            color: #9b2c2c;
         }
 
         .parcela-valor {
-            font-size: 22px;
-            font-weight: 700;
-            color: #e8edf5;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-left: 16px;
+            white-space: nowrap;
         }
 
         .btn-pagar {
-            background: #1a4a2a;
+            background: #38a169;
+            color: #fff;
             border: none;
-            border-radius: 10px;
-            padding: 11px 18px;
-            font-weight: 600;
-            font-size: 13px;
-            color: #b0e8c0;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
-            transition: 0.2s;
+            transition: background 0.2s;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .btn-pagar:hover {
-            background: #2a5a3a;
-            color: #fff;
+            background: #2f855a;
         }
 
         .btn-excluir {
-            background: #4a1a1a;
+            background: #e53e3e;
+            color: #fff;
             border: none;
-            border-radius: 10px;
-            padding: 11px 18px;
-            font-weight: 600;
-            font-size: 13px;
-            color: #f58a8a;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
-            transition: 0.2s;
+            transition: background 0.2s;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 6px;
         }
 
         .btn-excluir:hover {
-            background: #5a2a2a;
-            color: #ffaaaa;
+            background: #c53030;
         }
 
-        .btn-editar-contrato {
-            background: #1a2a4a;
-            border: 1px solid #2a3a5a;
-            border-radius: 10px;
-            padding: 11px 18px;
-            font-weight: 600;
-            font-size: 13px;
-            color: #8ab8f5;
+        .btn-editar {
+            background: #3182ce;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
-            transition: 0.2s;
+            transition: background 0.2s;
             width: 100%;
             margin-top: 6px;
         }
 
-        .btn-editar-contrato:hover {
-            background: #2a3a5a;
-            color: #aac8ff;
+        .btn-editar:hover {
+            background: #2b6cb0;
         }
 
-        .btn-excluir-contrato {
-            background: #3a1a1a;
-            border: 1px solid #5a2a2a;
-            border-radius: 10px;
-            padding: 11px 18px;
-            font-weight: 600;
-            font-size: 13px;
-            color: #f58a8a;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            margin-top: 6px;
-        }
-
-        .btn-excluir-contrato:hover {
-            background: #5a2a2a;
-            color: #ffaaaa;
-        }
-
-        .botoes-acao {
+        .acoes-parcela {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 8px;
+            margin-top: 8px;
         }
 
-        .botoes-acao button {
+        .acoes-parcela button {
             flex: 1;
             margin-top: 0;
         }
 
         .empty-state {
-            background: #121a2e;
-            border-radius: 18px;
-            padding: 50px 24px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 48px 24px;
             text-align: center;
-            color: #6a7fa0;
-            border: 1px dashed #22304a;
-            font-size: 16px;
+            color: #a0aec0;
+            border: 2px dashed #e2e8f0;
+            font-size: 15px;
+        }
+
+        /* Modal de cadastro */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .modal h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-grid input,
+        .form-grid select,
+        .form-grid textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #2d3748;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .form-grid textarea {
+            resize: vertical;
+            min-height: 60px;
+            grid-column: 1 / -1;
+        }
+
+        .form-grid input:focus,
+        .form-grid select:focus,
+        .form-grid textarea:focus {
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66,153,225,0.1);
+        }
+
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-salvar {
+            background: #2d3748;
+            color: #fff;
+        }
+
+        .btn-salvar:hover {
+            background: #4a5568;
+        }
+
+        .btn-cancelar {
+            background: #edf2f7;
+            color: #4a5568;
+        }
+
+        .btn-cancelar:hover {
+            background: #e2e8f0;
         }
 
         /* Toast */
         .toast {
             position: fixed;
-            top: 24px;
-            right: 24px;
-            padding: 14px 26px;
-            border-radius: 14px;
+            top: 20px;
+            right: 20px;
+            padding: 14px 24px;
+            border-radius: 10px;
             color: #fff;
             font-weight: 500;
-            z-index: 999;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             animation: slideIn 0.3s ease;
-            max-width: 380px;
+            font-size: 14px;
         }
 
         .toast-success {
-            background: #1a4a2a;
-            border-left: 4px solid #5aca7a;
+            background: #38a169;
         }
 
         .toast-error {
-            background: #4a1a1a;
-            border-left: 4px solid #e05a5a;
+            background: #e53e3e;
         }
 
         .toast-info {
-            background: #1a2a4a;
-            border-left: 4px solid #5a8ad9;
+            background: #3182ce;
         }
 
         @keyframes slideIn {
@@ -630,50 +493,58 @@
             }
         }
 
-        .obs-interna {
-            background: #1a1a2a;
-            border-radius: 8px;
-            padding: 6px 12px;
-            font-size: 12px;
-            color: #8a7a9a;
-            border-left: 2px solid #4a3a5a;
-            margin-top: 4px;
-            font-style: italic;
-        }
-
-        @media (max-width: 700px) {
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
             .client-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 6px;
+                gap: 8px;
             }
+            
             .parcela-item {
                 flex-direction: column;
                 align-items: stretch;
             }
-            .metric-grid {
-                grid-template-columns: 1fr 1fr;
+            
+            .parcela-valor {
+                margin-left: 0;
+                margin-top: 8px;
             }
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            .whatsapp-config .config-grid {
-                grid-template-columns: 1fr;
-            }
-            .config-buttons {
+            
+            .header {
                 flex-direction: column;
-            }
-            .botoes-acao {
-                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
             }
         }
 
-        @media (max-width: 450px) {
-            .metric-grid {
+        @media (max-width: 480px) {
+            .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+            
             body {
                 padding: 12px;
+            }
+            
+            .modal {
+                padding: 20px;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+            }
+            
+            .acoes-parcela {
+                flex-direction: column;
             }
         }
     </style>
@@ -685,52 +556,68 @@
         <!-- Header -->
         <header class="header">
             <div>
-                <h1>🏍️ MotoPromissorias</h1>
-                <span class="sub">Gestão de vendas com lembretes automáticos</span>
+                <h1>Gestão de Promissórias</h1>
+                <span class="sub">Controle financeiro de vendas</span>
             </div>
-            <div class="status-whatsapp">
-                <span class="dot offline" id="whatsappStatusDot"></span>
-                <span id="whatsappStatusText">Verificando...</span>
+            <div class="header-right">
+                <button class="btn-listar" onclick="toggleListaClientes()" id="btnToggleLista">
+                    Lista de Clientes
+                </button>
+                <button class="btn-cadastrar" onclick="abrirModalCadastro()">
+                    Nova Promissória
+                </button>
             </div>
         </header>
 
-        <!-- Métricas -->
-        <section class="metric-grid">
-            <div class="metric-card">
-                <div class="label">Total a Receber</div>
-                <div class="value highlight" id="totalReceber">R$ 0</div>
+        <!-- Dashboard -->
+        <section class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="label">A Receber Hoje</div>
+                <div class="value primary" id="valorHoje">R$ 0,00</div>
             </div>
-            <div class="metric-card">
-                <div class="label">Receber este Mês</div>
-                <div class="value" id="mesReceber">R$ 0</div>
+            <div class="dashboard-card">
+                <div class="label">A Receber na Semana</div>
+                <div class="value" id="valorSemana">R$ 0,00</div>
             </div>
-            <div class="metric-card">
-                <div class="label">Recebido este Mês</div>
-                <div class="value" id="mesPago">R$ 0</div>
+            <div class="dashboard-card">
+                <div class="label">A Receber no Mês</div>
+                <div class="value" id="valorMes">R$ 0,00</div>
             </div>
-            <div class="metric-card">
-                <div class="label">Total Atrasado</div>
-                <div class="value danger" id="totalAtrasado">R$ 0</div>
+            <div class="dashboard-card">
+                <div class="label">Total Geral</div>
+                <div class="value success" id="totalGeral">R$ 0,00</div>
             </div>
-            <div class="metric-card">
+            <div class="dashboard-card">
                 <div class="label">Clientes Ativos</div>
-                <div class="value" id="totalClientes">0</div>
-            </div>
-            <div class="metric-card">
-                <div class="label">Clientes Antigos</div>
-                <div class="value" id="totalAntigos" style="color: #a88ac8;">0</div>
+                <div class="value" id="clientesAtivos">0</div>
             </div>
         </section>
 
-        <!-- Formulário -->
-        <section class="form-section">
-            <div class="form-title">Nova Venda de Moto</div>
+        <!-- Busca e Lista (oculta por padrão) -->
+        <div id="listaClientesContainer" style="display: none;">
+            <div class="search-section">
+                <div class="search-box">
+                    <input type="text" id="busca" placeholder="Buscar cliente..." oninput="carregarClientes()" />
+                </div>
+            </div>
+
+            <div class="client-list" id="clientesContainer">
+                <div class="empty-state">Nenhum cliente encontrado</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal de Cadastro -->
+    <div class="modal-overlay" id="modalCadastro">
+        <div class="modal">
+            <h2>Nova Promissória</h2>
             <div class="form-grid">
                 <input type="text" id="nome" placeholder="Nome do cliente" />
-                <input type="text" id="telefone" placeholder="WhatsApp (com DDD)" value="89981067904" />
-                <input type="text" id="moto" placeholder="Moto (ex: Honda CG 160)" />
-                <input type="text" id="descricao" placeholder="Descrição do contrato" />
-                <input type="number" id="valorTotal" placeholder="Valor total" oninput="atualizarPreview()" />
+                <input type="text" id="telefone" placeholder="Telefone (com DDD)" />
+                <input type="text" id="moto" placeholder="Descrição do bem (ex: Honda CG 160)" class="full-width" />
+                <input type="text" id="descricao" placeholder="Descrição do contrato" class="full-width" />
+                <input type="number" id="valorTotal" placeholder="Valor total" step="0.01" oninput="atualizarPreview()" />
                 <select id="numParcelas" onchange="atualizarPreview()">
                     <option value="1">1 parcela</option>
                     <option value="2">2 parcelas</option>
@@ -739,65 +626,32 @@
                     <option value="5">5 parcelas</option>
                     <option value="6">6 parcelas</option>
                     <option value="12">12 parcelas</option>
+                    <option value="24">24 parcelas</option>
+                    <option value="36">36 parcelas</option>
                 </select>
                 <input type="date" id="vencimento" />
-                <textarea id="observacao" placeholder="Observação interna (só você vê)"></textarea>
+                <textarea id="observacao" placeholder="Observação interna"></textarea>
+                <div class="full-width" style="padding: 12px; background: #f7fafc; border-radius: 8px; font-size: 14px; color: #4a5568;">
+                    Valor por parcela: <strong id="valorParcela">R$ 0,00</strong>
+                </div>
             </div>
-
-            <div class="preview-block">
-                <span class="preview-label">Valor por parcela</span>
-                <span class="preview-value" id="valorParcela">R$ 0,00</span>
+            <div class="modal-buttons">
+                <button class="btn-cancelar" onclick="fecharModalCadastro()">Cancelar</button>
+                <button class="btn-salvar" onclick="salvar()">Salvar</button>
             </div>
-
-            <button class="btn-primary" id="btnSalvar" onclick="salvar()">Salvar Venda</button>
-        </section>
-
-        <!-- Configuração WhatsApp -->
-        <section class="whatsapp-config">
-            <div class="config-title">Configuração do WhatsApp</div>
-            <div class="config-grid">
-                <input type="text" id="whatsappServer" placeholder="URL do servidor" value="http://localhost:3000" />
-                <input type="text" id="whatsappTestPhone" placeholder="Telefone para teste" value="89981067904" />
-            </div>
-            <div class="config-buttons">
-                <button class="btn-testar-whatsapp" onclick="testarWhatsApp()">📱 Testar Mensagem</button>
-                <button class="btn-reiniciar-whatsapp" onclick="reiniciarWhatsApp()">🔄 Reiniciar Servidor</button>
-            </div>
-            <button class="btn-testar-whatsapp" onclick="verificarStatusWhatsApp()" style="margin-top: 10px; background: #1a2a4a; color: #8ab8f5;">
-                📊 Verificar Status
-            </button>
-        </section>
-
-        <!-- Filtros -->
-        <div class="filter-bar">
-            <button class="filter-btn active" data-filter="TODOS" onclick="setFiltro('TODOS', this)">Todos</button>
-            <button class="filter-btn" data-filter="PENDENTE" onclick="setFiltro('PENDENTE', this)">Pendentes</button>
-            <button class="filter-btn" data-filter="ATRASADO" onclick="setFiltro('ATRASADO', this)">Atrasados</button>
-            <button class="filter-btn" data-filter="PAGO" onclick="setFiltro('PAGO', this)">Pagos</button>
-            <button class="filter-btn antigos" data-filter="ANTIGOS" onclick="setFiltro('ANTIGOS', this)">Antigos</button>
         </div>
-
-        <div class="search-box">
-            <input type="text" id="busca" placeholder="Buscar cliente ou moto..." oninput="carregarClientes()" />
-        </div>
-
-        <div class="client-list" id="clientesContainer">
-            <div class="empty-state">Carregando...</div>
-        </div>
-
     </div>
 
     <!-- Modal de Edição -->
-    <div class="modal-overlay" id="modalEditarContrato" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:1000;justify-content:center;align-items:center;">
-        <div style="background:#121a2e;border-radius:24px;padding:32px;max-width:650px;width:90%;max-height:90vh;overflow-y:auto;border:1px solid #2a3a5a;">
-            <h2 style="color:#c8d6f0;margin-bottom:20px;font-size:20px;">Editar Contrato</h2>
+    <div class="modal-overlay" id="modalEdicao">
+        <div class="modal">
+            <h2>Editar Contrato</h2>
             <div class="form-grid">
                 <input type="text" id="editNome" placeholder="Nome do cliente" />
-                <input type="text" id="editTelefone" placeholder="WhatsApp (com DDD)" />
-                <input type="text" id="editMoto" placeholder="Moto" style="grid-column:1/-1;" />
-                <input type="text" id="editDescricao" placeholder="Descrição" style="grid-column:1/-1;" />
+                <input type="text" id="editTelefone" placeholder="Telefone" />
+                <input type="text" id="editMoto" placeholder="Descrição do bem" class="full-width" />
+                <input type="text" id="editDescricao" placeholder="Descrição do contrato" class="full-width" />
                 <input type="number" id="editValorTotal" placeholder="Valor total" step="0.01" />
-                <input type="date" id="editVencimento" />
                 <select id="editNumParcelas">
                     <option value="1">1 parcela</option>
                     <option value="2">2 parcelas</option>
@@ -806,31 +660,27 @@
                     <option value="5">5 parcelas</option>
                     <option value="6">6 parcelas</option>
                     <option value="12">12 parcelas</option>
+                    <option value="24">24 parcelas</option>
+                    <option value="36">36 parcelas</option>
                 </select>
-                <textarea id="editObservacao" placeholder="Observação interna" style="grid-column:1/-1;resize:vertical;min-height:50px;background:#0e1525;border:1px solid #22304a;border-radius:12px;padding:13px 15px;color:#e8edf5;font-size:14px;outline:none;font-family:inherit;"></textarea>
+                <input type="date" id="editVencimento" />
+                <textarea id="editObservacao" placeholder="Observação interna"></textarea>
             </div>
-            <div style="display:flex;gap:12px;margin-top:20px;">
-                <button onclick="fecharModalEdicao()" style="flex:1;padding:14px;border-radius:12px;border:none;font-weight:600;font-size:14px;cursor:pointer;background:#2a2a3a;color:#8a8aaa;">Cancelar</button>
-                <button onclick="salvarEdicaoContrato()" style="flex:1;padding:14px;border-radius:12px;border:none;font-weight:600;font-size:14px;cursor:pointer;background:#e65c2a;color:#fff;">Salvar Alterações</button>
+            <div class="modal-buttons">
+                <button class="btn-cancelar" onclick="fecharModalEdicao()">Cancelar</button>
+                <button class="btn-salvar" onclick="salvarEdicao()">Salvar Alterações</button>
             </div>
         </div>
     </div>
 
     <script>
-        // ============================================================
-        // CONFIGURAÇÃO
-        // ============================================================
-        const API_URL =
-            'https://script.google.com/macros/s/AKfycbwqEZxapoen_DXGAMGGVD1ZZ1uJ6Yn9cNc2aybxndDQ5jLk7uuPihFHG_dXuGXD-EXq/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbww_lQmPPVPo-BqEMlrl1yg6-jlrXbglt2rpFGF-d45JJtGtGWHB8kSQRFPUFCDx9Ki/exec';
 
-        let filtroAtual = 'TODOS';
         let dadosCache = [];
         let dadosAntigosCache = [];
         let contratoEditando = null;
+        let listaVisivel = false;
 
-        // ============================================================
-        // UTILITÁRIOS
-        // ============================================================
         function formatarMoeda(valor) {
             return Number(valor).toLocaleString('pt-BR', {
                 style: 'currency',
@@ -848,152 +698,74 @@
                 toast.style.transform = 'translateX(40px)';
                 toast.style.transition = '0.3s';
                 setTimeout(() => toast.remove(), 350);
-            }, 3800);
+            }, 3500);
         }
 
-        function previewParcela() {
+        function atualizarPreview() {
             const total = parseFloat(document.getElementById('valorTotal').value) || 0;
             const parcelas = parseInt(document.getElementById('numParcelas').value) || 1;
             const valor = total / parcelas;
             document.getElementById('valorParcela').textContent = formatarMoeda(valor);
         }
 
-        function atualizarPreview() {
-            previewParcela();
+        // Modal de cadastro
+        function abrirModalCadastro() {
+            document.getElementById('modalCadastro').classList.add('active');
+            document.getElementById('nome').focus();
         }
 
-        // ============================================================
-        // WHATSAPP - STATUS
-        // ============================================================
-        async function verificarStatusWhatsApp() {
-            const dot = document.getElementById('whatsappStatusDot');
-            const text = document.getElementById('whatsappStatusText');
-            const server = document.getElementById('whatsappServer').value || 'http://localhost:3000';
-
-            dot.className = 'dot testing';
-            text.textContent = 'Verificando...';
-
-            try {
-                const response = await fetch(`${server}/status`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                    cache: 'no-cache'
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('📊 Status WhatsApp:', data);
-
-                    if (data.connected === true) {
-                        dot.className = 'dot online';
-                        text.textContent = '✅ WhatsApp Conectado';
-                        localStorage.setItem('whatsappStatus', 'online');
-                    } else {
-                        dot.className = 'dot offline';
-                        text.textContent = '❌ WhatsApp Desconectado';
-                        localStorage.setItem('whatsappStatus', 'offline');
-                    }
-                } else {
-                    dot.className = 'dot offline';
-                    text.textContent = '⚠️ Servidor Offline';
-                    localStorage.setItem('whatsappStatus', 'offline');
-                }
-            } catch (error) {
-                console.error('❌ Erro:', error);
-                dot.className = 'dot offline';
-                text.textContent = '❌ Erro de Conexão';
-                localStorage.setItem('whatsappStatus', 'error');
-            }
+        function fecharModalCadastro() {
+            document.getElementById('modalCadastro').classList.remove('active');
         }
 
-        // ============================================================
-        // WHATSAPP - TESTAR ENVIO
-        // ============================================================
-        async function testarWhatsApp() {
-            const telefone = document.getElementById('whatsappTestPhone').value.trim();
-            const server = document.getElementById('whatsappServer').value.trim() || 'http://localhost:3000';
+        // Modal de edição
+        function abrirModalEdicao(contratoId) {
+            contratoEditando = contratoId;
+            const todasParcelas = [...dadosCache, ...dadosAntigosCache];
+            const parcelasContrato = todasParcelas.filter(p => p[1].toString() === contratoId.toString());
 
-            if (!telefone) {
-                mostrarAlerta('Informe um telefone para teste.', 'error');
+            if (parcelasContrato.length === 0) {
+                mostrarAlerta('Contrato não encontrado.', 'error');
                 return;
             }
 
-            const dot = document.getElementById('whatsappStatusDot');
-            const text = document.getElementById('whatsappStatusText');
+            const primeira = parcelasContrato[0];
+            const valorTotal = parcelasContrato.reduce((sum, p) => sum + parseFloat(p[7] || 0), 0);
 
-            dot.className = 'dot testing';
-            text.textContent = 'Enviando...';
+            document.getElementById('editNome').value = primeira[2] || '';
+            document.getElementById('editTelefone').value = primeira[3] || '';
+            document.getElementById('editMoto').value = primeira[14] || '';
+            document.getElementById('editDescricao').value = primeira[4] || '';
+            document.getElementById('editValorTotal').value = valorTotal;
+            document.getElementById('editNumParcelas').value = parcelasContrato.length;
+            document.getElementById('editVencimento').value = new Date(primeira[9]).toISOString().split('T')[0];
+            document.getElementById('editObservacao').value = primeira[15] || '';
 
-            try {
-                const mensagem = 'Teste do sistema MotoPromissorias!\n\nSistema funcionando perfeitamente.';
+            document.getElementById('modalEdicao').classList.add('active');
+        }
 
-                const response = await fetch(`${server}/enviar-whatsapp`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: telefone, message: mensagem })
-                });
+        function fecharModalEdicao() {
+            document.getElementById('modalEdicao').classList.remove('active');
+            contratoEditando = null;
+        }
 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        dot.className = 'dot online';
-                        text.textContent = '✅ Mensagem enviada!';
-                        mostrarAlerta(`✅ Mensagem enviada para ${telefone}`, 'success');
-                        setTimeout(verificarStatusWhatsApp, 3000);
-                    } else {
-                        dot.className = 'dot offline';
-                        text.textContent = '❌ Falha no envio';
-                        mostrarAlerta(`❌ Erro: ${data.error || 'Falha desconhecida'}`, 'error');
-                    }
-                } else {
-                    dot.className = 'dot offline';
-                    text.textContent = '⚠️ Servidor Offline';
-                    mostrarAlerta('❌ Servidor WhatsApp não respondeu.', 'error');
-                }
-            } catch (error) {
-                dot.className = 'dot offline';
-                text.textContent = '❌ Erro de Conexão';
-                mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
+        // Toggle lista
+        function toggleListaClientes() {
+            listaVisivel = !listaVisivel;
+            const container = document.getElementById('listaClientesContainer');
+            const btn = document.getElementById('btnToggleLista');
+            
+            if (listaVisivel) {
+                container.style.display = 'block';
+                btn.textContent = 'Ocultar Lista';
+                carregarClientes(true);
+            } else {
+                container.style.display = 'none';
+                btn.textContent = 'Lista de Clientes';
             }
         }
 
-        // ============================================================
-        // WHATSAPP - REINICIAR SERVIDOR
-        // ============================================================
-        async function reiniciarWhatsApp() {
-            const server = document.getElementById('whatsappServer').value.trim() || 'http://localhost:3000';
-
-            const dot = document.getElementById('whatsappStatusDot');
-            const text = document.getElementById('whatsappStatusText');
-
-            dot.className = 'dot testing';
-            text.textContent = 'Reiniciando...';
-
-            try {
-                const response = await fetch(`${server}/reiniciar`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        mostrarAlerta('✅ Servidor reiniciado! Escaneie o QR Code.', 'success');
-                        setTimeout(verificarStatusWhatsApp, 5000);
-                    } else {
-                        mostrarAlerta('❌ Erro ao reiniciar.', 'error');
-                    }
-                } else {
-                    mostrarAlerta('❌ Servidor não respondeu.', 'error');
-                }
-            } catch (error) {
-                mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
-            }
-        }
-
-        // ============================================================
         // API
-        // ============================================================
         async function chamarApi(acao, dados = {}, tentativas = 3) {
             const form = new FormData();
             form.append('acao', acao);
@@ -1017,9 +789,7 @@
             return {};
         }
 
-        // ============================================================
-        // SALVAR
-        // ============================================================
+        // Salvar
         async function salvar() {
             const nome = document.getElementById('nome').value.trim();
             const telefone = document.getElementById('telefone').value.trim();
@@ -1031,13 +801,9 @@
             const vencimento = document.getElementById('vencimento').value;
 
             if (!nome) return mostrarAlerta('Informe o nome do cliente.', 'error');
-            if (!moto) return mostrarAlerta('Informe a moto.', 'error');
+            if (!moto) return mostrarAlerta('Informe a descrição do bem.', 'error');
             if (!valorTotal || parseFloat(valorTotal) <= 0) return mostrarAlerta('Informe um valor válido.', 'error');
             if (!vencimento) return mostrarAlerta('Informe a data de vencimento.', 'error');
-
-            const btn = document.getElementById('btnSalvar');
-            btn.disabled = true;
-            btn.textContent = 'Salvando...';
 
             const descricaoCompleta = descricao ? `${moto} - ${descricao}` : moto;
 
@@ -1052,39 +818,25 @@
                 vencimento
             });
 
-            btn.disabled = false;
-            btn.textContent = 'Salvar Venda';
-
             if (resultado.sucesso) {
-                mostrarAlerta('Venda salva com sucesso!', 'success');
+                mostrarAlerta('Promissória cadastrada com sucesso!', 'success');
+                fecharModalCadastro();
                 document.getElementById('nome').value = '';
-                document.getElementById('telefone').value = '89981067904';
+                document.getElementById('telefone').value = '';
                 document.getElementById('moto').value = '';
                 document.getElementById('descricao').value = '';
                 document.getElementById('observacao').value = '';
                 document.getElementById('valorTotal').value = '';
                 document.getElementById('vencimento').value = '';
                 document.getElementById('numParcelas').value = '1';
-                previewParcela();
+                atualizarPreview();
                 carregarClientes(true);
             } else {
                 mostrarAlerta('Erro ao salvar. Tente novamente.', 'error');
             }
         }
 
-        // ============================================================
-        // FILTRO
-        // ============================================================
-        function setFiltro(tipo, el) {
-            filtroAtual = tipo;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            carregarClientes(true);
-        }
-
-        // ============================================================
-        // CARREGAR DADOS
-        // ============================================================
+        // Carregar dados
         async function carregarClientes(forcar = false) {
             if (!forcar && dadosCache.length > 0 && dadosAntigosCache.length > 0) {
                 renderizar(dadosCache, dadosAntigosCache);
@@ -1145,68 +897,76 @@
             renderizar(clientesAtivos, listaAntigos);
         }
 
-        // ============================================================
-        // RENDERIZAR
-        // ============================================================
+        // Renderizar
         function renderizar(dados, dadosAntigos) {
             const busca = document.getElementById('busca').value.toLowerCase().trim();
             const container = document.getElementById('clientesContainer');
 
-            let listaParaRenderizar = [];
-            let isAntigos = false;
-
-            if (filtroAtual === 'ANTIGOS') {
-                listaParaRenderizar = dadosAntigos || [];
-                isAntigos = true;
-            } else {
-                listaParaRenderizar = dados || [];
-            }
-
-            let filtrados = listaParaRenderizar.filter(row => {
+            let filtrados = dados.filter(row => {
                 const nome = (row[2] || '').toLowerCase();
                 const moto = (row[14] || '').toLowerCase();
                 if (busca && !nome.includes(busca) && !moto.includes(busca)) return false;
-                if (filtroAtual !== 'TODOS' && filtroAtual !== 'ANTIGOS' && row[10] !== filtroAtual) return false;
                 return true;
             });
 
-            // Métricas
+            // Métricas do dashboard
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
             const mesAtual = hoje.getMonth();
             const anoAtual = hoje.getFullYear();
 
-            let totalReceber = 0;
-            let totalAtrasado = 0;
-            let mesReceber = 0;
-            let mesPago = 0;
+            // Início da semana (segunda-feira)
+            const diaSemana = hoje.getDay();
+            const inicioSemana = new Date(hoje);
+            inicioSemana.setDate(hoje.getDate() - ((diaSemana + 6) % 7));
+            inicioSemana.setHours(0, 0, 0, 0);
+
+            let valorHoje = 0;
+            let valorSemana = 0;
+            let valorMes = 0;
+            let totalGeral = 0;
             const clientesSet = new Set();
 
-            (dados || []).forEach(row => {
+            dados.forEach(row => {
                 const status = row[10];
                 const valor = parseFloat(row[7]) || 0;
                 const venc = new Date(row[9]);
                 venc.setHours(0, 0, 0, 0);
 
-                if (status !== 'PAGO') totalReceber += valor;
-                if (status === 'ATRASADO') totalAtrasado += valor;
+                if (status !== 'PAGO') {
+                    totalGeral += valor;
 
-                if (venc.getMonth() === mesAtual && venc.getFullYear() === anoAtual) {
-                    if (status === 'PAGO') mesPago += valor;
-                    else mesReceber += valor;
+                    if (venc.getTime() === hoje.getTime()) {
+                        valorHoje += valor;
+                    }
+
+                    if (venc >= inicioSemana && venc <= hoje) {
+                        valorSemana += valor;
+                    } else if (venc > hoje) {
+                        const fimSemana = new Date(inicioSemana);
+                        fimSemana.setDate(fimSemana.getDate() + 6);
+                        if (venc <= fimSemana) {
+                            valorSemana += valor;
+                        }
+                    }
+
+                    if (venc.getMonth() === mesAtual && venc.getFullYear() === anoAtual) {
+                        valorMes += valor;
+                    }
                 }
 
                 if (row[2]) clientesSet.add(row[2]);
             });
 
-            document.getElementById('totalReceber').textContent = formatarMoeda(totalReceber);
-            document.getElementById('totalAtrasado').textContent = formatarMoeda(totalAtrasado);
-            document.getElementById('mesReceber').textContent = formatarMoeda(mesReceber);
-            document.getElementById('mesPago').textContent = formatarMoeda(mesPago);
-            document.getElementById('totalClientes').textContent = clientesSet.size;
-            document.getElementById('totalAntigos').textContent = (dadosAntigos || []).length;
+            document.getElementById('valorHoje').textContent = formatarMoeda(valorHoje);
+            document.getElementById('valorSemana').textContent = formatarMoeda(valorSemana);
+            document.getElementById('valorMes').textContent = formatarMoeda(valorMes);
+            document.getElementById('totalGeral').textContent = formatarMoeda(totalGeral);
+            document.getElementById('clientesAtivos').textContent = clientesSet.size;
 
-            // Agrupar por contrato
+            // Lista de clientes
+            if (!listaVisivel) return;
+
             const grupos = new Map();
             filtrados.forEach(row => {
                 const contratoId = row[1];
@@ -1217,8 +977,7 @@
             });
 
             if (grupos.size === 0) {
-                const mensagem = isAntigos ? 'Nenhum cliente antigo encontrado' : 'Nenhum cliente encontrado';
-                container.innerHTML = `<div class="empty-state">${mensagem}</div>`;
+                container.innerHTML = '<div class="empty-state">Nenhum cliente encontrado</div>';
                 return;
             }
 
@@ -1231,29 +990,15 @@
                     return p[10] !== 'PAGO' ? s + valor : s;
                 }, 0);
 
-                const pagas = parcelas.filter(p => p[10] === 'PAGO').length;
+                const moto = parcelas[0]?.[14] || 'Não informado';
                 const totalParcelas = parcelas.length;
-                const todasPagas = pagas === totalParcelas;
-
-                const moto = parcelas[0]?.[14] || 'Moto não informada';
-                const observacao = parcelas[0]?.[15] || '';
-
-                const isQuitado = todasPagas && totalParcelas > 0;
 
                 html += `
                     <div class="client-card">
                         <div class="client-header" onclick="toggleParcelas(${idx})">
-                            <div class="client-info">
-                                <div class="client-name">
-                                    ${nome}
-                                    ${isQuitado ? ' <span style="font-size:12px;color:#a88ac8;background:#2a1a3a;padding:2px 12px;border-radius:20px;">Quitado</span>' : ''}
-                                </div>
-                                <div class="client-details">
-                                    <span class="moto">🏍️ ${moto}</span>
-                                    <span>${totalParcelas} parcelas · ${pagas} pagas</span>
-                                    ${isQuitado ? ' <span>✅ Contrato finalizado</span>' : ''}
-                                </div>
-                                ${observacao ? `<div class="obs-interna">📝 ${observacao}</div>` : ''}
+                            <div>
+                                <div class="client-name">${nome}</div>
+                                <div class="client-meta">${moto} · ${totalParcelas} parcela(s)</div>
                             </div>
                             <div class="client-total">${formatarMoeda(totalCliente)}</div>
                         </div>
@@ -1266,54 +1011,39 @@
                     if (status === 'PAGO') badgeClass = 'badge-pago';
                     if (status === 'ATRASADO') badgeClass = 'badge-atrasado';
 
-                    const venc = new Date(p[9]);
-                    const vencStr = venc.toLocaleDateString('pt-BR');
-                    const desc = p[4] || 'Sem descrição';
-                    const parcelaNum = p[5] || '?';
-                    const totalParc = p[6] || '?';
+                    const vencStr = new Date(p[9]).toLocaleDateString('pt-BR');
                     const valor = parseFloat(p[7] || 0);
                     const idParcela = p[0] || '';
 
                     html += `
                         <div class="parcela-item">
                             <div class="parcela-info">
-                                <div class="parcela-desc">${desc}</div>
+                                <div class="parcela-desc">${p[4] || 'Sem descrição'}</div>
                                 <div class="parcela-meta">
-                                    <span>${parcelaNum}/${totalParc}</span>
-                                    <span>Venc: ${vencStr}</span>
-                                    <span class="badge-status ${badgeClass}">${status}</span>
+                                    ${p[5]}/${p[6]} · Venc: ${vencStr} · <span class="badge ${badgeClass}">${status}</span>
                                 </div>
                             </div>
                             <div class="parcela-valor">${formatarMoeda(valor)}</div>
                         </div>
                     `;
 
-                    if (status !== 'PAGO' && !isQuitado) {
+                    if (status !== 'PAGO') {
                         html += `
-                            <div class="botoes-acao">
-                                <button class="btn-pagar" onclick="marcarPago('${idParcela}')">✅ Marcar como pago</button>
-                                <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">🗑️ Excluir</button>
+                            <div class="acoes-parcela">
+                                <button class="btn-pagar" onclick="marcarPago('${idParcela}')">Marcar como Pago</button>
+                                <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">Excluir</button>
                             </div>
                         `;
-                    } else if (status === 'PAGO') {
-                        const dataPag = p[11] ? new Date(p[11]).toLocaleDateString('pt-BR') : '';
+                    } else {
                         html += `
-                            <div class="pago-info" style="margin-top:10px;color:#7ad4a0;font-size:14px;text-align:center;">
-                                ✅ Pago em ${dataPag || 'data desconhecida'}
-                            </div>
-                            <button class="btn-excluir" onclick="excluirParcela('${idParcela}')">🗑️ Excluir</button>
+                            <button class="btn-excluir" onclick="excluirParcela('${idParcela}')" style="margin-top:6px;">Excluir</button>
                         `;
                     }
                 });
 
-                if (!isQuitado && totalParcelas > 0) {
-                    html += `
-                        <button class="btn-editar-contrato" onclick="abrirModalEdicaoContrato('${contratoId}')">✏️ Editar contrato inteiro</button>
-                        <button class="btn-excluir-contrato" onclick="excluirContrato('${contratoId}')">🗑️ Excluir contrato inteiro (${totalParcelas} parcelas)</button>
-                    `;
-                }
-
                 html += `
+                    <button class="btn-editar" onclick="abrirModalEdicao('${contratoId}')" style="margin-top:10px;">Editar Contrato</button>
+                    <button class="btn-excluir" onclick="excluirContrato('${contratoId}')" style="margin-top:6px;">Excluir Contrato</button>
                         </div>
                     </div>
                 `;
@@ -1323,112 +1053,61 @@
             container.innerHTML = html;
         }
 
-        // ============================================================
-        // FUNÇÕES AUXILIARES
-        // ============================================================
         function toggleParcelas(idx) {
             const el = document.getElementById(`parcelas_${idx}`);
             if (el) el.classList.toggle('open');
         }
 
-        // ============================================================
-        // MARCAR PAGO
-        // ============================================================
+        // Marcar pago
         async function marcarPago(id) {
             if (!confirm('Confirmar pagamento desta parcela?')) return;
 
             const resultado = await chamarApi('pagar', { id });
 
             if (resultado.sucesso) {
-                if (resultado.contratoQuitado) {
-                    mostrarAlerta('🎉 Contrato quitado! Cliente movido para Antigos.', 'success');
-                    dadosCache = [];
-                    dadosAntigosCache = [];
-                    await carregarClientes(true);
-                } else {
-                    mostrarAlerta('✅ Parcela marcada como paga!', 'success');
-                    dadosCache = [];
-                    await carregarClientes(true);
-                }
+                mostrarAlerta('Parcela marcada como paga!', 'success');
+                dadosCache = [];
+                dadosAntigosCache = [];
+                await carregarClientes(true);
             } else {
-                mostrarAlerta('❌ Erro ao marcar como pago.', 'error');
+                mostrarAlerta('Erro ao marcar como pago.', 'error');
             }
         }
 
-        // ============================================================
-        // EXCLUIR PARCELA
-        // ============================================================
+        // Excluir parcela
         async function excluirParcela(id) {
-            if (!confirm('Tem certeza que deseja EXCLUIR esta parcela?\n\nEsta ação não pode ser desfeita!')) return;
+            if (!confirm('Tem certeza que deseja excluir esta parcela?')) return;
 
             const resultado = await chamarApi('excluirParcela', { id });
 
             if (resultado.sucesso) {
-                mostrarAlerta('🗑️ Parcela excluída com sucesso!', 'success');
+                mostrarAlerta('Parcela excluída!', 'success');
                 dadosCache = [];
                 dadosAntigosCache = [];
                 await carregarClientes(true);
             } else {
-                mostrarAlerta('❌ Erro ao excluir parcela.', 'error');
+                mostrarAlerta('Erro ao excluir parcela.', 'error');
             }
         }
 
-        // ============================================================
-        // EXCLUIR CONTRATO
-        // ============================================================
+        // Excluir contrato
         async function excluirContrato(contratoId) {
-            if (!confirm('ATENÇÃO! Você está prestes a excluir TODAS as parcelas deste contrato.\n\nEsta ação não pode ser desfeita!\n\nDeseja continuar?')) return;
+            if (!confirm('Excluir TODAS as parcelas deste contrato?')) return;
 
             const resultado = await chamarApi('excluirContrato', { contratoId });
 
             if (resultado.sucesso) {
-                mostrarAlerta(`🗑️ Contrato excluído com sucesso! ${resultado.parcelasExcluidas || 0} parcelas removidas.`, 'success');
+                mostrarAlerta('Contrato excluído!', 'success');
                 dadosCache = [];
                 dadosAntigosCache = [];
                 await carregarClientes(true);
             } else {
-                mostrarAlerta('❌ Erro ao excluir contrato.', 'error');
+                mostrarAlerta('Erro ao excluir contrato.', 'error');
             }
         }
 
-        // ============================================================
-        // EDIÇÃO DE CONTRATO
-        // ============================================================
-        function abrirModalEdicaoContrato(contratoId) {
-            contratoEditando = contratoId;
-
-            const todasParcelas = [...dadosCache, ...dadosAntigosCache];
-            const parcelasDoContrato = todasParcelas.filter(p => p[1].toString() === contratoId.toString());
-
-            if (parcelasDoContrato.length === 0) {
-                mostrarAlerta('Contrato não encontrado.', 'error');
-                return;
-            }
-
-            const primeira = parcelasDoContrato[0];
-            const valorTotal = parcelasDoContrato.reduce((sum, p) => sum + parseFloat(p[7] || 0), 0);
-
-            document.getElementById('editNome').value = primeira[2] || '';
-            document.getElementById('editTelefone').value = primeira[3] || '';
-            document.getElementById('editMoto').value = primeira[14] || '';
-            document.getElementById('editDescricao').value = primeira[4] || '';
-            document.getElementById('editValorTotal').value = valorTotal;
-            document.getElementById('editNumParcelas').value = parcelasDoContrato.length;
-
-            const vencimento = new Date(primeira[9]);
-            document.getElementById('editVencimento').value = vencimento.toISOString().split('T')[0];
-
-            document.getElementById('editObservacao').value = primeira[15] || '';
-
-            document.getElementById('modalEditarContrato').style.display = 'flex';
-        }
-
-        function fecharModalEdicao() {
-            document.getElementById('modalEditarContrato').style.display = 'none';
-            contratoEditando = null;
-        }
-
-        async function salvarEdicaoContrato() {
+        // Editar contrato
+        async function salvarEdicao() {
             if (!contratoEditando) return;
 
             const dados = {
@@ -1443,44 +1122,44 @@
                 observacao: document.getElementById('editObservacao').value.trim()
             };
 
-            if (!dados.nome) return mostrarAlerta('Informe o nome do cliente.', 'error');
-            if (!dados.moto) return mostrarAlerta('Informe a moto.', 'error');
-            if (!dados.valorTotal || parseFloat(dados.valorTotal) <= 0) return mostrarAlerta('Informe um valor válido.',
-            'error');
-            if (!dados.vencimento) return mostrarAlerta('Informe a data de vencimento.', 'error');
+            if (!dados.nome) return mostrarAlerta('Informe o nome.', 'error');
+            if (!dados.moto) return mostrarAlerta('Informe a descrição do bem.', 'error');
+            if (!dados.valorTotal || parseFloat(dados.valorTotal) <= 0) return mostrarAlerta('Valor inválido.', 'error');
+            if (!dados.vencimento) return mostrarAlerta('Informe a data.', 'error');
 
             const resultado = await chamarApi('editarContrato', dados);
 
             if (resultado.sucesso) {
-                mostrarAlerta('✅ Contrato atualizado com sucesso!', 'success');
+                mostrarAlerta('Contrato atualizado!', 'success');
                 fecharModalEdicao();
                 dadosCache = [];
                 dadosAntigosCache = [];
                 await carregarClientes(true);
             } else {
-                mostrarAlerta('❌ Erro ao editar contrato.', 'error');
+                mostrarAlerta('Erro ao editar.', 'error');
             }
         }
 
-        // ============================================================
-        // INICIALIZAÇÃO
-        // ============================================================
+        // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
-            previewParcela();
+            atualizarPreview();
             carregarClientes(true);
-
-            // Verificar WhatsApp a cada 10 segundos
-            verificarStatusWhatsApp();
-            setInterval(verificarStatusWhatsApp, 10000);
-
-            // Carregar dados a cada 30 segundos
             setInterval(() => carregarClientes(true), 30000);
         });
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
+                fecharModalCadastro();
                 fecharModalEdicao();
             }
+        });
+
+        // Fechar modais ao clicar fora
+        document.getElementById('modalCadastro').addEventListener('click', function(e) {
+            if (e.target === this) fecharModalCadastro();
+        });
+        document.getElementById('modalEdicao').addEventListener('click', function(e) {
+            if (e.target === this) fecharModalEdicao();
         });
     </script>
 
