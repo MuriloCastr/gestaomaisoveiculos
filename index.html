@@ -89,7 +89,7 @@
         /* Dashboard Cards */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
             gap: 16px;
             margin-bottom: 32px;
         }
@@ -116,6 +116,20 @@
             background: #ebf8ff;
         }
 
+        .dashboard-card.danger {
+            border-color: #fc8181;
+        }
+
+        .dashboard-card.danger:hover {
+            border-color: #e53e3e;
+            box-shadow: 0 4px 12px rgba(229,62,62,0.15);
+        }
+
+        .dashboard-card.danger.active {
+            border-color: #c53030;
+            background: #fff5f5;
+        }
+
         .dashboard-card .label {
             font-size: 12px;
             text-transform: uppercase;
@@ -139,6 +153,10 @@
             color: #276749;
         }
 
+        .dashboard-card .value.danger {
+            color: #c53030;
+        }
+
         .dashboard-card .badge-count {
             position: absolute;
             top: 16px;
@@ -149,6 +167,11 @@
             font-weight: 600;
             padding: 3px 10px;
             border-radius: 12px;
+        }
+
+        .dashboard-card.danger .badge-count {
+            background: #fed7d7;
+            color: #c53030;
         }
 
         /* Seção de detalhes do dashboard */
@@ -172,6 +195,15 @@
             margin-bottom: 16px;
             padding-bottom: 12px;
             border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-detail .detail-total {
+            font-size: 14px;
+            font-weight: 500;
+            color: #718096;
         }
 
         .detail-list {
@@ -189,6 +221,7 @@
             border-radius: 8px;
             border: 1px solid #e2e8f0;
             transition: background 0.15s;
+            gap: 12px;
         }
 
         .detail-item:hover {
@@ -197,6 +230,7 @@
 
         .detail-info {
             flex: 1;
+            min-width: 0;
         }
 
         .detail-name {
@@ -209,6 +243,10 @@
             font-size: 12px;
             color: #718096;
             margin-top: 3px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
         }
 
         .detail-value {
@@ -216,7 +254,6 @@
             font-weight: 600;
             color: #2d3748;
             white-space: nowrap;
-            margin-left: 16px;
         }
 
         .detail-status {
@@ -225,7 +262,6 @@
             text-transform: uppercase;
             padding: 2px 8px;
             border-radius: 10px;
-            margin-left: 8px;
         }
 
         .status-vencendo {
@@ -248,6 +284,33 @@
             color: #a0aec0;
             padding: 32px;
             font-size: 15px;
+        }
+
+        .btn-pagar-detail {
+            background: #38a169;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-pagar-detail:hover {
+            background: #2f855a;
+        }
+
+        .btn-pagar-detail:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .btn-pagar-detail.pagando {
+            background: #a0aec0;
+            cursor: wait;
         }
 
         /* Seção de busca */
@@ -648,12 +711,17 @@
             
             .detail-item {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
+                align-items: stretch;
+                gap: 10px;
             }
             
             .detail-value {
                 margin-left: 0;
+            }
+            
+            .btn-pagar-detail {
+                width: 100%;
+                text-align: center;
             }
         }
 
@@ -717,6 +785,11 @@
                 <div class="value" id="valorMes">R$ 0,00</div>
                 <div class="badge-count" id="countMes">0</div>
             </div>
+            <div class="dashboard-card danger" onclick="mostrarDetalhe('atrasados')" id="cardAtrasados">
+                <div class="label">Atrasados</div>
+                <div class="value danger" id="valorAtrasados">R$ 0,00</div>
+                <div class="badge-count" id="countAtrasados">0</div>
+            </div>
             <div class="dashboard-card" onclick="mostrarDetalhe('total')" id="cardTotal">
                 <div class="label">Total Geral</div>
                 <div class="value success" id="totalGeral">R$ 0,00</div>
@@ -730,7 +803,10 @@
 
         <!-- Seção de detalhes do dashboard -->
         <div class="dashboard-detail" id="dashboardDetail">
-            <h3 id="detailTitle">Detalhes</h3>
+            <h3>
+                <span id="detailTitle">Detalhes</span>
+                <span class="detail-total" id="detailTotal"></span>
+            </h3>
             <div class="detail-list" id="detailList">
                 <div class="detail-empty">Selecione um painel para ver os detalhes</div>
             </div>
@@ -829,6 +905,7 @@
         let dadosHoje = [];
         let dadosSemana = [];
         let dadosMes = [];
+        let dadosAtrasados = [];
         let dadosTotal = [];
         let dadosClientesAtivos = [];
 
@@ -920,6 +997,37 @@
             }
         }
 
+        // Marcar como pago pelo botão no detalhe
+        async function marcarPagoDetalhe(idParcela, botao) {
+            if (!confirm('Confirmar pagamento desta parcela?')) return;
+
+            botao.disabled = true;
+            botao.textContent = 'Processando...';
+            botao.classList.add('pagando');
+
+            const resultado = await chamarApi('pagar', { id: idParcela });
+
+            if (resultado.sucesso) {
+                if (resultado.contratoQuitado) {
+                    mostrarAlerta('Contrato quitado! Cliente movido para finalizados.', 'success');
+                } else {
+                    mostrarAlerta('Parcela marcada como paga!', 'success');
+                }
+                dadosCache = [];
+                dadosAntigosCache = [];
+                await carregarClientes(true);
+                // Reabrir o mesmo painel após atualizar
+                if (painelAtivo) {
+                    setTimeout(() => mostrarDetalhe(painelAtivo), 100);
+                }
+            } else {
+                mostrarAlerta('Erro ao marcar como pago.', 'error');
+                botao.disabled = false;
+                botao.textContent = 'Marcar como Pago';
+                botao.classList.remove('pagando');
+            }
+        }
+
         // Mostrar detalhes do dashboard
         function mostrarDetalhe(tipo) {
             // Remove active de todos os cards
@@ -929,11 +1037,13 @@
 
             const detailSection = document.getElementById('dashboardDetail');
             const detailTitle = document.getElementById('detailTitle');
+            const detailTotal = document.getElementById('detailTotal');
             const detailList = document.getElementById('detailList');
 
             let titulo = '';
             let dados = [];
             let cardId = '';
+            let valorTotal = 0;
 
             switch(tipo) {
                 case 'hoje':
@@ -950,6 +1060,11 @@
                     titulo = 'Pagamentos deste Mês';
                     dados = dadosMes;
                     cardId = 'cardMes';
+                    break;
+                case 'atrasados':
+                    titulo = 'Pagamentos Atrasados';
+                    dados = dadosAtrasados;
+                    cardId = 'cardAtrasados';
                     break;
                 case 'total':
                     titulo = 'Todos os Pagamentos Pendentes';
@@ -976,8 +1091,11 @@
             detailSection.classList.add('visible');
 
             if (tipo === 'clientes') {
+                detailTotal.textContent = `${dados.length} cliente(s)`;
                 renderizarDetalheClientes(dados);
             } else {
+                valorTotal = dados.reduce((sum, item) => sum + item.valor, 0);
+                detailTotal.textContent = `${dados.length} parcela(s) · Total: ${formatarMoeda(valorTotal)}`;
                 renderizarDetalheParcelas(dados, titulo);
             }
 
@@ -996,26 +1114,39 @@
             let html = '';
             dados.forEach(item => {
                 let statusClass = 'status-pendente';
-                if (item.status === 'ATRASADO') statusClass = 'status-atrasado';
+                let statusLabel = item.status;
                 
                 const hoje = new Date();
                 hoje.setHours(0, 0, 0, 0);
                 const venc = new Date(item.vencimento);
                 venc.setHours(0, 0, 0, 0);
                 
-                if (venc.getTime() === hoje.getTime()) statusClass = 'status-vencendo';
-                if (venc < hoje) statusClass = 'status-atrasado';
+                if (venc.getTime() === hoje.getTime()) {
+                    statusClass = 'status-vencendo';
+                    statusLabel = 'Vence Hoje';
+                }
+                if (venc < hoje || item.status === 'ATRASADO') {
+                    statusClass = 'status-atrasado';
+                    statusLabel = 'Atrasado';
+                }
+
+                const diasAtraso = venc < hoje ? Math.ceil((hoje - venc) / (1000 * 60 * 60 * 24)) : 0;
+                const infoAtraso = diasAtraso > 0 ? ` · ${diasAtraso} dia(s) de atraso` : '';
 
                 html += `
-                    <div class="detail-item">
+                    <div class="detail-item" id="detail-item-${item.id}">
                         <div class="detail-info">
                             <div class="detail-name">${item.cliente}</div>
                             <div class="detail-meta">
                                 ${item.moto} · Parcela ${item.parcela}/${item.totalParcelas} · Venc: ${formatarData(item.vencimento)}
-                                <span class="detail-status ${statusClass}">${item.status}</span>
+                                <span class="detail-status ${statusClass}">${statusLabel}</span>
+                                ${infoAtraso ? `<span style="color:#c53030;font-weight:500;">${infoAtraso}</span>` : ''}
                             </div>
                         </div>
                         <div class="detail-value">${formatarMoeda(item.valor)}</div>
+                        <button class="btn-pagar-detail" onclick="event.stopPropagation(); marcarPagoDetalhe('${item.id}', this)" title="Marcar como pago">
+                            Marcar como Pago
+                        </button>
                     </div>
                 `;
             });
@@ -1199,12 +1330,14 @@
             dadosHoje = [];
             dadosSemana = [];
             dadosMes = [];
+            dadosAtrasados = [];
             dadosTotal = [];
             dadosClientesAtivos = [];
 
             let valorHoje = 0;
             let valorSemana = 0;
             let valorMes = 0;
+            let valorAtrasados = 0;
             let totalGeral = 0;
             const clientesMap = new Map();
 
@@ -1240,7 +1373,7 @@
                         dadosHoje.push(parcelaInfo);
                     }
 
-                    // Esta semana (inclui hoje e próximos dias até domingo)
+                    // Esta semana
                     if (venc >= inicioSemana && venc <= fimSemana) {
                         valorSemana += valor;
                         if (venc.getTime() !== hoje.getTime()) {
@@ -1251,16 +1384,22 @@
                     // Este mês
                     if (venc.getMonth() === mesAtual && venc.getFullYear() === anoAtual) {
                         valorMes += valor;
-                        // Evita duplicar itens que já estão em hoje
-                        if (venc.getTime() !== hoje.getTime()) {
-                            const jaExiste = dadosMes.some(d => d.id === parcelaInfo.id);
-                            if (!jaExiste) {
-                                dadosMes.push(parcelaInfo);
-                            }
+                        const jaExiste = dadosMes.some(d => d.id === parcelaInfo.id);
+                        if (!jaExiste) {
+                            dadosMes.push(parcelaInfo);
                         }
                     }
 
-                    // Agrupar por cliente para o painel de clientes ativos
+                    // Atrasados
+                    if (status === 'ATRASADO' || venc < hoje) {
+                        valorAtrasados += valor;
+                        const jaExisteAtrasado = dadosAtrasados.some(d => d.id === parcelaInfo.id);
+                        if (!jaExisteAtrasado) {
+                            dadosAtrasados.push(parcelaInfo);
+                        }
+                    }
+
+                    // Agrupar por cliente
                     if (!clientesMap.has(cliente)) {
                         clientesMap.set(cliente, {
                             cliente,
@@ -1274,7 +1413,6 @@
                     clienteData.valorPendente += valor;
                     clienteData.totalParcelas++;
                 } else {
-                    // Parcelas pagas também contam para o total de parcelas do cliente
                     if (!clientesMap.has(cliente)) {
                         clientesMap.set(cliente, {
                             cliente,
@@ -1289,7 +1427,7 @@
                 }
             });
 
-            // Adicionar itens de hoje também na semana e mês para consistência
+            // Adicionar itens de hoje também na semana e mês
             dadosHoje.forEach(item => {
                 if (!dadosSemana.some(d => d.id === item.id)) {
                     dadosSemana.unshift(item);
@@ -1299,20 +1437,38 @@
                 }
             });
 
-            // Ordenar dados por data de vencimento
-            const ordenarPorData = (a, b) => new Date(a.vencimento) - new Date(b.vencimento);
-            dadosHoje.sort(ordenarPorData);
-            dadosSemana.sort(ordenarPorData);
-            dadosMes.sort(ordenarPorData);
-            dadosTotal.sort(ordenarPorData);
+            // Ordenar: atrasados primeiro, depois por data
+            const ordenarPorPrioridade = (a, b) => {
+                const hojeTime = hoje.getTime();
+                const aVenc = new Date(a.vencimento).getTime();
+                const bVenc = new Date(b.vencimento).getTime();
+                
+                // Atrasados primeiro
+                const aAtrasado = aVenc < hojeTime || a.status === 'ATRASADO';
+                const bAtrasado = bVenc < hojeTime || b.status === 'ATRASADO';
+                
+                if (aAtrasado && !bAtrasado) return -1;
+                if (!aAtrasado && bAtrasado) return 1;
+                
+                // Depois ordenar por data
+                return aVenc - bVenc;
+            };
+
+            dadosHoje.sort(ordenarPorPrioridade);
+            dadosSemana.sort(ordenarPorPrioridade);
+            dadosMes.sort(ordenarPorPrioridade);
+            dadosAtrasados.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+            dadosTotal.sort(ordenarPorPrioridade);
 
             // Converter mapa de clientes para array
-            dadosClientesAtivos = Array.from(clientesMap.values());
+            dadosClientesAtivos = Array.from(clientesMap.values())
+                .filter(c => c.valorPendente > 0 || c.totalParcelas > c.parcelasPagas);
 
             // Atualizar dashboard
             document.getElementById('valorHoje').textContent = formatarMoeda(valorHoje);
             document.getElementById('valorSemana').textContent = formatarMoeda(valorSemana);
             document.getElementById('valorMes').textContent = formatarMoeda(valorMes);
+            document.getElementById('valorAtrasados').textContent = formatarMoeda(valorAtrasados);
             document.getElementById('totalGeral').textContent = formatarMoeda(totalGeral);
             document.getElementById('clientesAtivos').textContent = dadosClientesAtivos.length;
 
@@ -1320,6 +1476,7 @@
             document.getElementById('countHoje').textContent = dadosHoje.length;
             document.getElementById('countSemana').textContent = dadosSemana.length;
             document.getElementById('countMes').textContent = dadosMes.length;
+            document.getElementById('countAtrasados').textContent = dadosAtrasados.length;
             document.getElementById('countTotal').textContent = dadosTotal.length;
 
             // Se um painel estiver ativo, atualizar os detalhes
@@ -1435,7 +1592,7 @@
             if (el) el.classList.toggle('open');
         }
 
-        // Marcar pago
+        // Marcar pago (da lista de clientes)
         async function marcarPago(id) {
             if (!confirm('Confirmar pagamento desta parcela?')) return;
 
